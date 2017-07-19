@@ -126,6 +126,11 @@ import BlobForkSuggestion from './blob/blob_fork_suggestion';
       const $target = $(e.target);
       const action = $target.data('action');
 
+      if (window.location.search == '?test') {
+        const minHeight = window.innerHeight - document.querySelector('.merge-request-tabs').getBoundingClientRect().bottom;
+        $('.tab-content').css({ minHeight });
+      }
+
       if (action === 'commits') {
         this.loadCommits($target.attr('href'));
         this.expandView();
