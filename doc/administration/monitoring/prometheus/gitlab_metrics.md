@@ -37,6 +37,12 @@ In this experimental phase, only a few metrics are available:
 | filesystem_writable                             | Gauge     | 9.4   | Whether or not the filesystem is writable |
 | filesystem_read_latency_seconds                 | Gauge     | 9.4   | Read latency of a specific filesystem |
 | filesystem_readable                             | Gauge     | 9.4   | Whether or not the filesystem is readable |
+| gitlab_sql_duration_seconds                     | Histogram | 10.3  | Rails SQL requests by controler/action |
+| gitlab_transaction_allocated_memory_bytes       | Histogram | 10.3  | Rails memory allocations for requests by controler/action |
+| gitlab_transaction_duration_seconds             | Histogram | 10.3  | Rails requests duration by controler/action |
+| gitlab_transaction_new_redis_connections_total  | Histogram | 10.3  | Rails request redis connections by controler/action |
+| gitlab_transaction_view_duration_total          | Histogram | 10.3  | Rails request view duration by controler/action |
+| gitlab_view_rendering_duration_seconds          | Histogram | 10.3  | Rails request view rendering duration by controler/action |
 | http_requests_total                             | Counter   | 9.4   | Rack request count |
 | http_request_duration_seconds                   | Histogram | 9.4   | HTTP response time from rack middleware |
 | pipelines_created_total                         | Counter   | 9.4   | Counter of pipelines created |
