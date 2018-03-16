@@ -6,7 +6,6 @@ const path = require('path');
 const glob = require('glob');
 const webpack = require('webpack');
 const StatsWriterPlugin = require('webpack-stats-plugin').StatsWriterPlugin;
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const NameAllModulesPlugin = require('name-all-modules-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
@@ -125,16 +124,8 @@ const config = {
           name: '[name].[hash].[ext]',
         }
       },
-      {
-        test: /monaco-editor\/\w+\/vs\/loader\.js$/,
-        use: [
-          { loader: 'exports-loader', options: 'l.global' },
-          { loader: 'imports-loader', options: 'l=>{},this=>l,AMDLoader=>this,module=>undefined' },
-        ],
-      }
     ],
 
-    noParse: [/monaco-editor\/\w+\/vs\//],
     strictExportPresence: true,
   },
 
@@ -210,26 +201,6 @@ const config = {
 
     // enable scope hoisting
     new webpack.optimize.ModuleConcatenationPlugin(),
-
-    // copy pre-compiled vendor libraries verbatim
-    new CopyWebpackPlugin([
-      {
-        from: path.join(ROOT_PATH, `node_modules/monaco-editor/${IS_PRODUCTION ? 'min' : 'dev'}/vs`),
-        to: 'monaco-editor/vs',
-        transform: function(content, path) {
-          if (/\.js$/.test(path) && !/worker/i.test(path) && !/typescript/i.test(path)) {
-            return (
-              '(function(){\n' +
-              'var define = this.define, require = this.require;\n' +
-              'window.define = define; window.require = require;\n' +
-              content +
-              '\n}.call(window.__monaco_context__ || (window.__monaco_context__ = {})));'
-            );
-          }
-          return content;
-        }
-      }
-    ]),
   ],
 
   resolve: {
