@@ -4,7 +4,7 @@
       %a{ href: "#", data: { toggle: "dropdown" } }
         Projects
         = sprite_icon('angle-down', css_class: 'caret-down')
-      .dropdown-menu.projects-dropdown-menu
+      .dropdown-menu.frequent-items-dropdown-menu
         = render "layouts/nav/projects_dropdown/show"
 
   - if dashboard_nav_link?(:groups)
@@ -12,7 +12,7 @@
       %a{ href: "#", data: { toggle: "dropdown" } }
         Groups
         = sprite_icon('angle-down', css_class: 'caret-down')
-      .dropdown-menu.projects-dropdown-menu
+      .dropdown-menu.frequent-items-dropdown-menu
         = render "layouts/nav/groups_dropdown/show"
 
   - if dashboard_nav_link?(:activity)
