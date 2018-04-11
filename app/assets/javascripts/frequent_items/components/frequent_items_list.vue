@@ -1,36 +1,38 @@
 <script>
-  import { s__ } from '../../locale';
-  import frequentItemsListItem from './frequent_items_list_item.vue';
+import frequentItemsListItem from './frequent_items_list_item.vue';
 
-  export default {
-    components: {
-      frequentItemsListItem,
+export default {
+  components: {
+    frequentItemsListItem,
+  },
+  props: {
+    items: {
+      type: Array,
+      required: true,
     },
-    props: {
-      items: {
-        type: Array,
-        required: true,
-      },
-      localStorageFailed: {
-        type: Boolean,
-        required: true,
-      },
-      service: {
-        type: Object,
-        required: true,
-      },
+    localStorageFailed: {
+      type: Boolean,
+      required: true,
     },
-    computed: {
-      isListEmpty() {
-        return this.items.length === 0;
-      },
-      listEmptyMessage() {
-        return this.localStorageFailed ?
-          s__('ProjectsDropdown|This feature requires browser localStorage support') :
-          s__('ProjectsDropdown|Projects you visit often will appear here');
-      },
+    service: {
+      type: Object,
+      required: true,
     },
-  };
+  },
+  computed: {
+    translations() {
+      return this.service.getTranslations(['itemListErrorMessage', 'itemListEmptyMessage']);
+    },
+    isListEmpty() {
+      return this.items.length === 0;
+    },
+    listEmptyMessage() {
+      return this.localStorageFailed
+        ? this.translations.itemListErrorMessage
+        : this.translations.itemListEmptyMessage;
+    },
+  },
+};
 </script>
 
 <template>

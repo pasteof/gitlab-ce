@@ -2,24 +2,27 @@ import _ from 'underscore';
 import Vue from 'vue';
 import VueResource from 'vue-resource';
 
-import bp from '../../breakpoints';
-import Api from '../../api';
-import AccessorUtilities from '../../lib/utils/accessor';
+import { s__ } from '~/locale';
+import bp from '~/breakpoints';
+import Api from '~/api';
+import AccessorUtilities from '~/lib/utils/accessor';
 
-import { FREQUENT_ITEMS, HOUR_IN_MS, STORAGE_KEY } from '../constants';
+import { FREQUENT_ITEMS, HOUR_IN_MS, STORAGE_KEY, TRANSLATION_KEYS } from '../constants';
 
 Vue.use(VueResource);
 
-export default class ProjectsService {
-  constructor(currentUserName) {
-    this.isLocalStorageAvailable = AccessorUtilities.isLocalStorageAccessSafe();
+export default class ItemsService {
+  constructor(namespace, currentUserName) {
+    this.namespace = namespace;
     this.currentUserName = currentUserName;
-    this.storageKey = `${this.currentUserName}/${STORAGE_KEY}`;
-    this.projectsPath = Vue.resource(Api.buildUrl(Api.projectsPath));
+    this.isLocalStorageAvailable = AccessorUtilities.isLocalStorageAccessSafe();
+    this.storageKey = `${this.currentUserName}/${STORAGE_KEY[namespace]}`;
+    // TODO: Make this flexible
+    this.itemsPath = Vue.resource(Api.buildUrl(Api.projectsPath));
   }
 
-  getSearchedProjects(searchQuery) {
-    return this.projectsPath.get({
+  getSearchedItems(searchQuery) {
+    return this.itemsPath.get({
       simple: true,
       per_page: 20,
       membership: !!gon.current_user_id,
@@ -28,106 +31,116 @@ export default class ProjectsService {
     });
   }
 
-  getFrequentProjects() {
+  getFrequentItems() {
     if (this.isLocalStorageAvailable) {
-      return this.getTopFrequentProjects();
+      return this.getTopFrequentItems();
     }
     return null;
   }
 
-  logProjectAccess(project) {
+  logItemAccess(item) {
     let matchFound = false;
-    let storedFrequentProjects;
+    let storedFrequentItems;
 
     if (this.isLocalStorageAvailable) {
-      const storedRawProjects = localStorage.getItem(this.storageKey);
+      const storedRawItems = localStorage.getItem(this.storageKey);
 
-      // Check if there's any frequent projects list set
-      if (!storedRawProjects) {
-        // No frequent projects list set, set one up.
-        storedFrequentProjects = [];
-        storedFrequentProjects.push({ ...project, frequency: 1 });
+      // Check if there's any frequent items list set
+      if (!storedRawItems) {
+        // No frequent items list set, set one up.
+        storedFrequentItems = [];
+        storedFrequentItems.push({ ...item, frequency: 1 });
       } else {
-        // Check if project is already present in frequents list
+        // Check if item is already present in items list
         // When found, update metadata of it.
-        storedFrequentProjects = JSON.parse(storedRawProjects).map((projectItem) => {
-          if (projectItem.id === project.id) {
+        storedFrequentItems = JSON.parse(storedRawItems).map(itemItem => {
+          if (itemItem.id === item.id) {
             matchFound = true;
-            const diff = Math.abs(project.lastAccessedOn - projectItem.lastAccessedOn) / HOUR_IN_MS;
-            const updatedProject = {
-              ...project,
-              frequency: projectItem.frequency,
-              lastAccessedOn: projectItem.lastAccessedOn,
+            const diff = Math.abs(item.lastAccessedOn - itemItem.lastAccessedOn) / HOUR_IN_MS;
+            const updatedItem = {
+              ...item,
+              frequency: itemItem.frequency,
+              lastAccessedOn: itemItem.lastAccessedOn,
             };
 
-            // Check if duration since last access of this project
+            // Check if duration since last access of this item
             // is over an hour
             if (diff > 1) {
               return {
-                ...updatedProject,
-                frequency: updatedProject.frequency + 1,
+                ...updatedItem,
+                frequency: updatedItem.frequency + 1,
                 lastAccessedOn: Date.now(),
               };
             }
 
             return {
-              ...updatedProject,
+              ...updatedItem,
             };
           }
 
-          return projectItem;
+          return itemItem;
         });
 
-        // Check whether currently logged project is present in frequents list
+        // Check whether currently logged item is present in items list
         if (!matchFound) {
-          // We always keep size of frequents collection to 20 projects
-          // out of which only 5 projects with
+          // We always keep size of items collection to 20 items
+          // out of which only 5 items with
           // highest value of `frequency` and most recent `lastAccessedOn`
-          // are shown in projects dropdown
-          if (storedFrequentProjects.length === FREQUENT_ITEMS.MAX_COUNT) {
-            storedFrequentProjects.shift(); // Remove an item from head of array
+          // are shown in items dropdown
+          if (storedFrequentItems.length === FREQUENT_ITEMS.MAX_COUNT) {
+            storedFrequentItems.shift(); // Remove an item from head of array
           }
 
-          storedFrequentProjects.push({ ...project, frequency: 1 });
+          storedFrequentItems.push({ ...item, frequency: 1 });
         }
       }
 
-      localStorage.setItem(this.storageKey, JSON.stringify(storedFrequentProjects));
+      localStorage.setItem(this.storageKey, JSON.stringify(storedFrequentItems));
     }
   }
 
-  getTopFrequentProjects() {
-    const storedFrequentProjects = JSON.parse(localStorage.getItem(this.storageKey));
-    let frequentProjectsCount = FREQUENT_ITEMS.LIST_COUNT_DESKTOP;
+  getTopFrequentItems() {
+    const storedFrequentItems = JSON.parse(localStorage.getItem(this.storageKey));
+    let frequentItemsCount = FREQUENT_ITEMS.LIST_COUNT_DESKTOP;
 
-    if (!storedFrequentProjects) {
+    if (!storedFrequentItems) {
       return [];
     }
 
-    if (bp.getBreakpointSize() === 'sm' ||
-      bp.getBreakpointSize() === 'xs') {
-      frequentProjectsCount = FREQUENT_ITEMS.LIST_COUNT_MOBILE;
+    if (bp.getBreakpointSize() === 'sm' || bp.getBreakpointSize() === 'xs') {
+      frequentItemsCount = FREQUENT_ITEMS.LIST_COUNT_MOBILE;
     }
 
-    const frequentProjects = storedFrequentProjects
-      .filter(project => project.frequency >= FREQUENT_ITEMS.ELIGIBLE_FREQUENCY);
+    const frequentItems = storedFrequentItems.filter(
+      item => item.frequency >= FREQUENT_ITEMS.ELIGIBLE_FREQUENCY,
+    );
 
-    // Sort all frequent projects in decending order of frequency
+    // Sort all frequent items in decending order of frequency
     // and then by lastAccessedOn with recent most first
-    frequentProjects.sort((projectA, projectB) => {
-      if (projectA.frequency < projectB.frequency) {
+    frequentItems.sort((itemA, itemB) => {
+      if (itemA.frequency < itemB.frequency) {
         return 1;
-      } else if (projectA.frequency > projectB.frequency) {
+      } else if (itemA.frequency > itemB.frequency) {
         return -1;
-      } else if (projectA.lastAccessedOn < projectB.lastAccessedOn) {
+      } else if (itemA.lastAccessedOn < itemB.lastAccessedOn) {
         return 1;
-      } else if (projectA.lastAccessedOn > projectB.lastAccessedOn) {
+      } else if (itemA.lastAccessedOn > itemB.lastAccessedOn) {
         return -1;
       }
 
       return 0;
     });
 
-    return _.first(frequentProjects, frequentProjectsCount);
+    return _.first(frequentItems, frequentItemsCount);
+  }
+
+  // TODO: Should probably be moved to ~/locale for use with other components?
+  getTranslations(keys) {
+    const translationStrings = {};
+    keys.forEach(key => {
+      translationStrings[key] = s__(TRANSLATION_KEYS[this.namespace][key]);
+    });
+
+    return translationStrings;
   }
 }

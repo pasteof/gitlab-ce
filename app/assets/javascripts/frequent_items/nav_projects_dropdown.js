@@ -1,7 +1,6 @@
 import $ from 'jquery';
 import Vue from 'vue';
 
-import { s__ } from '~/locale';
 import Translate from '~/vue_shared/translate';
 import eventHub from '~/frequent_items/event_hub';
 import FrequentItemsService from '~/frequent_items/services/frequent_items_service';
@@ -35,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     data() {
       const dataset = this.$options.el.dataset;
       const store = new FrequentItemsStore();
-      const service = new FrequentItemsService(dataset.userName);
+      const service = new FrequentItemsService(frequentProjectsNamespace, dataset.userName);
 
       const project = {
         id: Number(dataset.projectId),

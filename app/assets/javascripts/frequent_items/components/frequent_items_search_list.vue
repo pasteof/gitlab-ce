@@ -25,18 +25,15 @@ export default {
   },
   computed: {
     translations() {
-      return this.service.getTranslations([
-        'searchListErrorMessage',
-        'searchListEmptyMessage',
-      ]);
+      return this.service.getTranslations(['searchListErrorMessage', 'searchListEmptyMessage']);
     },
     isListEmpty() {
       return this.items.length === 0;
     },
     listEmptyMessage() {
-      return this.searchFailed ?
-        this.translations.searchListErrorMessage :
-        this.translations.searchListEmptyMessage;
+      return this.searchFailed
+        ? this.translations.searchListErrorMessage
+        : this.translations.searchListEmptyMessage;
     },
   },
 };

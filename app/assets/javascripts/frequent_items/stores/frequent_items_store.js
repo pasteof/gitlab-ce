@@ -1,33 +1,33 @@
-export default class ProjectsStore {
+export default class ItemsStore {
   constructor() {
     this.state = {};
-    this.state.frequentProjects = [];
-    this.state.searchedProjects = [];
+    this.state.frequentItems = [];
+    this.state.searchedItems = [];
   }
 
-  setFrequentProjects(rawProjects) {
-    this.state.frequentProjects = rawProjects;
+  setFrequentItems(rawItems) {
+    this.state.frequentItems = rawItems;
   }
 
-  getFrequentProjects() {
-    return this.state.frequentProjects;
+  getFrequentItems() {
+    return this.state.frequentItems;
   }
 
-  setSearchedProjects(rawProjects) {
-    this.state.searchedProjects = rawProjects.map(rawProject => ({
-      id: rawProject.id,
-      name: rawProject.name,
-      namespace: rawProject.name_with_namespace,
-      webUrl: rawProject.web_url,
-      avatarUrl: rawProject.avatar_url,
+  setSearchedItems(rawItems) {
+    this.state.searchedItems = rawItems.map(rawItem => ({
+      id: rawItem.id,
+      name: rawItem.name,
+      namespace: rawItem.name_with_namespace,
+      webUrl: rawItem.web_url,
+      avatarUrl: rawItem.avatar_url,
     }));
   }
 
-  getSearchedProjects() {
-    return this.state.searchedProjects;
+  getSearchedItems() {
+    return this.state.searchedItems;
   }
 
-  clearSearchedProjects() {
-    this.state.searchedProjects = [];
+  clearSearchedItems() {
+    this.state.searchedItems = [];
   }
 }

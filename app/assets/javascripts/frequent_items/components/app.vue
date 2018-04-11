@@ -1,8 +1,8 @@
 <script>
-import bs from '../../breakpoints';
-import eventHub from '../event_hub';
-import loadingIcon from '../../vue_shared/components/loading_icon.vue';
+import bs from '~/breakpoints';
+import loadingIcon from '~/vue_shared/components/loading_icon.vue';
 
+import eventHub from '../event_hub';
 import frequentItemsSearchInput from './frequent_items_search_input.vue';
 import frequentItemsList from './frequent_items_list.vue';
 import frequentItemsSearchList from './frequent_items_search_list.vue';
@@ -15,6 +15,10 @@ export default {
     frequentItemsSearchList,
   },
   props: {
+    namespace: {
+      type: String,
+      required: true,
+    },
     currentItem: {
       type: Object,
       required: true,
@@ -39,11 +43,14 @@ export default {
     };
   },
   computed: {
+    translations() {
+      return this.service.getTranslations(['loadingMessage', 'header']);
+    },
     frequentItems() {
-      return this.store.getFrequentProjects();
+      return this.store.getFrequentItems();
     },
     searchItems() {
-      return this.store.getSearchedProjects();
+      return this.store.getSearchedItems();
     },
   },
   created() {
@@ -85,25 +92,26 @@ export default {
       } else {
         this.toggleLoader(true);
         this.isLocalStorageFailed = false;
-        const items = this.service.getFrequentProjects();
+        const items = this.service.getFrequentItems();
         if (items) {
           this.toggleFrequentItemsList(true);
-          this.store.setFrequentProjects(items);
+          this.store.setFrequentItems(items);
         } else {
           this.isLocalStorageFailed = true;
           this.toggleFrequentItemsList(true);
-          this.store.setFrequentProjects([]);
+          this.store.setFrequentItems([]);
         }
       }
     },
     fetchSearchedItems(searchQuery) {
       this.searchQuery = searchQuery;
       this.toggleLoader(true);
-      this.service.getSearchedProjects(this.searchQuery)
+      this.service
+        .getSearchedItems(this.searchQuery)
         .then(res => res.json())
-        .then((results) => {
+        .then(results => {
           this.toggleSearchItemsList(true);
-          this.store.setSearchedProjects(results);
+          this.store.setSearchedItems(results);
         })
         .catch(() => {
           this.isSearchFailed = true;
@@ -111,12 +119,12 @@ export default {
         });
     },
     logCurrentItemAccess() {
-      this.service.logProjectAccess(this.currentItem);
+      this.service.logItemAccess(this.currentItem);
     },
     handleSearchClear() {
       this.searchQuery = '';
       this.toggleFrequentItemsList(true);
-      this.store.clearSearchedProjects();
+      this.store.clearSearchedItems();
     },
     handleSearchFailure() {
       this.isSearchFailed = true;
@@ -133,13 +141,13 @@ export default {
       class="loading-animation prepend-top-20"
       size="2"
       v-if="isLoadingItems"
-      :label="s__('ProjectsDropdown|Loading projects')"
+      :label="translations.loadingMessage"
     />
     <div
       class="section-header"
       v-if="isItemsListVisible"
     >
-      {{ s__('ProjectsDropdown|Frequently visited') }}
+      {{ translations.header }}
     </div>
     <frequent-items-list
       v-if="isItemsListVisible"

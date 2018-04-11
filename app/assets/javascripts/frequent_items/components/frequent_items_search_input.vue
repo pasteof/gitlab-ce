@@ -1,47 +1,47 @@
 <script>
-  import _ from 'underscore';
-  import eventHub from '../event_hub';
+import _ from 'underscore';
+import eventHub from '../event_hub';
 
-  export default {
-    data() {
-      return {
-        searchQuery: '',
-      };
+export default {
+  data() {
+    return {
+      searchQuery: '',
+    };
+  },
+  watch: {
+    searchQuery() {
+      this.handleInput();
     },
-    watch: {
-      searchQuery() {
-        this.handleInput();
-      },
+  },
+  mounted() {
+    eventHub.$on('dropdownOpen', this.setFocus);
+  },
+  beforeDestroy() {
+    eventHub.$off('dropdownOpen', this.setFocus);
+  },
+  methods: {
+    setFocus() {
+      this.$refs.search.focus();
     },
-    mounted() {
-      eventHub.$on('dropdownOpen', this.setFocus);
+    emitSearchEvents() {
+      if (this.searchQuery) {
+        eventHub.$emit('searchItems', this.searchQuery);
+      } else {
+        eventHub.$emit('searchCleared');
+      }
     },
-    beforeDestroy() {
-      eventHub.$off('dropdownOpen', this.setFocus);
-    },
-    methods: {
-      setFocus() {
-        this.$refs.search.focus();
-      },
-      emitSearchEvents() {
-        if (this.searchQuery) {
-          eventHub.$emit('searchItems', this.searchQuery);
-        } else {
-          eventHub.$emit('searchCleared');
-        }
-      },
-      /**
-       * Callback function within _.debounce is intentionally
-       * kept as ES5 `function() {}` instead of ES6 `() => {}`
-       * as it otherwise messes up function context
-       * and component reference is no longer accessible via `this`
-       */
-      // eslint-disable-next-line func-names
-      handleInput: _.debounce(function () {
-        this.emitSearchEvents();
-      }, 500),
-    },
-  };
+    /**
+     * Callback function within _.debounce is intentionally
+     * kept as ES5 `function() {}` instead of ES6 `() => {}`
+     * as it otherwise messes up function context
+     * and component reference is no longer accessible via `this`
+     */
+    // eslint-disable-next-line func-names
+    handleInput: _.debounce(function() {
+      this.emitSearchEvents();
+    }, 500),
+  },
+};
 </script>
 
 <template>
