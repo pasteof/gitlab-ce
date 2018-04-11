@@ -1,18 +1,20 @@
 import $ from 'jquery';
 import Vue from 'vue';
 
-import Translate from '../vue_shared/translate';
-import eventHub from './event_hub';
-import ProjectsService from './service/projects_service';
-import ProjectsStore from './store/projects_store';
+import { s__ } from '~/locale';
+import Translate from '~/vue_shared/translate';
+import eventHub from '~/frequent_items/event_hub';
+import FrequentItemsService from '~/frequent_items/services/frequent_items_service';
+import FrequentItemsStore from '~/frequent_items/stores/frequent_items_store';
 
-import projectsDropdownApp from './components/app.vue';
+import frequentItems from './components/app.vue';
 
 Vue.use(Translate);
 
 document.addEventListener('DOMContentLoaded', () => {
   const el = document.getElementById('js-projects-dropdown');
   const navEl = document.getElementById('nav-projects-dropdown');
+  const frequentProjectsNamespace = 'projects';
 
   // Don't do anything if element doesn't exist (No projects dropdown)
   // This is for when the user accesses GitLab without logging in
@@ -28,12 +30,12 @@ document.addEventListener('DOMContentLoaded', () => {
   new Vue({
     el,
     components: {
-      projectsDropdownApp,
+      frequentItems,
     },
     data() {
       const dataset = this.$options.el.dataset;
-      const store = new ProjectsStore();
-      const service = new ProjectsService(dataset.userName);
+      const store = new FrequentItemsStore();
+      const service = new FrequentItemsService(dataset.userName);
 
       const project = {
         id: Number(dataset.projectId),
@@ -49,14 +51,15 @@ document.addEventListener('DOMContentLoaded', () => {
         service,
         state: store.state,
         currentUserName: dataset.userName,
-        currentProject: project,
+        currentItem: project,
       };
     },
     render(createElement) {
-      return createElement('projects-dropdown-app', {
+      return createElement('frequent-items', {
         props: {
+          namespace: frequentProjectsNamespace,
           currentUserName: this.currentUserName,
-          currentProject: this.currentProject,
+          currentItem: this.currentItem,
           store: this.store,
           service: this.service,
         },

@@ -1,13 +1,13 @@
 <script>
   import { s__ } from '../../locale';
-  import projectsListItem from './projects_list_item.vue';
+  import frequentItemsListItem from './frequent_items_list_item.vue';
 
   export default {
     components: {
-      projectsListItem,
+      frequentItemsListItem,
     },
     props: {
-      projects: {
+      items: {
         type: Array,
         required: true,
       },
@@ -15,10 +15,14 @@
         type: Boolean,
         required: true,
       },
+      service: {
+        type: Object,
+        required: true,
+      },
     },
     computed: {
       isListEmpty() {
-        return this.projects.length === 0;
+        return this.items.length === 0;
       },
       listEmptyMessage() {
         return this.localStorageFailed ?
@@ -42,15 +46,15 @@
       >
         {{ listEmptyMessage }}
       </li>
-      <projects-list-item
+      <frequent-items-list-item
         v-else
-        v-for="(project, index) in projects"
+        v-for="(item, index) in items"
         :key="index"
-        :project-id="project.id"
-        :project-name="project.name"
-        :namespace="project.namespace"
-        :web-url="project.webUrl"
-        :avatar-url="project.avatarUrl"
+        :item-id="item.id"
+        :item-name="item.name"
+        :namespace="item.namespace"
+        :web-url="item.webUrl"
+        :avatar-url="item.avatarUrl"
       />
     </ul>
   </div>

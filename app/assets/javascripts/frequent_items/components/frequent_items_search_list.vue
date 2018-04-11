@@ -1,17 +1,16 @@
 <script>
-import { s__ } from '../../locale';
-import projectsListItem from './projects_list_item.vue';
+import frequentItemsListItem from './frequent_items_list_item.vue';
 
 export default {
   components: {
-    projectsListItem,
+    frequentItemsListItem,
   },
   props: {
     matcher: {
       type: String,
       required: true,
     },
-    projects: {
+    items: {
       type: Array,
       required: true,
     },
@@ -19,15 +18,25 @@ export default {
       type: Boolean,
       required: true,
     },
+    service: {
+      type: Object,
+      required: true,
+    },
   },
   computed: {
+    translations() {
+      return this.service.getTranslations([
+        'searchListErrorMessage',
+        'searchListEmptyMessage',
+      ]);
+    },
     isListEmpty() {
-      return this.projects.length === 0;
+      return this.items.length === 0;
     },
     listEmptyMessage() {
       return this.searchFailed ?
-        s__('ProjectsDropdown|Something went wrong on our end.') :
-        s__('ProjectsDropdown|Sorry, no projects matched your search');
+        this.translations.searchListErrorMessage :
+        this.translations.searchListEmptyMessage;
     },
   },
 };
@@ -47,15 +56,15 @@ export default {
       >
         {{ listEmptyMessage }}
       </li>
-      <projects-list-item
+      <frequent-items-list-item
         v-else
-        v-for="(project, index) in projects"
+        v-for="(item, index) in items"
         :key="index"
-        :project-id="project.id"
-        :project-name="project.name"
-        :namespace="project.namespace"
-        :web-url="project.webUrl"
-        :avatar-url="project.avatarUrl"
+        :item-id="item.id"
+        :item-name="item.name"
+        :namespace="item.namespace"
+        :web-url="item.webUrl"
+        :avatar-url="item.avatarUrl"
         :matcher="matcher"
       />
     </ul>

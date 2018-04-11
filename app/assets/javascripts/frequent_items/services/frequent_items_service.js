@@ -6,7 +6,7 @@ import bp from '../../breakpoints';
 import Api from '../../api';
 import AccessorUtilities from '../../lib/utils/accessor';
 
-import { FREQUENT_PROJECTS, HOUR_IN_MS, STORAGE_KEY } from '../constants';
+import { FREQUENT_ITEMS, HOUR_IN_MS, STORAGE_KEY } from '../constants';
 
 Vue.use(VueResource);
 
@@ -84,7 +84,7 @@ export default class ProjectsService {
           // out of which only 5 projects with
           // highest value of `frequency` and most recent `lastAccessedOn`
           // are shown in projects dropdown
-          if (storedFrequentProjects.length === FREQUENT_PROJECTS.MAX_COUNT) {
+          if (storedFrequentProjects.length === FREQUENT_ITEMS.MAX_COUNT) {
             storedFrequentProjects.shift(); // Remove an item from head of array
           }
 
@@ -98,19 +98,19 @@ export default class ProjectsService {
 
   getTopFrequentProjects() {
     const storedFrequentProjects = JSON.parse(localStorage.getItem(this.storageKey));
-    let frequentProjectsCount = FREQUENT_PROJECTS.LIST_COUNT_DESKTOP;
+    let frequentProjectsCount = FREQUENT_ITEMS.LIST_COUNT_DESKTOP;
 
     if (!storedFrequentProjects) {
       return [];
     }
 
     if (bp.getBreakpointSize() === 'sm' ||
-        bp.getBreakpointSize() === 'xs') {
-      frequentProjectsCount = FREQUENT_PROJECTS.LIST_COUNT_MOBILE;
+      bp.getBreakpointSize() === 'xs') {
+      frequentProjectsCount = FREQUENT_ITEMS.LIST_COUNT_MOBILE;
     }
 
     const frequentProjects = storedFrequentProjects
-      .filter(project => project.frequency >= FREQUENT_PROJECTS.ELIGIBLE_FREQUENCY);
+      .filter(project => project.frequency >= FREQUENT_ITEMS.ELIGIBLE_FREQUENCY);
 
     // Sort all frequent projects in decending order of frequency
     // and then by lastAccessedOn with recent most first

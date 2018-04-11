@@ -11,11 +11,11 @@
         type: String,
         required: false,
       },
-      projectId: {
+      itemId: {
         type: Number,
         required: true,
       },
-      projectName: {
+      itemName: {
         type: String,
         required: true,
       },
@@ -41,23 +41,23 @@
       highlightedProjectName() {
         if (this.matcher) {
           const matcherRegEx = new RegExp(this.matcher, 'gi');
-          const matches = this.projectName.match(matcherRegEx);
+          const matches = this.itemName.match(matcherRegEx);
 
           if (matches && matches.length > 0) {
-            return this.projectName.replace(matches[0], `<b>${matches[0]}</b>`);
+            return this.itemName.replace(matches[0], `<b>${matches[0]}</b>`);
           }
         }
-        return this.projectName;
+        return this.itemName;
       },
       /**
-       * Smartly truncates project namespace by doing two things;
-       * 1. Only include Group names in path by removing project name
+       * Smartly truncates item namespace by doing two things;
+       * 1. Only include Group names in path by removing item name
        * 2. Only include first and last group names in the path
        *    when namespace has more than 2 groups present
        *
-       * First part (removal of project name from namespace) can be
+       * First part (removal of item name from namespace) can be
        * done from backend but doing so involves migration of
-       * existing project namespaces which is not wise thing to do.
+       * existing item namespaces which is not wise thing to do.
        */
       truncatedNamespace() {
         const namespaceArr = this.namespace.split(' / ');
@@ -93,8 +93,8 @@
         <identicon
           v-else
           size-class="s32"
-          :entity-id="projectId"
-          :entity-name="projectName"
+          :entity-id="itemId"
+          :entity-name="itemName"
         />
       </div>
       <div
@@ -102,7 +102,7 @@
       >
         <div
           class="project-title"
-          :title="projectName"
+          :title="itemName"
           v-html="highlightedProjectName"
         >
         </div>

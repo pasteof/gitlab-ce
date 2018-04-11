@@ -1,4 +1,4 @@
-export const FREQUENT_PROJECTS = {
+export const FREQUENT_ITEMS = {
   MAX_COUNT: 20,
   LIST_COUNT_DESKTOP: 5,
   LIST_COUNT_MOBILE: 3,

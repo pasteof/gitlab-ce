@@ -3,20 +3,19 @@ import bs from '../../breakpoints';
 import eventHub from '../event_hub';
 import loadingIcon from '../../vue_shared/components/loading_icon.vue';
 
-import projectsListFrequent from './projects_list_frequent.vue';
-import projectsListSearch from './projects_list_search.vue';
-
-import search from './search.vue';
+import frequentItemsSearchInput from './frequent_items_search_input.vue';
+import frequentItemsList from './frequent_items_list.vue';
+import frequentItemsSearchList from './frequent_items_search_list.vue';
 
 export default {
   components: {
-    search,
+    frequentItemsSearchInput,
     loadingIcon,
-    projectsListFrequent,
-    projectsListSearch,
+    frequentItemsList,
+    frequentItemsSearchList,
   },
   props: {
-    currentProject: {
+    currentItem: {
       type: Object,
       required: true,
     },
@@ -31,8 +30,8 @@ export default {
   },
   data() {
     return {
-      isLoadingProjects: false,
-      isFrequentsListVisible: false,
+      isLoadingItems: false,
+      isItemsListVisible: false,
       isSearchListVisible: false,
       isLocalStorageFailed: false,
       isSearchFailed: false,
@@ -40,88 +39,88 @@ export default {
     };
   },
   computed: {
-    frequentProjects() {
+    frequentItems() {
       return this.store.getFrequentProjects();
     },
-    searchProjects() {
+    searchItems() {
       return this.store.getSearchedProjects();
     },
   },
   created() {
-    if (this.currentProject.id) {
-      this.logCurrentProjectAccess();
+    if (this.currentItem.id) {
+      this.logCurrentItemAccess();
     }
 
-    eventHub.$on('dropdownOpen', this.fetchFrequentProjects);
-    eventHub.$on('searchProjects', this.fetchSearchedProjects);
+    eventHub.$on('dropdownOpen', this.fetchFrequentItems);
+    eventHub.$on('searchItems', this.fetchSearchedItems);
     eventHub.$on('searchCleared', this.handleSearchClear);
     eventHub.$on('searchFailed', this.handleSearchFailure);
   },
   beforeDestroy() {
-    eventHub.$off('dropdownOpen', this.fetchFrequentProjects);
-    eventHub.$off('searchProjects', this.fetchSearchedProjects);
+    eventHub.$off('dropdownOpen', this.fetchFrequentItems);
+    eventHub.$off('searchItems', this.fetchSearchedItems);
     eventHub.$off('searchCleared', this.handleSearchClear);
     eventHub.$off('searchFailed', this.handleSearchFailure);
   },
   methods: {
-    toggleFrequentProjectsList(state) {
-      this.isLoadingProjects = !state;
+    toggleFrequentItemsList(state) {
+      this.isLoadingItems = !state;
       this.isSearchListVisible = !state;
-      this.isFrequentsListVisible = state;
+      this.isItemsListVisible = state;
     },
-    toggleSearchProjectsList(state) {
-      this.isLoadingProjects = !state;
-      this.isFrequentsListVisible = !state;
+    toggleSearchItemsList(state) {
+      this.isLoadingItems = !state;
+      this.isItemsListVisible = !state;
       this.isSearchListVisible = state;
     },
     toggleLoader(state) {
-      this.isFrequentsListVisible = !state;
+      this.isItemsListVisible = !state;
       this.isSearchListVisible = !state;
-      this.isLoadingProjects = state;
+      this.isLoadingItems = state;
     },
-    fetchFrequentProjects() {
+    fetchFrequentItems() {
       const screenSize = bs.getBreakpointSize();
       if (this.searchQuery && (screenSize !== 'sm' && screenSize !== 'xs')) {
-        this.toggleSearchProjectsList(true);
+        this.toggleSearchItemsList(true);
       } else {
         this.toggleLoader(true);
         this.isLocalStorageFailed = false;
-        const projects = this.service.getFrequentProjects();
-        if (projects) {
-          this.toggleFrequentProjectsList(true);
-          this.store.setFrequentProjects(projects);
+        const items = this.service.getFrequentProjects();
+        if (items) {
+          this.toggleFrequentItemsList(true);
+          this.store.setFrequentProjects(items);
         } else {
           this.isLocalStorageFailed = true;
-          this.toggleFrequentProjectsList(true);
+          this.toggleFrequentItemsList(true);
           this.store.setFrequentProjects([]);
         }
       }
     },
-    fetchSearchedProjects(searchQuery) {
+    fetchSearchedItems(searchQuery) {
       this.searchQuery = searchQuery;
       this.toggleLoader(true);
       this.service.getSearchedProjects(this.searchQuery)
         .then(res => res.json())
         .then((results) => {
-          this.toggleSearchProjectsList(true);
+          this.toggleSearchItemsList(true);
           this.store.setSearchedProjects(results);
         })
         .catch(() => {
           this.isSearchFailed = true;
-          this.toggleSearchProjectsList(true);
+          this.toggleSearchItemsList(true);
         });
     },
-    logCurrentProjectAccess() {
-      this.service.logProjectAccess(this.currentProject);
+    logCurrentItemAccess() {
+      this.service.logProjectAccess(this.currentItem);
     },
     handleSearchClear() {
       this.searchQuery = '';
-      this.toggleFrequentProjectsList(true);
+      this.toggleFrequentItemsList(true);
       this.store.clearSearchedProjects();
     },
     handleSearchFailure() {
       this.isSearchFailed = true;
-      this.toggleSearchProjectsList(true);
+      this.toggleSearchItemsList(true);
     },
   },
 };
@@ -129,29 +128,31 @@ export default {
 
 <template>
   <div>
-    <search/>
+    <frequent-items-search-input />
     <loading-icon
       class="loading-animation prepend-top-20"
       size="2"
-      v-if="isLoadingProjects"
+      v-if="isLoadingItems"
       :label="s__('ProjectsDropdown|Loading projects')"
     />
     <div
       class="section-header"
-      v-if="isFrequentsListVisible"
+      v-if="isItemsListVisible"
     >
       {{ s__('ProjectsDropdown|Frequently visited') }}
     </div>
-    <projects-list-frequent
-      v-if="isFrequentsListVisible"
+    <frequent-items-list
+      v-if="isItemsListVisible"
       :local-storage-failed="isLocalStorageFailed"
-      :projects="frequentProjects"
+      :items="frequentItems"
+      :service="service"
     />
-    <projects-list-search
+    <frequent-items-search-list
       v-if="isSearchListVisible"
       :search-failed="isSearchFailed"
       :matcher="searchQuery"
-      :projects="searchProjects"
+      :items="searchItems"
+      :service="service"
     />
   </div>
 </template>

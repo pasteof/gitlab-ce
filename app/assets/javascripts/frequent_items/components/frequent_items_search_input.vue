@@ -25,7 +25,7 @@
       },
       emitSearchEvents() {
         if (this.searchQuery) {
-          eventHub.$emit('searchProjects', this.searchQuery);
+          eventHub.$emit('searchItems', this.searchQuery);
         } else {
           eventHub.$emit('searchCleared');
         }
