@@ -38,7 +38,7 @@ export default {
     hasAvatar() {
       return this.avatarUrl !== null;
     },
-    highlightedProjectName() {
+    highlightedItemName() {
       if (this.matcher) {
         const matcherRegEx = new RegExp(this.matcher, 'gi');
         const matches = this.itemName.match(matcherRegEx);
@@ -103,7 +103,7 @@ export default {
         <div
           class="frequent-items-item-title"
           :title="itemName"
-          v-html="highlightedProjectName"
+          v-html="highlightedItemName"
         >
         </div>
         <div

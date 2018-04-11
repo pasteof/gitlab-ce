@@ -39,15 +39,15 @@ describe('FrequentItemsListItemComponent', () => {
       });
     });
 
-    describe('highlightedProjectName', () => {
+    describe('highlightedItemName', () => {
       it('should enclose part of project name in <b> & </b> which matches with `matcher` prop', () => {
         vm.matcher = 'lab';
-        expect(vm.highlightedProjectName).toContain('<b>Lab</b>');
+        expect(vm.highlightedItemName).toContain('<b>Lab</b>');
       });
 
       it('should return project name as it is if `matcher` is not available', () => {
         vm.matcher = null;
-        expect(vm.highlightedProjectName).toBe(mockProject.name);
+        expect(vm.highlightedItemName).toBe(mockProject.name);
       });
     });
 
