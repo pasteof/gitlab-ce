@@ -30,7 +30,7 @@ export const mockRawProject = {
   avatar_url: null,
 };
 
-export const mockFrequents = [
+export const mockFrequentProjects = [
   {
     id: 1,
     name: 'GitLab Community Edition',
@@ -68,7 +68,7 @@ export const mockFrequents = [
   },
 ];
 
-export const unsortedFrequents = [
+export const unsortedFrequentProjects = [
   { id: 1, frequency: 12, lastAccessedOn: 1491400843391 },
   { id: 2, frequency: 14, lastAccessedOn: 1488240890738 },
   { id: 3, frequency: 44, lastAccessedOn: 1497675908472 },
@@ -82,10 +82,10 @@ export const unsortedFrequents = [
 
 /**
  * This const has a specific order which tests authenticity
- * of `ProjectsService.getTopFrequentProjects` method so
+ * of `FrequentItemsService.getTopFrequentItems` method so
  * DO NOT change order of items in this const.
  */
-export const sortedFrequents = [
+export const sortedFrequentProjects = [
   { id: 10, frequency: 46, lastAccessedOn: 1483251641543 },
   { id: 3, frequency: 44, lastAccessedOn: 1497675908472 },
   { id: 7, frequency: 42, lastAccessedOn: 1486815299875 },

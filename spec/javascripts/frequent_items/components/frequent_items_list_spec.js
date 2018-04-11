@@ -4,7 +4,7 @@ import frequentItemsListComponent from '~/frequent_items/components/frequent_ite
 import FrequentItemsService from '~/frequent_items/services/frequent_items_service';
 
 import mountComponent from 'spec/helpers/vue_mount_component_helper';
-import { currentSession, mockFrequents } from '../mock_data';
+import { currentSession, mockFrequentProjects } from '../mock_data';
 
 const projectsNamespace = 'projects';
 const session = currentSession[projectsNamespace];
@@ -14,7 +14,7 @@ const createComponent = () => {
   const service = new FrequentItemsService(projectsNamespace, session.username);
 
   return mountComponent(Component, {
-    items: mockFrequents,
+    items: mockFrequentProjects,
     localStorageFailed: false,
     service,
   });
@@ -37,7 +37,7 @@ describe('FrequentItemsListComponent', () => {
         vm.items = [];
         expect(vm.isListEmpty).toBeTruthy();
 
-        vm.items = mockFrequents;
+        vm.items = mockFrequentProjects;
         expect(vm.isListEmpty).toBeFalsy();
       });
     });
@@ -55,7 +55,7 @@ describe('FrequentItemsListComponent', () => {
 
   describe('template', () => {
     it('should render component element with list of items', (done) => {
-      vm.items = mockFrequents;
+      vm.items = mockFrequentProjects;
 
       Vue.nextTick(() => {
         expect(vm.$el.classList.contains('frequent-items-list-container')).toBeTruthy();
