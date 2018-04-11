@@ -22,7 +22,6 @@ describe('ItemsStore', () => {
       expect(store.getFrequentItems().length).toBe(1);
       expect(store.getFrequentItems()[0].id).toBe(mockGroup.id);
     });
-
   });
 
   describe('setSearchedItems', () => {
