@@ -853,12 +853,6 @@ header.header-content .dropdown-menu.frequent-items-dropdown-menu {
     }
   }
 
-  .frequent-items-list-container,
-  .frequent-items-search-container {
-    padding: 8px 0;
-    overflow-y: auto;
-  }
-
   .section-header,
   .frequent-items-list-container li.section-empty,
   .frequent-items-search-container li.section-empty {
@@ -869,6 +863,9 @@ header.header-content .dropdown-menu.frequent-items-dropdown-menu {
 
   .frequent-items-list-container,
   .frequent-items-search-container {
+    padding: 8px 0;
+    overflow-y: auto;
+
     li.section-empty.section-failure {
       color: $callout-danger-color;
     }
