@@ -41,7 +41,7 @@ export default {
 
 <template>
   <div
-    class="projects-list-search-container"
+    class="frequent-items-search-container"
   >
     <ul
       class="list-unstyled"

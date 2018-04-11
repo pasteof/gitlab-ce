@@ -37,7 +37,7 @@ export default {
 
 <template>
   <div
-    class="projects-list-frequent-container"
+    class="frequent-items-list-container"
   >
     <ul
       class="list-unstyled"

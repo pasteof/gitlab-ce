@@ -76,14 +76,14 @@ export default {
 
 <template>
   <li
-    class="projects-list-item-container"
+    class="frequent-items-list-item-container"
   >
     <a
       class="clearfix"
       :href="webUrl"
     >
       <div
-        class="project-item-avatar-container"
+        class="frequent-items-item-avatar-container"
       >
         <img
           v-if="hasAvatar"
@@ -98,16 +98,16 @@ export default {
         />
       </div>
       <div
-        class="project-item-metadata-container"
+        class="frequent-items-item-metadata-container"
       >
         <div
-          class="project-title"
+          class="frequent-items-item-title"
           :title="itemName"
           v-html="highlightedProjectName"
         >
         </div>
         <div
-          class="project-namespace"
+          class="frequent-items-item-namespace"
           :title="namespace"
         >{{ truncatedNamespace }}</div>
       </div>
