@@ -1,4 +1,4 @@
-export default class ItemsStore {
+export default class FrequentItemsStore {
   constructor() {
     this.state = {};
     this.state.frequentItems = [];

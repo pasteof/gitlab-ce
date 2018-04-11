@@ -11,7 +11,7 @@ import { FREQUENT_ITEMS, HOUR_IN_MS, STORAGE_KEY, TRANSLATION_KEYS } from '../co
 
 Vue.use(VueResource);
 
-export default class ItemsService {
+export default class FrequentItemsService {
   constructor(namespace, currentUserName) {
     this.namespace = namespace;
     this.currentUserName = currentUserName;
