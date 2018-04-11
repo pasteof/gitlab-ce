@@ -13,7 +13,7 @@ module QA
         view 'app/views/layouts/nav/_dashboard.html.haml' do
           element :admin_area_link
           element :projects_dropdown
-          element :groups_link
+          element :groups_dropdown
         end
 
         view 'app/views/layouts/nav/projects_dropdown/_show.html.haml' do
@@ -22,7 +22,13 @@ module QA
         end
 
         def go_to_groups
-          within_top_menu { click_element :groups_link }
+          within_top_menu do
+            click_element :groups_dropdown
+          end
+
+          page.within('.qa-groups-dropdown-sidebar') do
+            click_element :your_groups_link
+          end
         end
 
         def go_to_projects
