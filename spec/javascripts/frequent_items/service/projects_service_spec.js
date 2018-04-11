@@ -2,8 +2,8 @@ import Vue from 'vue';
 import VueResource from 'vue-resource';
 
 import bp from '~/breakpoints';
-import ProjectsService from '~/projects_dropdown/service/projects_service';
-import { FREQUENT_PROJECTS } from '~/projects_dropdown/constants';
+import ProjectsService from '~/frequent_items/service/projects_service';
+import { FREQUENT_PROJECTS } from '~/frequent_items/constants';
 import { currentSession, unsortedFrequents, sortedFrequents } from '../mock_data';
 
 Vue.use(VueResource);

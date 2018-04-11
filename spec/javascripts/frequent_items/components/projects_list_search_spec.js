@@ -1,6 +1,6 @@
 import Vue from 'vue';
 
-import projectsListSearchComponent from '~/projects_dropdown/components/projects_list_search.vue';
+import projectsListSearchComponent from '~/frequent_items/components/frequent_items_search_list.vue';
 
 import mountComponent from 'spec/helpers/vue_mount_component_helper';
 import { mockProject } from '../mock_data';
@@ -53,9 +53,9 @@ describe('ProjectsListSearchComponent', () => {
       vm.projects = [mockProject];
 
       Vue.nextTick(() => {
-        expect(vm.$el.classList.contains('projects-list-search-container')).toBeTruthy();
+        expect(vm.$el.classList.contains('frequent-items-search-container')).toBeTruthy();
         expect(vm.$el.querySelectorAll('ul.list-unstyled').length).toBe(1);
-        expect(vm.$el.querySelectorAll('li.projects-list-item-container').length).toBe(1);
+        expect(vm.$el.querySelectorAll('li.frequent-items-list-item-container').length).toBe(1);
         done();
       });
     });
@@ -65,7 +65,7 @@ describe('ProjectsListSearchComponent', () => {
 
       Vue.nextTick(() => {
         expect(vm.$el.querySelectorAll('li.section-empty').length).toBe(1);
-        expect(vm.$el.querySelectorAll('li.projects-list-item-container').length).toBe(0);
+        expect(vm.$el.querySelectorAll('li.frequent-items-list-item-container').length).toBe(0);
         done();
       });
     });
@@ -76,7 +76,7 @@ describe('ProjectsListSearchComponent', () => {
 
       Vue.nextTick(() => {
         expect(vm.$el.querySelectorAll('li.section-empty.section-failure').length).toBe(1);
-        expect(vm.$el.querySelectorAll('li.projects-list-item-container').length).toBe(0);
+        expect(vm.$el.querySelectorAll('li.frequent-items-list-item-container').length).toBe(0);
         done();
       });
     });

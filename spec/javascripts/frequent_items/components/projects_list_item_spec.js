@@ -1,6 +1,6 @@
 import Vue from 'vue';
 
-import projectsListItemComponent from '~/projects_dropdown/components/projects_list_item.vue';
+import projectsListItemComponent from '~/frequent_items/components/frequent_items_list_item.vue';
 
 import mountComponent from 'spec/helpers/vue_mount_component_helper';
 import { mockProject } from '../mock_data';
@@ -66,12 +66,12 @@ describe('ProjectsListItemComponent', () => {
 
   describe('template', () => {
     it('should render component element', () => {
-      expect(vm.$el.classList.contains('projects-list-item-container')).toBeTruthy();
+      expect(vm.$el.classList.contains('frequent-items-list-item-container')).toBeTruthy();
       expect(vm.$el.querySelectorAll('a').length).toBe(1);
-      expect(vm.$el.querySelectorAll('.project-item-avatar-container').length).toBe(1);
-      expect(vm.$el.querySelectorAll('.project-item-metadata-container').length).toBe(1);
-      expect(vm.$el.querySelectorAll('.project-title').length).toBe(1);
-      expect(vm.$el.querySelectorAll('.project-namespace').length).toBe(1);
+      expect(vm.$el.querySelectorAll('.frequent-items-item-avatar-container').length).toBe(1);
+      expect(vm.$el.querySelectorAll('.frequent-items-item-metadata-container').length).toBe(1);
+      expect(vm.$el.querySelectorAll('.frequent-items-item-title').length).toBe(1);
+      expect(vm.$el.querySelectorAll('.frequent-items-item-namespace').length).toBe(1);
     });
   });
 });

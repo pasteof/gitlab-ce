@@ -1,4 +1,4 @@
-import ProjectsStore from '~/projects_dropdown/store/projects_store';
+import ProjectsStore from '~/frequent_items/store/projects_store';
 import { mockProject, mockRawProject } from '../mock_data';
 
 describe('ProjectsStore', () => {

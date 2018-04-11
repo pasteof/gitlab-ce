@@ -1,10 +1,10 @@
 import Vue from 'vue';
 
 import bp from '~/breakpoints';
-import appComponent from '~/projects_dropdown/components/app.vue';
-import eventHub from '~/projects_dropdown/event_hub';
-import ProjectsStore from '~/projects_dropdown/store/projects_store';
-import ProjectsService from '~/projects_dropdown/service/projects_service';
+import appComponent from '~/frequent_items/components/app.vue';
+import eventHub from '~/frequent_items/event_hub';
+import ProjectsService from '~/frequent_items/service/frequent_items_service';
+import ProjectsStore from '~/frequent_items/store/frequent_items_store';
 
 import mountComponent from 'spec/helpers/vue_mount_component_helper';
 import { currentSession, mockProject, mockRawProject } from '../mock_data';
@@ -331,7 +331,7 @@ describe('AppComponent', () => {
     it('should render frequent projects list', (done) => {
       vm.toggleFrequentProjectsList(true);
       Vue.nextTick(() => {
-        expect(vm.$el.querySelector('.projects-list-frequent-container')).toBeDefined();
+        expect(vm.$el.querySelector('.frequent-items-list-container')).toBeDefined();
         done();
       });
     });
@@ -340,7 +340,7 @@ describe('AppComponent', () => {
       vm.toggleSearchProjectsList(true);
       Vue.nextTick(() => {
         expect(vm.$el.querySelector('.section-header')).toBe(null);
-        expect(vm.$el.querySelector('.projects-list-search-container')).toBeDefined();
+        expect(vm.$el.querySelector('.frequent-items-search-container')).toBeDefined();
         done();
       });
     });

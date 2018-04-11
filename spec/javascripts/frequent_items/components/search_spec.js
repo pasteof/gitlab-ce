@@ -1,7 +1,7 @@
 import Vue from 'vue';
 
-import searchComponent from '~/projects_dropdown/components/search.vue';
-import eventHub from '~/projects_dropdown/event_hub';
+import searchComponent from '~/frequent_items/components/frequent_items_search_input.vue';
+import eventHub from '~/frequent_items/event_hub';
 
 import mountComponent from 'spec/helpers/vue_mount_component_helper';
 
