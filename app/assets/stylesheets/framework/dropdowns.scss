@@ -902,9 +902,16 @@ header.header-content .dropdown-menu.frequent-items-dropdown-menu {
 }
 
 .frequent-items-list-item-container {
-  .frequent-items-item-avatar-container
+  .frequent-items-item-avatar-container,
   .frequent-items-item-metadata-container {
     float: left;
+  }
+
+  .frequent-items-item-metadata-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 32px;
   }
 
   .frequent-items-item-title,

@@ -107,6 +107,7 @@ export default {
         >
         </div>
         <div
+          v-if="truncatedNamespace"
           class="frequent-items-item-namespace"
           :title="namespace"
         >{{ truncatedNamespace }}</div>
