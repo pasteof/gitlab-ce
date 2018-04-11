@@ -59,15 +59,15 @@ export default {
     }
 
     eventHub.$on('dropdownOpen', this.fetchFrequentItems);
-    eventHub.$on('searchItems', this.fetchSearchedItems);
-    eventHub.$on('searchCleared', this.handleSearchClear);
-    eventHub.$on('searchFailed', this.handleSearchFailure);
+    eventHub.$on(`${this.namespace}-searchItems`, this.fetchSearchedItems);
+    eventHub.$on(`${this.namespace}-searchCleared`, this.handleSearchClear);
+    eventHub.$on(`${this.namespace}-searchFailed`, this.handleSearchFailure);
   },
   beforeDestroy() {
     eventHub.$off('dropdownOpen', this.fetchFrequentItems);
-    eventHub.$off('searchItems', this.fetchSearchedItems);
-    eventHub.$off('searchCleared', this.handleSearchClear);
-    eventHub.$off('searchFailed', this.handleSearchFailure);
+    eventHub.$off(`${this.namespace}-searchItems`, this.fetchSearchedItems);
+    eventHub.$off(`${this.namespace}-searchCleared`, this.handleSearchClear);
+    eventHub.$off(`${this.namespace}-searchFailed`, this.handleSearchFailure);
   },
   methods: {
     toggleFrequentItemsList(state) {

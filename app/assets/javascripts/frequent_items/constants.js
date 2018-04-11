@@ -9,6 +9,7 @@ export const HOUR_IN_MS = 3600000;
 
 export const STORAGE_KEY = {
   projects: 'frequent-projects',
+  groups: 'frequent-groups',
 };
 
 export const TRANSLATION_KEYS = {
@@ -20,5 +21,14 @@ export const TRANSLATION_KEYS = {
     searchListErrorMessage: 'ProjectsDropdown|Something went wrong on our end.',
     searchListEmptyMessage: 'ProjectsDropdown|Sorry, no projects matched your search',
     searchInputPlaceholder: 'ProjectsDropdown|Search your projects',
+  },
+  groups: {
+    loadingMessage: 'GroupsDropdown|Loading groups',
+    header: 'GroupsDropdown|Frequently visited',
+    itemListErrorMessage: 'GroupsDropdown|This feature requires browser localStorage support',
+    itemListEmptyMessage: 'GroupsDropdown|Groups you visit often will appear here',
+    searchListErrorMessage: 'GroupsDropdown|Something went wrong on our end.',
+    searchListEmptyMessage: 'GroupsDropdown|Sorry, no groups matched your search',
+    searchInputPlaceholder: 'GroupsDropdown|Search your groups',
   },
 };

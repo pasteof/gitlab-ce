@@ -36,9 +36,9 @@ export default {
     },
     emitSearchEvents() {
       if (this.searchQuery) {
-        eventHub.$emit('searchItems', this.searchQuery);
+        eventHub.$emit(`${this.service.namespace}-searchItems`, this.searchQuery);
       } else {
-        eventHub.$emit('searchCleared');
+        eventHub.$emit(`${this.service.namespace}-searchCleared`);
       }
     },
     /**

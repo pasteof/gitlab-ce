@@ -1,4 +1,4 @@
-// TODO: Consolidate this with nav_groups_dropdown.js
+// TODO: Consolidate this with nav_projects_dropdown.js
 import $ from 'jquery';
 import Vue from 'vue';
 
@@ -12,11 +12,11 @@ import frequentItems from './components/app.vue';
 Vue.use(Translate);
 
 document.addEventListener('DOMContentLoaded', () => {
-  const el = document.getElementById('js-projects-dropdown');
-  const navEl = document.getElementById('nav-projects-dropdown');
-  const frequentItemsNamespace = 'projects';
+  const el = document.getElementById('js-groups-dropdown');
+  const navEl = document.getElementById('nav-groups-dropdown');
+  const frequentItemsNamespace = 'groups';
 
-  // Don't do anything if element doesn't exist (No projects dropdown)
+  // Don't do anything if element doesn't exist (No groups dropdown)
   // This is for when the user accesses GitLab without logging in
   if (!el || !navEl) {
     return;
@@ -37,12 +37,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const store = new FrequentItemsStore();
       const service = new FrequentItemsService(frequentItemsNamespace, dataset.userName);
 
-      const project = {
-        id: Number(dataset.projectId),
-        name: dataset.projectName,
-        namespace: dataset.projectNamespace,
-        webUrl: dataset.projectWebUrl,
-        avatarUrl: dataset.projectAvatarUrl || null,
+      const group = {
+        id: Number(dataset.groupId),
+        name: dataset.groupName,
+        namespace: dataset.groupNamespace,
+        webUrl: dataset.groupWebUrl,
+        avatarUrl: dataset.groupAvatarUrl || null,
         lastAccessedOn: Date.now(),
       };
 
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
         service,
         state: store.state,
         currentUserName: dataset.userName,
-        currentItem: project,
+        currentItem: group,
       };
     },
     render(createElement) {

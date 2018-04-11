@@ -18,17 +18,22 @@ export default class ItemsService {
     this.isLocalStorageAvailable = AccessorUtilities.isLocalStorageAccessSafe();
     this.storageKey = `${this.currentUserName}/${STORAGE_KEY[namespace]}`;
     // TODO: Make this flexible
-    this.itemsPath = Vue.resource(Api.buildUrl(Api.projectsPath));
+    this.itemsPath = Vue.resource(Api.buildUrl(Api[`${namespace}Path`]));
   }
 
   getSearchedItems(searchQuery) {
-    return this.itemsPath.get({
+    const params = {
       simple: true,
       per_page: 20,
       membership: !!gon.current_user_id,
-      order_by: 'last_activity_at',
       search: searchQuery,
-    });
+    };
+
+    if (this.namespace === 'projects') {
+      params.order_by = 'last_activity_at';
+    }
+
+    return this.itemsPath.get(params);
   }
 
   getFrequentItems() {

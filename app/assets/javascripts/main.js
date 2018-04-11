@@ -30,7 +30,7 @@ import LazyLoader from './lazy_loader';
 import initLogoAnimation from './logo';
 import './milestone_select';
 import './frequent_items/nav_projects_dropdown';
-// import './frequent_items/nav_groups_dropdown';
+import './frequent_items/nav_groups_dropdown';
 import initBreadcrumbs from './breadcrumb';
 
 import initDispatcher from './dispatcher';

@@ -17,7 +17,7 @@ export default class ItemsStore {
     this.state.searchedItems = rawItems.map(rawItem => ({
       id: rawItem.id,
       name: rawItem.name,
-      namespace: rawItem.name_with_namespace,
+      namespace: rawItem.name_with_namespace || rawItem.full_name,
       webUrl: rawItem.web_url,
       avatarUrl: rawItem.avatar_url,
     }));
