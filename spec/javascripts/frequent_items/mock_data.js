@@ -1,4 +1,17 @@
 export const currentSession = {
+  groups: {
+    username: 'root',
+    storageKey: 'root/frequent-groups',
+    apiVersion: 'v4',
+    group: {
+      id: 1,
+      name: 'dummy-group',
+      namespace: 'dummy-parent-group',
+      webUrl: 'http://127.0.0.1/dummy-group',
+      avatarUrl: null,
+      lastAccessedOn: Date.now(),
+    },
+  },
   projects: {
     username: 'root',
     storageKey: 'root/frequent-projects',
@@ -13,6 +26,39 @@ export const currentSession = {
     },
   },
 };
+
+export const mockGroup = {
+  id: 1,
+  name: 'Commit451',
+  namespace: 'Commit451',
+  webUrl: 'http://127.0.0.1:3000/Commit451',
+  avatarUrl: null,
+};
+
+export const mockRawGroup = {
+  id: 1,
+  name: 'GitLab Community Edition',
+  full_name: 'gitlab-org / gitlab-ce',
+  web_url: 'http://127.0.0.1:3000/gitlab-org/gitlab-ce',
+  avatar_url: null,
+};
+
+export const mockFrequentGroups = [
+  {
+    id: 3,
+    name: 'Subgroup451',
+    namespace: 'Commit451 / Subgroup451',
+    webUrl: '/Commit451/Subgroup451',
+    avatarUrl: null,
+  },
+  {
+    id: 1,
+    name: 'Commit451',
+    namespace: 'Commit451',
+    webUrl: '/Commit451',
+    avatarUrl: null,
+  },
+];
 
 export const mockProject = {
   id: 1,

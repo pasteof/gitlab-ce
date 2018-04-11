@@ -7,7 +7,7 @@ import eventHub from '~/frequent_items/event_hub';
 import mountComponent from 'spec/helpers/vue_mount_component_helper';
 import { currentSession } from '../mock_data';
 
-const projectsNamespace = 'projects';
+const projectsNamespace = 'projects'; // can also use 'groups', but not useful to test both here
 const session = currentSession[projectsNamespace];
 
 const createComponent = () => {
@@ -41,7 +41,7 @@ describe('FrequentItemsSearchInputComponent', () => {
     });
 
     describe('emitSearchEvents', () => {
-      it('should emit `searchProjects` event via eventHub when `searchQuery` present', () => {
+      it('should emit `searchItems` event via eventHub when `searchQuery` present', () => {
         const searchQuery = 'test';
         spyOn(eventHub, '$emit');
         vm.searchQuery = searchQuery;

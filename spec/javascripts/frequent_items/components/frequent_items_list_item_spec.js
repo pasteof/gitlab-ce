@@ -3,7 +3,7 @@ import Vue from 'vue';
 import frequentItemsListItemComponent from '~/frequent_items/components/frequent_items_list_item.vue';
 
 import mountComponent from 'spec/helpers/vue_mount_component_helper';
-import { mockProject } from '../mock_data';
+import { mockProject } from '../mock_data'; // can also use 'mockGroup', but not useful to test here
 
 const createComponent = () => {
   const Component = Vue.extend(frequentItemsListItemComponent);
