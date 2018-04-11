@@ -19,5 +19,6 @@ export const TRANSLATION_KEYS = {
     itemListEmptyMessage: 'ProjectsDropdown|Projects you visit often will appear here',
     searchListErrorMessage: 'ProjectsDropdown|Something went wrong on our end.',
     searchListEmptyMessage: 'ProjectsDropdown|Sorry, no projects matched your search',
+    searchInputPlaceholder: 'ProjectsDropdown|Search your projects',
   },
 };

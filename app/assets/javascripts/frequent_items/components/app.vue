@@ -136,7 +136,9 @@ export default {
 
 <template>
   <div>
-    <frequent-items-search-input />
+    <frequent-items-search-input
+      :service="service"
+    />
     <loading-icon
       class="loading-animation prepend-top-20"
       size="2"

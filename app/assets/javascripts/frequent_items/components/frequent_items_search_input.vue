@@ -3,10 +3,21 @@ import _ from 'underscore';
 import eventHub from '../event_hub';
 
 export default {
+  props: {
+    service: {
+      type: Object,
+      required: true,
+    },
+  },
   data() {
     return {
       searchQuery: '',
     };
+  },
+  computed: {
+    translations() {
+      return this.service.getTranslations(['searchInputPlaceholder']);
+    },
   },
   watch: {
     searchQuery() {
@@ -53,7 +64,7 @@ export default {
       class="form-control"
       ref="search"
       v-model="searchQuery"
-      :placeholder="s__('ProjectsDropdown|Search your projects')"
+      :placeholder="translations.searchInputPlaceholder"
     />
     <i
       v-if="!searchQuery"
