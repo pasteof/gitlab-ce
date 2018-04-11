@@ -68,7 +68,7 @@ export const mockFrequentProjects = [
   },
 ];
 
-export const unsortedFrequentProjects = [
+export const unsortedFrequentItems = [
   { id: 1, frequency: 12, lastAccessedOn: 1491400843391 },
   { id: 2, frequency: 14, lastAccessedOn: 1488240890738 },
   { id: 3, frequency: 44, lastAccessedOn: 1497675908472 },
@@ -85,7 +85,7 @@ export const unsortedFrequentProjects = [
  * of `FrequentItemsService.getTopFrequentItems` method so
  * DO NOT change order of items in this const.
  */
-export const sortedFrequentProjects = [
+export const sortedFrequentItems = [
   { id: 10, frequency: 46, lastAccessedOn: 1483251641543 },
   { id: 3, frequency: 44, lastAccessedOn: 1497675908472 },
   { id: 7, frequency: 42, lastAccessedOn: 1486815299875 },

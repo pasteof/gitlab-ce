@@ -4,7 +4,7 @@ import VueResource from 'vue-resource';
 import bp from '~/breakpoints';
 import FrequentItemsService from '~/frequent_items/services/frequent_items_service';
 import { FREQUENT_ITEMS } from '~/frequent_items/constants';
-import { currentSession, unsortedFrequentProjects, sortedFrequentProjects } from '../mock_data';
+import { currentSession, unsortedFrequentItems, sortedFrequentItems } from '../mock_data';
 
 Vue.use(VueResource);
 
@@ -142,7 +142,7 @@ describe('FrequentItemsService', () => {
     let storage = {};
 
     beforeEach(() => {
-      storage[session.storageKey] = JSON.stringify(unsortedFrequentProjects);
+      storage[session.storageKey] = JSON.stringify(unsortedFrequentItems);
 
       spyOn(window.localStorage, 'getItem').and.callFake((storageKey) => {
         if (storage[storageKey]) {
@@ -159,7 +159,7 @@ describe('FrequentItemsService', () => {
 
       expect(frequentItems.length).toBe(5);
       frequentItems.forEach((project, index) => {
-        expect(project.id).toBe(sortedFrequentProjects[index].id);
+        expect(project.id).toBe(sortedFrequentItems[index].id);
       });
     });
 
@@ -169,7 +169,7 @@ describe('FrequentItemsService', () => {
 
       expect(frequentItems.length).toBe(3);
       frequentItems.forEach((project, index) => {
-        expect(project.id).toBe(sortedFrequentProjects[index].id);
+        expect(project.id).toBe(sortedFrequentItems[index].id);
       });
     });
 
