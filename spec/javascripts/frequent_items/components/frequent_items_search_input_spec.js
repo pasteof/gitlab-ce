@@ -1,17 +1,25 @@
 import Vue from 'vue';
 
+import FrequentItemsService from '~/frequent_items/services/frequent_items_service';
 import searchComponent from '~/frequent_items/components/frequent_items_search_input.vue';
 import eventHub from '~/frequent_items/event_hub';
 
 import mountComponent from 'spec/helpers/vue_mount_component_helper';
+import { currentSession } from '../mock_data';
+
+const projectsNamespace = 'projects';
+const session = currentSession[projectsNamespace];
 
 const createComponent = () => {
   const Component = Vue.extend(searchComponent);
+  const service = new FrequentItemsService(projectsNamespace, session.username);
 
-  return mountComponent(Component);
+  return mountComponent(Component, {
+    service,
+  });
 };
 
-describe('SearchComponent', () => {
+describe('FrequentItemsSearchInputComponent', () => {
   describe('methods', () => {
     let vm;
 
@@ -38,14 +46,14 @@ describe('SearchComponent', () => {
         spyOn(eventHub, '$emit');
         vm.searchQuery = searchQuery;
         vm.emitSearchEvents();
-        expect(eventHub.$emit).toHaveBeenCalledWith('searchProjects', searchQuery);
+        expect(eventHub.$emit).toHaveBeenCalledWith(`${projectsNamespace}-searchItems`, searchQuery);
       });
 
       it('should emit `searchCleared` event via eventHub when `searchQuery` is cleared', () => {
         spyOn(eventHub, '$emit');
         vm.searchQuery = '';
         vm.emitSearchEvents();
-        expect(eventHub.$emit).toHaveBeenCalledWith('searchCleared');
+        expect(eventHub.$emit).toHaveBeenCalledWith(`${projectsNamespace}-searchCleared`);
       });
     });
   });

@@ -2,35 +2,37 @@ import Vue from 'vue';
 import VueResource from 'vue-resource';
 
 import bp from '~/breakpoints';
-import ProjectsService from '~/frequent_items/service/projects_service';
-import { FREQUENT_PROJECTS } from '~/frequent_items/constants';
+import FrequentItemsService from '~/frequent_items/services/frequent_items_service';
+import { FREQUENT_ITEMS } from '~/frequent_items/constants';
 import { currentSession, unsortedFrequents, sortedFrequents } from '../mock_data';
 
 Vue.use(VueResource);
 
-FREQUENT_PROJECTS.MAX_COUNT = 3;
+const projectsNamespace = 'projects';
+const session = currentSession[projectsNamespace];
+FREQUENT_ITEMS.MAX_COUNT = 3;
 
-describe('ProjectsService', () => {
+describe('FrequentItemsService', () => {
   let service;
 
   beforeEach(() => {
-    gon.api_version = currentSession.apiVersion;
+    gon.api_version = session.apiVersion;
     gon.current_user_id = 1;
-    service = new ProjectsService(currentSession.username);
+    service = new FrequentItemsService(projectsNamespace, session.username);
   });
 
-  describe('contructor', () => {
+  describe('constructor', () => {
     it('should initialize default properties of class', () => {
       expect(service.isLocalStorageAvailable).toBeTruthy();
-      expect(service.currentUserName).toBe(currentSession.username);
-      expect(service.storageKey).toBe(currentSession.storageKey);
-      expect(service.projectsPath).toBeDefined();
+      expect(service.currentUserName).toBe(session.username);
+      expect(service.storageKey).toBe(session.storageKey);
+      expect(service.itemsPath).toBeDefined();
     });
   });
 
-  describe('getSearchedProjects', () => {
+  describe('getSearchedItems', () => {
     it('should return promise from VueResource HTTP GET', () => {
-      spyOn(service.projectsPath, 'get').and.stub();
+      spyOn(service.itemsPath, 'get').and.stub();
 
       const searchQuery = 'lab';
       const queryParams = {
@@ -41,12 +43,12 @@ describe('ProjectsService', () => {
         search: searchQuery,
       };
 
-      service.getSearchedProjects(searchQuery);
-      expect(service.projectsPath.get).toHaveBeenCalledWith(queryParams);
+      service.getSearchedItems(searchQuery);
+      expect(service.itemsPath.get).toHaveBeenCalledWith(queryParams);
     });
   });
 
-  describe('logProjectAccess', () => {
+  describe('logItemAccess', () => {
     let storage;
 
     beforeEach(() => {
@@ -66,59 +68,59 @@ describe('ProjectsService', () => {
     });
 
     it('should create a project store if it does not exist and adds a project', () => {
-      service.logProjectAccess(currentSession.project);
+      service.logItemAccess(session.project);
 
-      const projects = JSON.parse(storage[currentSession.storageKey]);
+      const projects = JSON.parse(storage[session.storageKey]);
       expect(projects.length).toBe(1);
       expect(projects[0].frequency).toBe(1);
       expect(projects[0].lastAccessedOn).toBeDefined();
     });
 
     it('should prevent inserting same report multiple times into store', () => {
-      service.logProjectAccess(currentSession.project);
-      service.logProjectAccess(currentSession.project);
+      service.logItemAccess(session.project);
+      service.logItemAccess(session.project);
 
-      const projects = JSON.parse(storage[currentSession.storageKey]);
+      const projects = JSON.parse(storage[session.storageKey]);
       expect(projects.length).toBe(1);
     });
 
     it('should increase frequency of report if it was logged multiple times over the course of an hour', () => {
       let projects;
       spyOn(Math, 'abs').and.returnValue(3600001); // this will lead to `diff` > 1;
-      service.logProjectAccess(currentSession.project);
+      service.logItemAccess(session.project);
 
-      projects = JSON.parse(storage[currentSession.storageKey]);
+      projects = JSON.parse(storage[session.storageKey]);
       expect(projects[0].frequency).toBe(1);
 
-      service.logProjectAccess(currentSession.project);
-      projects = JSON.parse(storage[currentSession.storageKey]);
+      service.logItemAccess(session.project);
+      projects = JSON.parse(storage[session.storageKey]);
       expect(projects[0].frequency).toBe(2);
-      expect(projects[0].lastAccessedOn).not.toBe(currentSession.project.lastAccessedOn);
+      expect(projects[0].lastAccessedOn).not.toBe(session.project.lastAccessedOn);
     });
 
     it('should always update project metadata', () => {
       let projects;
       const oldProject = {
-        ...currentSession.project,
+        ...session.project,
       };
 
       const newProject = {
-        ...currentSession.project,
+        ...session.project,
         name: 'New Name',
         avatarUrl: 'new/avatar.png',
         namespace: 'New / Namespace',
         webUrl: 'http://localhost/new/web/url',
       };
 
-      service.logProjectAccess(oldProject);
-      projects = JSON.parse(storage[currentSession.storageKey]);
+      service.logItemAccess(oldProject);
+      projects = JSON.parse(storage[session.storageKey]);
       expect(projects[0].name).toBe(oldProject.name);
       expect(projects[0].avatarUrl).toBe(oldProject.avatarUrl);
       expect(projects[0].namespace).toBe(oldProject.namespace);
       expect(projects[0].webUrl).toBe(oldProject.webUrl);
 
-      service.logProjectAccess(newProject);
-      projects = JSON.parse(storage[currentSession.storageKey]);
+      service.logItemAccess(newProject);
+      projects = JSON.parse(storage[session.storageKey]);
       expect(projects[0].name).toBe(newProject.name);
       expect(projects[0].avatarUrl).toBe(newProject.avatarUrl);
       expect(projects[0].namespace).toBe(newProject.namespace);
@@ -127,20 +129,20 @@ describe('ProjectsService', () => {
 
     it('should not add more than 20 projects in store', () => {
       for (let i = 1; i <= 5; i += 1) {
-        const project = Object.assign(currentSession.project, { id: i });
-        service.logProjectAccess(project);
+        const project = Object.assign(session.project, { id: i });
+        service.logItemAccess(project);
       }
 
-      const projects = JSON.parse(storage[currentSession.storageKey]);
+      const projects = JSON.parse(storage[session.storageKey]);
       expect(projects.length).toBe(3);
     });
   });
 
-  describe('getTopFrequentProjects', () => {
+  describe('getTopFrequentItems', () => {
     let storage = {};
 
     beforeEach(() => {
-      storage[currentSession.storageKey] = JSON.stringify(unsortedFrequents);
+      storage[session.storageKey] = JSON.stringify(unsortedFrequents);
 
       spyOn(window.localStorage, 'getItem').and.callFake((storageKey) => {
         if (storage[storageKey]) {
@@ -153,27 +155,27 @@ describe('ProjectsService', () => {
 
     it('should return top 5 frequently accessed projects for desktop screens', () => {
       spyOn(bp, 'getBreakpointSize').and.returnValue('md');
-      const frequentProjects = service.getTopFrequentProjects();
+      const frequentItems = service.getTopFrequentItems();
 
-      expect(frequentProjects.length).toBe(5);
-      frequentProjects.forEach((project, index) => {
+      expect(frequentItems.length).toBe(5);
+      frequentItems.forEach((project, index) => {
         expect(project.id).toBe(sortedFrequents[index].id);
       });
     });
 
     it('should return top 3 frequently accessed projects for mobile screens', () => {
       spyOn(bp, 'getBreakpointSize').and.returnValue('sm');
-      const frequentProjects = service.getTopFrequentProjects();
+      const frequentItems = service.getTopFrequentItems();
 
-      expect(frequentProjects.length).toBe(3);
-      frequentProjects.forEach((project, index) => {
+      expect(frequentItems.length).toBe(3);
+      frequentItems.forEach((project, index) => {
         expect(project.id).toBe(sortedFrequents[index].id);
       });
     });
 
     it('should return empty array if there are no projects available in store', () => {
       storage = {};
-      expect(service.getTopFrequentProjects().length).toBe(0);
+      expect(service.getTopFrequentItems().length).toBe(0);
     });
   });
 });

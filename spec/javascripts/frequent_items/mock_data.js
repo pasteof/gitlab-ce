@@ -1,14 +1,16 @@
 export const currentSession = {
-  username: 'root',
-  storageKey: 'root/frequent-projects',
-  apiVersion: 'v4',
-  project: {
-    id: 1,
-    name: 'dummy-project',
-    namespace: 'SamepleGroup / Dummy-Project',
-    webUrl: 'http://127.0.0.1/samplegroup/dummy-project',
-    avatarUrl: null,
-    lastAccessedOn: Date.now(),
+  projects: {
+    username: 'root',
+    storageKey: 'root/frequent-projects',
+    apiVersion: 'v4',
+    project: {
+      id: 1,
+      name: 'dummy-project',
+      namespace: 'SamepleGroup / Dummy-Project',
+      webUrl: 'http://127.0.0.1/samplegroup/dummy-project',
+      avatarUrl: null,
+      lastAccessedOn: Date.now(),
+    },
   },
 };
 

@@ -1,20 +1,26 @@
 import Vue from 'vue';
 
-import projectsListFrequentComponent from '~/frequent_items/components/frequent_items_list.vue';
+import frequentItemsListComponent from '~/frequent_items/components/frequent_items_list.vue';
+import FrequentItemsService from '~/frequent_items/services/frequent_items_service';
 
 import mountComponent from 'spec/helpers/vue_mount_component_helper';
-import { mockFrequents } from '../mock_data';
+import { currentSession, mockFrequents } from '../mock_data';
+
+const projectsNamespace = 'projects';
+const session = currentSession[projectsNamespace];
 
 const createComponent = () => {
-  const Component = Vue.extend(projectsListFrequentComponent);
+  const Component = Vue.extend(frequentItemsListComponent);
+  const service = new FrequentItemsService(projectsNamespace, session.username);
 
   return mountComponent(Component, {
-    projects: mockFrequents,
+    items: mockFrequents,
     localStorageFailed: false,
+    service,
   });
 };
 
-describe('ProjectsListFrequentComponent', () => {
+describe('FrequentItemsListComponent', () => {
   let vm;
 
   beforeEach(() => {
@@ -27,11 +33,11 @@ describe('ProjectsListFrequentComponent', () => {
 
   describe('computed', () => {
     describe('isListEmpty', () => {
-      it('should return `true` or `false` representing whether if `projects` is empty of not', () => {
-        vm.projects = [];
+      it('should return `true` or `false` representing whether if `items` is empty of not', () => {
+        vm.items = [];
         expect(vm.isListEmpty).toBeTruthy();
 
-        vm.projects = mockFrequents;
+        vm.items = mockFrequents;
         expect(vm.isListEmpty).toBeFalsy();
       });
     });
@@ -48,8 +54,8 @@ describe('ProjectsListFrequentComponent', () => {
   });
 
   describe('template', () => {
-    it('should render component element with list of projects', (done) => {
-      vm.projects = mockFrequents;
+    it('should render component element with list of items', (done) => {
+      vm.items = mockFrequents;
 
       Vue.nextTick(() => {
         expect(vm.$el.classList.contains('frequent-items-list-container')).toBeTruthy();
@@ -60,7 +66,7 @@ describe('ProjectsListFrequentComponent', () => {
     });
 
     it('should render component element with empty message', (done) => {
-      vm.projects = [];
+      vm.items = [];
 
       Vue.nextTick(() => {
         expect(vm.$el.querySelectorAll('li.section-empty').length).toBe(1);

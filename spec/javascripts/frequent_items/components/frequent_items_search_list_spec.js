@@ -1,21 +1,27 @@
 import Vue from 'vue';
 
-import projectsListSearchComponent from '~/frequent_items/components/frequent_items_search_list.vue';
+import frequentItemsSearchListComponent from '~/frequent_items/components/frequent_items_search_list.vue';
+import FrequentItemsService from '~/frequent_items/services/frequent_items_service';
 
 import mountComponent from 'spec/helpers/vue_mount_component_helper';
-import { mockProject } from '../mock_data';
+import { currentSession, mockProject } from '../mock_data';
+
+const projectsNamespace = 'projects';
+const session = currentSession[projectsNamespace];
 
 const createComponent = () => {
-  const Component = Vue.extend(projectsListSearchComponent);
+  const Component = Vue.extend(frequentItemsSearchListComponent);
+  const service = new FrequentItemsService(projectsNamespace, session.username);
 
   return mountComponent(Component, {
-    projects: [mockProject],
+    items: [mockProject],
     matcher: 'lab',
     searchFailed: false,
+    service,
   });
 };
 
-describe('ProjectsListSearchComponent', () => {
+describe('FrequentItemsSearchListComponent', () => {
   let vm;
 
   beforeEach(() => {
@@ -28,11 +34,11 @@ describe('ProjectsListSearchComponent', () => {
 
   describe('computed', () => {
     describe('isListEmpty', () => {
-      it('should return `true` or `false` representing whether if `projects` is empty of not', () => {
-        vm.projects = [];
+      it('should return `true` or `false` representing whether if `items` is empty of not', () => {
+        vm.items = [];
         expect(vm.isListEmpty).toBeTruthy();
 
-        vm.projects = [mockProject];
+        vm.items = [mockProject];
         expect(vm.isListEmpty).toBeFalsy();
       });
     });
@@ -49,8 +55,8 @@ describe('ProjectsListSearchComponent', () => {
   });
 
   describe('template', () => {
-    it('should render component element with list of projects', (done) => {
-      vm.projects = [mockProject];
+    it('should render component element with list of items', (done) => {
+      vm.items = [mockProject];
 
       Vue.nextTick(() => {
         expect(vm.$el.classList.contains('frequent-items-search-container')).toBeTruthy();
@@ -61,7 +67,7 @@ describe('ProjectsListSearchComponent', () => {
     });
 
     it('should render component element with empty message', (done) => {
-      vm.projects = [];
+      vm.items = [];
 
       Vue.nextTick(() => {
         expect(vm.$el.querySelectorAll('li.section-empty').length).toBe(1);
@@ -72,7 +78,7 @@ describe('ProjectsListSearchComponent', () => {
 
     it('should render component element with failure message', (done) => {
       vm.searchFailed = true;
-      vm.projects = [];
+      vm.items = [];
 
       Vue.nextTick(() => {
         expect(vm.$el.querySelectorAll('li.section-empty.section-failure').length).toBe(1);

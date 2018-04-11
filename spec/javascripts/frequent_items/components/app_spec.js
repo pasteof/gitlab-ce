@@ -1,25 +1,30 @@
+// TODO: Add tests for groups context
 import Vue from 'vue';
 
 import bp from '~/breakpoints';
 import appComponent from '~/frequent_items/components/app.vue';
 import eventHub from '~/frequent_items/event_hub';
-import ProjectsService from '~/frequent_items/service/frequent_items_service';
-import ProjectsStore from '~/frequent_items/store/frequent_items_store';
+import FrequentItemsService from '~/frequent_items/services/frequent_items_service';
+import FrequentItemsStore from '~/frequent_items/stores/frequent_items_store';
 
 import mountComponent from 'spec/helpers/vue_mount_component_helper';
 import { currentSession, mockProject, mockRawProject } from '../mock_data';
 
+const projectsNamespace = 'projects';
+const session = currentSession[projectsNamespace];
+
 const createComponent = () => {
-  gon.api_version = currentSession.apiVersion;
+  gon.api_version = session.apiVersion;
   const Component = Vue.extend(appComponent);
-  const store = new ProjectsStore();
-  const service = new ProjectsService(currentSession.username);
+  const store = new FrequentItemsStore();
+  const service = new FrequentItemsService(projectsNamespace, session.username);
 
   return mountComponent(Component, {
+    namespace: projectsNamespace,
     store,
     service,
-    currentUserName: currentSession.username,
-    currentProject: currentSession.project,
+    currentUserName: session.username,
+    currentItem: session.project,
   });
 };
 
@@ -47,25 +52,25 @@ describe('AppComponent', () => {
       vm.$destroy();
     });
 
-    describe('frequentProjects', () => {
+    describe('frequentItems', () => {
       it('should return list of frequently accessed projects from store', () => {
-        expect(vm.frequentProjects).toBeDefined();
-        expect(vm.frequentProjects.length).toBe(0);
+        expect(vm.frequentItems).toBeDefined();
+        expect(vm.frequentItems.length).toBe(0);
 
-        vm.store.setFrequentProjects([mockProject]);
-        expect(vm.frequentProjects).toBeDefined();
-        expect(vm.frequentProjects.length).toBe(1);
+        vm.store.setFrequentItems([mockProject]);
+        expect(vm.frequentItems).toBeDefined();
+        expect(vm.frequentItems.length).toBe(1);
       });
     });
 
-    describe('searchProjects', () => {
-      it('should return list of frequently accessed projects from store', () => {
-        expect(vm.searchProjects).toBeDefined();
-        expect(vm.searchProjects.length).toBe(0);
+    describe('searchItems', () => {
+      it('should return list of frequently accessed projects from search endpoint', () => {
+        expect(vm.searchItems).toBeDefined();
+        expect(vm.searchItems.length).toBe(0);
 
-        vm.store.setSearchedProjects([mockRawProject]);
-        expect(vm.searchProjects).toBeDefined();
-        expect(vm.searchProjects.length).toBe(1);
+        vm.store.setSearchedItems([mockRawProject]);
+        expect(vm.searchItems).toBeDefined();
+        expect(vm.searchItems.length).toBe(1);
       });
     });
   });
@@ -81,30 +86,30 @@ describe('AppComponent', () => {
       vm.$destroy();
     });
 
-    describe('toggleFrequentProjectsList', () => {
-      it('should toggle props which control visibility of Frequent Projects list from state passed', () => {
-        vm.toggleFrequentProjectsList(true);
-        expect(vm.isLoadingProjects).toBeFalsy();
+    describe('toggleFrequentItemsList', () => {
+      it('should toggle props which control visibility of Frequent Items list from state passed', () => {
+        vm.toggleFrequentItemsList(true);
+        expect(vm.isLoadingItems).toBeFalsy();
         expect(vm.isSearchListVisible).toBeFalsy();
-        expect(vm.isFrequentsListVisible).toBeTruthy();
+        expect(vm.isItemsListVisible).toBeTruthy();
 
-        vm.toggleFrequentProjectsList(false);
-        expect(vm.isLoadingProjects).toBeTruthy();
+        vm.toggleFrequentItemsList(false);
+        expect(vm.isLoadingItems).toBeTruthy();
         expect(vm.isSearchListVisible).toBeTruthy();
-        expect(vm.isFrequentsListVisible).toBeFalsy();
+        expect(vm.isItemsListVisible).toBeFalsy();
       });
     });
 
-    describe('toggleSearchProjectsList', () => {
-      it('should toggle props which control visibility of Searched Projects list from state passed', () => {
-        vm.toggleSearchProjectsList(true);
-        expect(vm.isLoadingProjects).toBeFalsy();
-        expect(vm.isFrequentsListVisible).toBeFalsy();
+    describe('toggleSearchItemsList', () => {
+      it('should toggle props which control visibility of Searched Items list from state passed', () => {
+        vm.toggleSearchItemsList(true);
+        expect(vm.isLoadingItems).toBeFalsy();
+        expect(vm.isItemsListVisible).toBeFalsy();
         expect(vm.isSearchListVisible).toBeTruthy();
 
-        vm.toggleSearchProjectsList(false);
-        expect(vm.isLoadingProjects).toBeTruthy();
-        expect(vm.isFrequentsListVisible).toBeTruthy();
+        vm.toggleSearchItemsList(false);
+        expect(vm.isLoadingItems).toBeTruthy();
+        expect(vm.isItemsListVisible).toBeTruthy();
         expect(vm.isSearchListVisible).toBeFalsy();
       });
     });
@@ -112,22 +117,22 @@ describe('AppComponent', () => {
     describe('toggleLoader', () => {
       it('should toggle props which control visibility of list loading animation from state passed', () => {
         vm.toggleLoader(true);
-        expect(vm.isFrequentsListVisible).toBeFalsy();
+        expect(vm.isItemsListVisible).toBeFalsy();
         expect(vm.isSearchListVisible).toBeFalsy();
-        expect(vm.isLoadingProjects).toBeTruthy();
+        expect(vm.isLoadingItems).toBeTruthy();
 
         vm.toggleLoader(false);
-        expect(vm.isFrequentsListVisible).toBeTruthy();
+        expect(vm.isItemsListVisible).toBeTruthy();
         expect(vm.isSearchListVisible).toBeTruthy();
-        expect(vm.isLoadingProjects).toBeFalsy();
+        expect(vm.isLoadingItems).toBeFalsy();
       });
     });
 
-    describe('fetchFrequentProjects', () => {
+    describe('fetchFrequentItems', () => {
       it('should set props for loading animation to `true` while frequent projects list is being loaded', () => {
         spyOn(vm, 'toggleLoader');
 
-        vm.fetchFrequentProjects();
+        vm.fetchFrequentItems();
         expect(vm.isLocalStorageFailed).toBeFalsy();
         expect(vm.toggleLoader).toHaveBeenCalledWith(true);
       });
@@ -135,98 +140,98 @@ describe('AppComponent', () => {
       it('should set props for loading animation to `false` and props for frequent projects list to `true` once data is loaded', () => {
         const mockData = [mockProject];
 
-        spyOn(vm.service, 'getFrequentProjects').and.returnValue(mockData);
-        spyOn(vm.store, 'setFrequentProjects');
-        spyOn(vm, 'toggleFrequentProjectsList');
+        spyOn(vm.service, 'getFrequentItems').and.returnValue(mockData);
+        spyOn(vm.store, 'setFrequentItems');
+        spyOn(vm, 'toggleFrequentItemsList');
 
-        vm.fetchFrequentProjects();
-        expect(vm.service.getFrequentProjects).toHaveBeenCalled();
-        expect(vm.store.setFrequentProjects).toHaveBeenCalledWith(mockData);
-        expect(vm.toggleFrequentProjectsList).toHaveBeenCalledWith(true);
+        vm.fetchFrequentItems();
+        expect(vm.service.getFrequentItems).toHaveBeenCalled();
+        expect(vm.store.setFrequentItems).toHaveBeenCalledWith(mockData);
+        expect(vm.toggleFrequentItemsList).toHaveBeenCalledWith(true);
       });
 
       it('should set props for failure message to `true` when method fails to fetch frequent projects list', () => {
-        spyOn(vm.service, 'getFrequentProjects').and.returnValue(null);
-        spyOn(vm.store, 'setFrequentProjects');
-        spyOn(vm, 'toggleFrequentProjectsList');
+        spyOn(vm.service, 'getFrequentItems').and.returnValue(null);
+        spyOn(vm.store, 'setFrequentItems');
+        spyOn(vm, 'toggleFrequentItemsList');
 
         expect(vm.isLocalStorageFailed).toBeFalsy();
 
-        vm.fetchFrequentProjects();
-        expect(vm.service.getFrequentProjects).toHaveBeenCalled();
-        expect(vm.store.setFrequentProjects).toHaveBeenCalledWith([]);
-        expect(vm.toggleFrequentProjectsList).toHaveBeenCalledWith(true);
+        vm.fetchFrequentItems();
+        expect(vm.service.getFrequentItems).toHaveBeenCalled();
+        expect(vm.store.setFrequentItems).toHaveBeenCalledWith([]);
+        expect(vm.toggleFrequentItemsList).toHaveBeenCalledWith(true);
         expect(vm.isLocalStorageFailed).toBeTruthy();
       });
 
       it('should set props for search results list to `true` if search query was already made previously', () => {
         spyOn(bp, 'getBreakpointSize').and.returnValue('md');
-        spyOn(vm.service, 'getFrequentProjects');
-        spyOn(vm, 'toggleSearchProjectsList');
+        spyOn(vm.service, 'getFrequentItems');
+        spyOn(vm, 'toggleSearchItemsList');
 
         vm.searchQuery = 'test';
-        vm.fetchFrequentProjects();
-        expect(vm.service.getFrequentProjects).not.toHaveBeenCalled();
-        expect(vm.toggleSearchProjectsList).toHaveBeenCalledWith(true);
+        vm.fetchFrequentItems();
+        expect(vm.service.getFrequentItems).not.toHaveBeenCalled();
+        expect(vm.toggleSearchItemsList).toHaveBeenCalledWith(true);
       });
 
       it('should set props for frequent projects list to `true` if search query was already made but screen size is less than 768px', () => {
         spyOn(bp, 'getBreakpointSize').and.returnValue('sm');
-        spyOn(vm, 'toggleSearchProjectsList');
-        spyOn(vm.service, 'getFrequentProjects');
+        spyOn(vm, 'toggleSearchItemsList');
+        spyOn(vm.service, 'getFrequentItems');
 
         vm.searchQuery = 'test';
-        vm.fetchFrequentProjects();
-        expect(vm.service.getFrequentProjects).toHaveBeenCalled();
-        expect(vm.toggleSearchProjectsList).not.toHaveBeenCalled();
+        vm.fetchFrequentItems();
+        expect(vm.service.getFrequentItems).toHaveBeenCalled();
+        expect(vm.toggleSearchItemsList).not.toHaveBeenCalled();
       });
     });
 
-    describe('fetchSearchedProjects', () => {
+    describe('fetchSearchedItems', () => {
       const searchQuery = 'test';
 
       it('should perform search with provided search query', (done) => {
         const mockData = [mockRawProject];
         spyOn(vm, 'toggleLoader');
-        spyOn(vm, 'toggleSearchProjectsList');
-        spyOn(vm.service, 'getSearchedProjects').and.returnValue(returnServicePromise(mockData));
-        spyOn(vm.store, 'setSearchedProjects');
+        spyOn(vm, 'toggleSearchItemsList');
+        spyOn(vm.service, 'getSearchedItems').and.returnValue(returnServicePromise(mockData));
+        spyOn(vm.store, 'setSearchedItems');
 
-        vm.fetchSearchedProjects(searchQuery);
+        vm.fetchSearchedItems(searchQuery);
         setTimeout(() => {
           expect(vm.searchQuery).toBe(searchQuery);
           expect(vm.toggleLoader).toHaveBeenCalledWith(true);
-          expect(vm.service.getSearchedProjects).toHaveBeenCalledWith(searchQuery);
-          expect(vm.toggleSearchProjectsList).toHaveBeenCalledWith(true);
-          expect(vm.store.setSearchedProjects).toHaveBeenCalledWith(mockData);
+          expect(vm.service.getSearchedItems).toHaveBeenCalledWith(searchQuery);
+          expect(vm.toggleSearchItemsList).toHaveBeenCalledWith(true);
+          expect(vm.store.setSearchedItems).toHaveBeenCalledWith(mockData);
           done();
         }, 0);
       });
 
       it('should update props for showing search failure', (done) => {
-        spyOn(vm, 'toggleSearchProjectsList');
-        spyOn(vm.service, 'getSearchedProjects').and.returnValue(returnServicePromise({}, true));
+        spyOn(vm, 'toggleSearchItemsList');
+        spyOn(vm.service, 'getSearchedItems').and.returnValue(returnServicePromise({}, true));
 
-        vm.fetchSearchedProjects(searchQuery);
+        vm.fetchSearchedItems(searchQuery);
         setTimeout(() => {
           expect(vm.searchQuery).toBe(searchQuery);
-          expect(vm.service.getSearchedProjects).toHaveBeenCalledWith(searchQuery);
+          expect(vm.service.getSearchedItems).toHaveBeenCalledWith(searchQuery);
           expect(vm.isSearchFailed).toBeTruthy();
-          expect(vm.toggleSearchProjectsList).toHaveBeenCalledWith(true);
+          expect(vm.toggleSearchItemsList).toHaveBeenCalledWith(true);
           done();
         }, 0);
       });
     });
 
-    describe('logCurrentProjectAccess', () => {
+    describe('logCurrentItemAccess', () => {
       it('should log current project access via service', (done) => {
-        spyOn(vm.service, 'logProjectAccess');
+        spyOn(vm.service, 'logItemAccess');
 
-        vm.currentProject = mockProject;
-        vm.logCurrentProjectAccess();
+        vm.currentItem = mockProject;
+        vm.logCurrentItemAccess();
 
         setTimeout(() => {
-          expect(vm.service.logProjectAccess).toHaveBeenCalledWith(mockProject);
+          expect(vm.service.logItemAccess).toHaveBeenCalledWith(mockProject);
           done();
         }, 1);
       });
@@ -234,23 +239,23 @@ describe('AppComponent', () => {
 
     describe('handleSearchClear', () => {
       it('should show frequent projects list when search input is cleared', () => {
-        spyOn(vm.store, 'clearSearchedProjects');
-        spyOn(vm, 'toggleFrequentProjectsList');
+        spyOn(vm.store, 'clearSearchedItems');
+        spyOn(vm, 'toggleFrequentItemsList');
 
         vm.handleSearchClear();
 
-        expect(vm.toggleFrequentProjectsList).toHaveBeenCalledWith(true);
-        expect(vm.store.clearSearchedProjects).toHaveBeenCalled();
+        expect(vm.toggleFrequentItemsList).toHaveBeenCalledWith(true);
+        expect(vm.store.clearSearchedItems).toHaveBeenCalled();
         expect(vm.searchQuery).toBe('');
       });
     });
 
     describe('handleSearchFailure', () => {
       it('should show failure message within dropdown', () => {
-        spyOn(vm, 'toggleSearchProjectsList');
+        spyOn(vm, 'toggleSearchItemsList');
 
         vm.handleSearchFailure();
-        expect(vm.toggleSearchProjectsList).toHaveBeenCalledWith(true);
+        expect(vm.toggleSearchItemsList).toHaveBeenCalledWith(true);
         expect(vm.isSearchFailed).toBeTruthy();
       });
     });
@@ -263,10 +268,10 @@ describe('AppComponent', () => {
       createComponent().$mount();
 
       Vue.nextTick(() => {
-        expect(eventHub.$on).toHaveBeenCalledWith('dropdownOpen', jasmine.any(Function));
-        expect(eventHub.$on).toHaveBeenCalledWith('searchProjects', jasmine.any(Function));
-        expect(eventHub.$on).toHaveBeenCalledWith('searchCleared', jasmine.any(Function));
-        expect(eventHub.$on).toHaveBeenCalledWith('searchFailed', jasmine.any(Function));
+        expect(eventHub.$on).toHaveBeenCalledWith(`${projectsNamespace}-dropdownOpen`, jasmine.any(Function));
+        expect(eventHub.$on).toHaveBeenCalledWith(`${projectsNamespace}-searchItems`, jasmine.any(Function));
+        expect(eventHub.$on).toHaveBeenCalledWith(`${projectsNamespace}-searchCleared`, jasmine.any(Function));
+        expect(eventHub.$on).toHaveBeenCalledWith(`${projectsNamespace}-searchFailed`, jasmine.any(Function));
         done();
       });
     });
@@ -281,10 +286,10 @@ describe('AppComponent', () => {
       vm.$destroy();
 
       Vue.nextTick(() => {
-        expect(eventHub.$off).toHaveBeenCalledWith('dropdownOpen', jasmine.any(Function));
-        expect(eventHub.$off).toHaveBeenCalledWith('searchProjects', jasmine.any(Function));
-        expect(eventHub.$off).toHaveBeenCalledWith('searchCleared', jasmine.any(Function));
-        expect(eventHub.$off).toHaveBeenCalledWith('searchFailed', jasmine.any(Function));
+        expect(eventHub.$off).toHaveBeenCalledWith(`${projectsNamespace}-dropdownOpen`, jasmine.any(Function));
+        expect(eventHub.$off).toHaveBeenCalledWith(`${projectsNamespace}-searchItems`, jasmine.any(Function));
+        expect(eventHub.$off).toHaveBeenCalledWith(`${projectsNamespace}-searchCleared`, jasmine.any(Function));
+        expect(eventHub.$off).toHaveBeenCalledWith(`${projectsNamespace}-searchFailed`, jasmine.any(Function));
         done();
       });
     });
@@ -318,7 +323,7 @@ describe('AppComponent', () => {
     });
 
     it('should render frequent projects list header', (done) => {
-      vm.toggleFrequentProjectsList(true);
+      vm.toggleFrequentItemsList(true);
       Vue.nextTick(() => {
         const sectionHeaderEl = vm.$el.querySelector('.section-header');
 
@@ -329,7 +334,7 @@ describe('AppComponent', () => {
     });
 
     it('should render frequent projects list', (done) => {
-      vm.toggleFrequentProjectsList(true);
+      vm.toggleFrequentItemsList(true);
       Vue.nextTick(() => {
         expect(vm.$el.querySelector('.frequent-items-list-container')).toBeDefined();
         done();
@@ -337,7 +342,7 @@ describe('AppComponent', () => {
     });
 
     it('should render searched projects list', (done) => {
-      vm.toggleSearchProjectsList(true);
+      vm.toggleSearchItemsList(true);
       Vue.nextTick(() => {
         expect(vm.$el.querySelector('.section-header')).toBe(null);
         expect(vm.$el.querySelector('.frequent-items-search-container')).toBeDefined();
