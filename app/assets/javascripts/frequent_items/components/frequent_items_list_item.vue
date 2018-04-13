@@ -21,7 +21,7 @@ export default {
     },
     namespace: {
       type: String,
-      required: true,
+      required: false,
     },
     webUrl: {
       type: String,
@@ -60,15 +60,18 @@ export default {
      * existing item namespaces which is not wise thing to do.
      */
     truncatedNamespace() {
-      const namespaceArr = this.namespace.split(' / ');
-      namespaceArr.splice(-1, 1);
-      let namespace = namespaceArr.join(' / ');
+      if (this.namespace) {
+        const namespaceArr = this.namespace.split(' / ');
 
-      if (namespaceArr.length > 2) {
-        namespace = `${namespaceArr[0]} / ... / ${namespaceArr.pop()}`;
+        namespaceArr.splice(-1, 1);
+        let namespace = namespaceArr.join(' / ');
+
+        if (namespaceArr.length > 2) {
+          namespace = `${namespaceArr[0]} / ... / ${namespaceArr.pop()}`;
+        }
+
+        return namespace;
       }
-
-      return namespace;
     },
   },
 };

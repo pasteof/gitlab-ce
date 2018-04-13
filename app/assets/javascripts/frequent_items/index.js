@@ -10,12 +10,22 @@ import frequentItems from './components/app.vue';
 
 Vue.use(Translate);
 
-const frequentItemDropdowns = ['projects', 'groups'];
+const frequentItemDropdowns = [
+  {
+    namespace: 'projects',
+    datasetKey: 'project',
+  },
+  {
+    namespace: 'groups',
+    datasetKey: 'group',
+  },
+];
 
 document.addEventListener('DOMContentLoaded', () => {
-  frequentItemDropdowns.forEach(itemType => {
-    const el = document.getElementById(`js-${itemType}-dropdown`);
-    const navEl = document.getElementById(`nav-${itemType}-dropdown`);
+  frequentItemDropdowns.forEach(dropdown => {
+    const { namespace, datasetKey } = dropdown;
+    const el = document.getElementById(`js-${namespace}-dropdown`);
+    const navEl = document.getElementById(`nav-${namespace}-dropdown`);
 
     // Don't do anything if element doesn't exist (No groups dropdown)
     // This is for when the user accesses GitLab without logging in
@@ -24,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     $(navEl).on('shown.bs.dropdown', () => {
-      eventHub.$emit(`${itemType}-dropdownOpen`);
+      eventHub.$emit(`${namespace}-dropdownOpen`);
     });
 
     // eslint-disable-next-line no-new
@@ -36,14 +46,14 @@ document.addEventListener('DOMContentLoaded', () => {
       data() {
         const dataset = this.$options.el.dataset;
         const store = new FrequentItemsStore();
-        const service = new FrequentItemsService(itemType, dataset.userName);
+        const service = new FrequentItemsService(namespace, dataset.userName);
 
         const item = {
-          id: Number(dataset[`${itemType}Id`]),
-          name: dataset[`${itemType}Name`],
-          namespace: dataset[`${itemType}Namespace`],
-          webUrl: dataset[`${itemType}WebUrl`],
-          avatarUrl: dataset[`${itemType}AvatarUrl`] || null,
+          id: Number(dataset[`${datasetKey}Id`]),
+          name: dataset[`${datasetKey}Name`],
+          namespace: dataset[`${datasetKey}Namespace`],
+          webUrl: dataset[`${datasetKey}WebUrl`],
+          avatarUrl: dataset[`${datasetKey}AvatarUrl`] || null,
           lastAccessedOn: Date.now(),
         };
 
@@ -58,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
       render(createElement) {
         return createElement('frequent-items', {
           props: {
-            namespace: itemType,
+            namespace,
             currentUserName: this.currentUserName,
             currentItem: this.currentItem,
             store: this.store,
