@@ -156,7 +156,7 @@ describe('FrequentItemsService', () => {
 
       it('should return top 5 frequently accessed projects for desktop screens', () => {
         spyOn(bp, 'getBreakpointSize').and.returnValue('md');
-        const frequentItems = service.getTopFrequentItems();
+        const frequentItems = service.getFrequentItems();
 
         expect(frequentItems.length).toBe(5);
         frequentItems.forEach((project, index) => {
@@ -166,7 +166,7 @@ describe('FrequentItemsService', () => {
 
       it('should return top 3 frequently accessed projects for mobile screens', () => {
         spyOn(bp, 'getBreakpointSize').and.returnValue('sm');
-        const frequentItems = service.getTopFrequentItems();
+        const frequentItems = service.getFrequentItems();
 
         expect(frequentItems.length).toBe(3);
         frequentItems.forEach((project, index) => {
@@ -176,7 +176,7 @@ describe('FrequentItemsService', () => {
 
       it('should return empty array if there are no projects available in store', () => {
         storage = {};
-        expect(service.getTopFrequentItems().length).toBe(0);
+        expect(service.getFrequentItems().length).toBe(0);
       });
     });
   });
@@ -325,7 +325,7 @@ describe('FrequentItemsService', () => {
 
       it('should return top 5 frequently accessed groups for desktop screens', () => {
         spyOn(bp, 'getBreakpointSize').and.returnValue('md');
-        const frequentItems = service.getTopFrequentItems();
+        const frequentItems = service.getFrequentItems();
 
         expect(frequentItems.length).toBe(5);
         frequentItems.forEach((group, index) => {
@@ -335,7 +335,7 @@ describe('FrequentItemsService', () => {
 
       it('should return top 3 frequently accessed groups for mobile screens', () => {
         spyOn(bp, 'getBreakpointSize').and.returnValue('sm');
-        const frequentItems = service.getTopFrequentItems();
+        const frequentItems = service.getFrequentItems();
 
         expect(frequentItems.length).toBe(3);
         frequentItems.forEach((group, index) => {
@@ -345,7 +345,7 @@ describe('FrequentItemsService', () => {
 
       it('should return empty array if there are no groups available in store', () => {
         storage = {};
-        expect(service.getTopFrequentItems().length).toBe(0);
+        expect(service.getFrequentItems().length).toBe(0);
       });
     });
   });

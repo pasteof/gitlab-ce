@@ -18,6 +18,7 @@ export default class FrequentItemsService {
     this.isLocalStorageAvailable = AccessorUtilities.isLocalStorageAccessSafe();
     this.storageKey = `${this.currentUserName}/${STORAGE_KEY[namespace]}`;
     this.itemsPath = Vue.resource(Api.buildUrl(Api[`${namespace}Path`]));
+    this.isMobile = () => bp.getBreakpointSize() === 'sm' || bp.getBreakpointSize() === 'xs';
   }
 
   getSearchedItems(searchQuery) {
@@ -37,7 +38,13 @@ export default class FrequentItemsService {
 
   getFrequentItems() {
     if (this.isLocalStorageAvailable) {
-      return this.getTopFrequentItems();
+      const storedFrequentItems = JSON.parse(localStorage.getItem(this.storageKey));
+
+      if (!storedFrequentItems) {
+        return [];
+      }
+
+      return this.getTopFrequentItems(storedFrequentItems);
     }
     return null;
   }
@@ -52,8 +59,9 @@ export default class FrequentItemsService {
       // Check if there's any frequent items list set
       if (!storedRawItems) {
         // No frequent items list set, set one up.
-        storedFrequentItems = [];
-        storedFrequentItems.push({ ...item, frequency: 1 });
+        storedFrequentItems = [
+          { ...item, frequency: 1 },
+        ];
       } else {
         // Check if item is already present in items list
         // When found, update metadata of it.
@@ -62,21 +70,14 @@ export default class FrequentItemsService {
             matchFound = true;
             const accessedOverHourAgo =
               Math.abs(item.lastAccessedOn - frequentItem.lastAccessedOn) / HOUR_IN_MS > 1;
-            const updatedItem = {
-              ...item,
-              frequency: frequentItem.frequency,
-              lastAccessedOn: frequentItem.lastAccessedOn,
-            };
 
             // Check if duration since last access of this item
             // is over an hour
-            return accessedOverHourAgo
-              ? {
-                ...updatedItem,
-                frequency: updatedItem.frequency + 1,
-                lastAccessedOn: Date.now(),
-              }
-              : { ...updatedItem };
+            return {
+              ...item,
+              frequency: accessedOverHourAgo ? frequentItem.frequency + 1 : frequentItem.frequency,
+              lastAccessedOn: accessedOverHourAgo ? Date.now() : frequentItem.lastAccessedOn,
+            };
           }
 
           return frequentItem;
@@ -100,18 +101,12 @@ export default class FrequentItemsService {
     }
   }
 
-  getTopFrequentItems() {
-    const storedFrequentItems = JSON.parse(localStorage.getItem(this.storageKey));
-    const isMobile = bp.getBreakpointSize() === 'sm' || bp.getBreakpointSize() === 'xs';
-    const frequentItemsCount = isMobile
+  getTopFrequentItems(items) {
+    const frequentItemsCount = this.isMobile()
       ? FREQUENT_ITEMS.LIST_COUNT_MOBILE
       : FREQUENT_ITEMS.LIST_COUNT_DESKTOP;
 
-    if (!storedFrequentItems) {
-      return [];
-    }
-
-    const frequentItems = storedFrequentItems.filter(
+    const frequentItems = items.filter(
       item => item.frequency >= FREQUENT_ITEMS.ELIGIBLE_FREQUENCY,
     );
 
