@@ -17,7 +17,6 @@ export default class FrequentItemsService {
     this.currentUserName = currentUserName;
     this.isLocalStorageAvailable = AccessorUtilities.isLocalStorageAccessSafe();
     this.storageKey = `${this.currentUserName}/${STORAGE_KEY[namespace]}`;
-    // TODO: Make this flexible
     this.itemsPath = Vue.resource(Api.buildUrl(Api[`${namespace}Path`]));
   }
 
@@ -61,7 +60,8 @@ export default class FrequentItemsService {
         storedFrequentItems = JSON.parse(storedRawItems).map(frequentItem => {
           if (frequentItem.id === item.id) {
             matchFound = true;
-            const accessedOverHourAgo = (Math.abs(item.lastAccessedOn - frequentItem.lastAccessedOn) / HOUR_IN_MS) > 1;
+            const accessedOverHourAgo =
+              Math.abs(item.lastAccessedOn - frequentItem.lastAccessedOn) / HOUR_IN_MS > 1;
             const updatedItem = {
               ...item,
               frequency: frequentItem.frequency,
@@ -83,25 +83,20 @@ export default class FrequentItemsService {
         });
 
         // Make room for the new item if the list of frequent items is past 20.
-        this.truncateFrequentsList(matchFound, storedFrequentItems, item);
+        if (!matchFound) {
+          // We always keep size of items collection to 20 items
+          // out of which only 5 items with
+          // highest value of `frequency` and most recent `lastAccessedOn`
+          // are shown in items dropdown
+          if (storedFrequentItems.length === FREQUENT_ITEMS.MAX_COUNT) {
+            storedFrequentItems.shift();
+          }
+
+          storedFrequentItems.push({ ...item, frequency: 1 });
+        }
       }
 
       localStorage.setItem(this.storageKey, JSON.stringify(storedFrequentItems));
-    }
-  }
-
-  static truncateFrequentsList(matchFound, storedFrequentItems, item) {
-    // Check whether currently logged item is present in items list
-    if (!matchFound) {
-      // We always keep size of items collection to 20 items
-      // out of which only 5 items with
-      // highest value of `frequency` and most recent `lastAccessedOn`
-      // are shown in items dropdown
-      if (storedFrequentItems.length === FREQUENT_ITEMS.MAX_COUNT) {
-        storedFrequentItems.shift();
-      }
-
-      storedFrequentItems.push({ ...item, frequency: 1 });
     }
   }
 
@@ -120,25 +115,23 @@ export default class FrequentItemsService {
       item => item.frequency >= FREQUENT_ITEMS.ELIGIBLE_FREQUENCY,
     );
 
-    frequentItems.sort(this.compareFrequentItems);
+    frequentItems.sort((itemA, itemB) => {
+      // Sort all frequent items in decending order of frequency
+      // and then by lastAccessedOn with recent most first
+      if (itemA.frequency < itemB.frequency) {
+        return 1;
+      } else if (itemA.frequency > itemB.frequency) {
+        return -1;
+      } else if (itemA.lastAccessedOn < itemB.lastAccessedOn) {
+        return 1;
+      } else if (itemA.lastAccessedOn > itemB.lastAccessedOn) {
+        return -1;
+      }
+
+      return 0;
+    });
 
     return _.first(frequentItems, frequentItemsCount);
-  }
-
-  static compareFrequentItems(itemA, itemB) {
-    // Sort all frequent items in decending order of frequency
-    // and then by lastAccessedOn with recent most first
-    if (itemA.frequency < itemB.frequency) {
-      return 1;
-    } else if (itemA.frequency > itemB.frequency) {
-      return -1;
-    } else if (itemA.lastAccessedOn < itemB.lastAccessedOn) {
-      return 1;
-    } else if (itemA.lastAccessedOn > itemB.lastAccessedOn) {
-      return -1;
-    }
-
-    return 0;
   }
 
   // TODO: Should probably be moved to ~/locale for use with other components?
