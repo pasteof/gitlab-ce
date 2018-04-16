@@ -4,7 +4,6 @@ import Vue from 'vue';
 import Translate from '~/vue_shared/translate';
 import eventHub from '~/frequent_items/event_hub';
 import FrequentItemsService from '~/frequent_items/services/frequent_items_service';
-import FrequentItemsStore from '~/frequent_items/stores/frequent_items_store';
 
 import frequentItems from './components/app.vue';
 
@@ -45,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       data() {
         const dataset = this.$options.el.dataset;
-        const store = new FrequentItemsStore();
         const service = new FrequentItemsService(namespace, dataset.userName);
 
         const item = {
@@ -58,9 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         return {
-          store,
           service,
-          state: store.state,
           currentUserName: dataset.userName,
           currentItem: item,
         };
@@ -71,7 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
             namespace,
             currentUserName: this.currentUserName,
             currentItem: this.currentItem,
-            store: this.store,
             service: this.service,
           },
         });

@@ -1,13 +1,16 @@
 <script>
+import { mapGetters, mapActions } from 'vuex';
 import bs from '~/breakpoints';
 import loadingIcon from '~/vue_shared/components/loading_icon.vue';
 
 import eventHub from '../event_hub';
+import store from '../stores/';
 import frequentItemsSearchInput from './frequent_items_search_input.vue';
 import frequentItemsList from './frequent_items_list.vue';
 import frequentItemsSearchList from './frequent_items_search_list.vue';
 
 export default {
+  store,
   components: {
     frequentItemsSearchInput,
     loadingIcon,
@@ -20,10 +23,6 @@ export default {
       required: true,
     },
     currentItem: {
-      type: Object,
-      required: true,
-    },
-    store: {
       type: Object,
       required: true,
     },
@@ -43,14 +42,9 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(['frequentItems', 'searchedItems']),
     translations() {
       return this.service.getTranslations(['loadingMessage', 'header']);
-    },
-    frequentItems() {
-      return this.store.getFrequentItems();
-    },
-    searchItems() {
-      return this.store.getSearchedItems();
     },
   },
   created() {
@@ -70,6 +64,7 @@ export default {
     eventHub.$off(`${this.namespace}-searchFailed`, this.handleSearchFailure);
   },
   methods: {
+    ...mapActions(['setFrequentItems', 'setSearchedItems', 'clearSearchedItems']),
     toggleFrequentItemsList(state) {
       this.isLoadingItems = !state;
       this.isSearchListVisible = !state;
@@ -95,11 +90,11 @@ export default {
         const items = this.service.getFrequentItems();
         if (items) {
           this.toggleFrequentItemsList(true);
-          this.store.setFrequentItems(items);
+          this.setFrequentItems(items);
         } else {
           this.isLocalStorageFailed = true;
           this.toggleFrequentItemsList(true);
-          this.store.setFrequentItems([]);
+          this.setFrequentItems([]);
         }
       }
     },
@@ -111,7 +106,7 @@ export default {
         .then(res => res.json())
         .then(results => {
           this.toggleSearchItemsList(true);
-          this.store.setSearchedItems(results);
+          this.setSearchedItems(results);
         })
         .catch(() => {
           this.isSearchFailed = true;
@@ -124,7 +119,7 @@ export default {
     handleSearchClear() {
       this.searchQuery = '';
       this.toggleFrequentItemsList(true);
-      this.store.clearSearchedItems();
+      this.clearSearchedItems();
     },
     handleSearchFailure() {
       this.isSearchFailed = true;
@@ -161,7 +156,7 @@ export default {
       v-if="isSearchListVisible"
       :search-failed="isSearchFailed"
       :matcher="searchQuery"
-      :items="searchItems"
+      :items="searchedItems"
       :service="service"
     />
   </div>
