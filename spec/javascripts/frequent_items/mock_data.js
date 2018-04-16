@@ -19,7 +19,7 @@ export const currentSession = {
     project: {
       id: 1,
       name: 'dummy-project',
-      namespace: 'SamepleGroup / Dummy-Project',
+      namespace: 'SampleGroup / Dummy-Project',
       webUrl: 'http://127.0.0.1/samplegroup/dummy-project',
       avatarUrl: null,
       lastAccessedOn: Date.now(),
@@ -37,8 +37,8 @@ export const mockGroup = {
 
 export const mockRawGroup = {
   id: 1,
-  name: 'GitLab Community Edition',
-  full_name: 'gitlab-org / gitlab-ce',
+  name: 'Sub451',
+  full_name: 'Commit451 / Sub451',
   web_url: 'http://127.0.0.1:3000/gitlab-org/gitlab-ce',
   avatar_url: null,
 };
