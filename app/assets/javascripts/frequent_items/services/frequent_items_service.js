@@ -58,85 +58,87 @@ export default class FrequentItemsService {
       } else {
         // Check if item is already present in items list
         // When found, update metadata of it.
-        storedFrequentItems = JSON.parse(storedRawItems).map(itemItem => {
-          if (itemItem.id === item.id) {
+        storedFrequentItems = JSON.parse(storedRawItems).map(frequentItem => {
+          if (frequentItem.id === item.id) {
             matchFound = true;
-            const diff = Math.abs(item.lastAccessedOn - itemItem.lastAccessedOn) / HOUR_IN_MS;
+            const accessedOverHourAgo = (Math.abs(item.lastAccessedOn - frequentItem.lastAccessedOn) / HOUR_IN_MS) > 1;
             const updatedItem = {
               ...item,
-              frequency: itemItem.frequency,
-              lastAccessedOn: itemItem.lastAccessedOn,
+              frequency: frequentItem.frequency,
+              lastAccessedOn: frequentItem.lastAccessedOn,
             };
 
             // Check if duration since last access of this item
             // is over an hour
-            if (diff > 1) {
-              return {
+            return accessedOverHourAgo
+              ? {
                 ...updatedItem,
                 frequency: updatedItem.frequency + 1,
                 lastAccessedOn: Date.now(),
-              };
-            }
-
-            return {
-              ...updatedItem,
-            };
+              }
+              : { ...updatedItem };
           }
 
-          return itemItem;
+          return frequentItem;
         });
 
-        // Check whether currently logged item is present in items list
-        if (!matchFound) {
-          // We always keep size of items collection to 20 items
-          // out of which only 5 items with
-          // highest value of `frequency` and most recent `lastAccessedOn`
-          // are shown in items dropdown
-          if (storedFrequentItems.length === FREQUENT_ITEMS.MAX_COUNT) {
-            storedFrequentItems.shift(); // Remove an item from head of array
-          }
-
-          storedFrequentItems.push({ ...item, frequency: 1 });
-        }
+        // Make room for the new item if the list of frequent items is past 20.
+        this.truncateFrequentsList(matchFound, storedFrequentItems, item);
       }
 
       localStorage.setItem(this.storageKey, JSON.stringify(storedFrequentItems));
     }
   }
 
+  static truncateFrequentsList(matchFound, storedFrequentItems, item) {
+    // Check whether currently logged item is present in items list
+    if (!matchFound) {
+      // We always keep size of items collection to 20 items
+      // out of which only 5 items with
+      // highest value of `frequency` and most recent `lastAccessedOn`
+      // are shown in items dropdown
+      if (storedFrequentItems.length === FREQUENT_ITEMS.MAX_COUNT) {
+        storedFrequentItems.shift();
+      }
+
+      storedFrequentItems.push({ ...item, frequency: 1 });
+    }
+  }
+
   getTopFrequentItems() {
     const storedFrequentItems = JSON.parse(localStorage.getItem(this.storageKey));
-    let frequentItemsCount = FREQUENT_ITEMS.LIST_COUNT_DESKTOP;
+    const isMobile = bp.getBreakpointSize() === 'sm' || bp.getBreakpointSize() === 'xs';
+    const frequentItemsCount = isMobile
+      ? FREQUENT_ITEMS.LIST_COUNT_MOBILE
+      : FREQUENT_ITEMS.LIST_COUNT_DESKTOP;
 
     if (!storedFrequentItems) {
       return [];
-    }
-
-    if (bp.getBreakpointSize() === 'sm' || bp.getBreakpointSize() === 'xs') {
-      frequentItemsCount = FREQUENT_ITEMS.LIST_COUNT_MOBILE;
     }
 
     const frequentItems = storedFrequentItems.filter(
       item => item.frequency >= FREQUENT_ITEMS.ELIGIBLE_FREQUENCY,
     );
 
-    // Sort all frequent items in decending order of frequency
-    // and then by lastAccessedOn with recent most first
-    frequentItems.sort((itemA, itemB) => {
-      if (itemA.frequency < itemB.frequency) {
-        return 1;
-      } else if (itemA.frequency > itemB.frequency) {
-        return -1;
-      } else if (itemA.lastAccessedOn < itemB.lastAccessedOn) {
-        return 1;
-      } else if (itemA.lastAccessedOn > itemB.lastAccessedOn) {
-        return -1;
-      }
-
-      return 0;
-    });
+    frequentItems.sort(this.compareFrequentItems);
 
     return _.first(frequentItems, frequentItemsCount);
+  }
+
+  static compareFrequentItems(itemA, itemB) {
+    // Sort all frequent items in decending order of frequency
+    // and then by lastAccessedOn with recent most first
+    if (itemA.frequency < itemB.frequency) {
+      return 1;
+    } else if (itemA.frequency > itemB.frequency) {
+      return -1;
+    } else if (itemA.lastAccessedOn < itemB.lastAccessedOn) {
+      return 1;
+    } else if (itemA.lastAccessedOn > itemB.lastAccessedOn) {
+      return -1;
+    }
+
+    return 0;
   }
 
   // TODO: Should probably be moved to ~/locale for use with other components?
