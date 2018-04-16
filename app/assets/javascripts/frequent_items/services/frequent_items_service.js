@@ -40,11 +40,7 @@ export default class FrequentItemsService {
     if (this.isLocalStorageAvailable) {
       const storedFrequentItems = JSON.parse(localStorage.getItem(this.storageKey));
 
-      if (!storedFrequentItems) {
-        return [];
-      }
-
-      return this.getTopFrequentItems(storedFrequentItems);
+      return !storedFrequentItems ? [] : this.getTopFrequentItems(storedFrequentItems);
     }
     return null;
   }
@@ -59,9 +55,7 @@ export default class FrequentItemsService {
       // Check if there's any frequent items list set
       if (!storedRawItems) {
         // No frequent items list set, set one up.
-        storedFrequentItems = [
-          { ...item, frequency: 1 },
-        ];
+        storedFrequentItems = [{ ...item, frequency: 1 }];
       } else {
         // Check if item is already present in items list
         // When found, update metadata of it.
@@ -106,9 +100,7 @@ export default class FrequentItemsService {
       ? FREQUENT_ITEMS.LIST_COUNT_MOBILE
       : FREQUENT_ITEMS.LIST_COUNT_DESKTOP;
 
-    const frequentItems = items.filter(
-      item => item.frequency >= FREQUENT_ITEMS.ELIGIBLE_FREQUENCY,
-    );
+    const frequentItems = items.filter(item => item.frequency >= FREQUENT_ITEMS.ELIGIBLE_FREQUENCY);
 
     frequentItems.sort((itemA, itemB) => {
       // Sort all frequent items in decending order of frequency
