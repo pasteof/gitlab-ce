@@ -18,7 +18,7 @@ export default class FrequentItemsService {
     this.isLocalStorageAvailable = AccessorUtilities.isLocalStorageAccessSafe();
     this.storageKey = `${this.currentUserName}/${STORAGE_KEY[namespace]}`;
     this.itemsPath = Vue.resource(Api.buildUrl(Api[`${namespace}Path`]));
-    this.isMobile = () => bp.getBreakpointSize() === 'sm' || bp.getBreakpointSize() === 'xs';
+    this.isMobile = () => bp.getBreakpointSize() === ('sm' || 'xs');
   }
 
   getSearchedItems(searchQuery) {
@@ -42,6 +42,7 @@ export default class FrequentItemsService {
 
       return !storedFrequentItems ? [] : this.getTopFrequentItems(storedFrequentItems);
     }
+
     return null;
   }
 

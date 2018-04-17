@@ -60,18 +60,17 @@ export default {
      * existing item namespaces which is not wise thing to do.
      */
     truncatedNamespace() {
-      if (this.namespace) {
-        const namespaceArr = this.namespace.split(' / ');
+      if (!this.namespace) { return null; }
+      const namespaceArr = this.namespace.split(' / ');
 
-        namespaceArr.splice(-1, 1);
-        let namespace = namespaceArr.join(' / ');
+      namespaceArr.splice(-1, 1);
+      let namespace = namespaceArr.join(' / ');
 
-        if (namespaceArr.length > 2) {
-          namespace = `${namespaceArr[0]} / ... / ${namespaceArr.pop()}`;
-        }
-
-        return namespace;
+      if (namespaceArr.length > 2) {
+        namespace = `${namespaceArr[0]} / ... / ${namespaceArr.pop()}`;
       }
+
+      return namespace;
     },
   },
 };
