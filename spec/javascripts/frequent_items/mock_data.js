@@ -6,7 +6,7 @@ export const currentSession = {
     group: {
       id: 1,
       name: 'dummy-group',
-      namespace: 'dummy-parent-group',
+      full_name: 'dummy-parent-group',
       webUrl: 'http://127.0.0.1/dummy-group',
       avatarUrl: null,
       lastAccessedOn: Date.now(),
@@ -30,7 +30,7 @@ export const currentSession = {
 export const mockGroup = {
   id: 1,
   name: 'Commit451',
-  namespace: 'Commit451',
+  full_name: 'Commit451',
   webUrl: 'http://127.0.0.1:3000/Commit451',
   avatarUrl: null,
 };
@@ -47,14 +47,14 @@ export const mockFrequentGroups = [
   {
     id: 3,
     name: 'Subgroup451',
-    namespace: 'Commit451 / Subgroup451',
+    full_name: 'Commit451 / Subgroup451',
     webUrl: '/Commit451/Subgroup451',
     avatarUrl: null,
   },
   {
     id: 1,
     name: 'Commit451',
-    namespace: 'Commit451',
+    full_name: 'Commit451',
     webUrl: '/Commit451',
     avatarUrl: null,
   },
