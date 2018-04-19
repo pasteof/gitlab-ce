@@ -19,6 +19,7 @@ export default class FrequentItemsService {
     this.storageKey = `${this.currentUserName}/${STORAGE_KEY[namespace]}`;
     this.itemsPath = Vue.resource(Api.buildUrl(Api[`${namespace}Path`]));
     this.isMobile = () => bp.getBreakpointSize() === ('sm' || 'xs');
+    this.existingFrequentItem = null;
   }
 
   getSearchedItems(searchQuery) {
@@ -47,53 +48,46 @@ export default class FrequentItemsService {
   }
 
   logItemAccess(item) {
-    let matchFound = false;
-    let storedFrequentItems;
+    if (!this.isLocalStorageAvailable) {
+      return false;
+    }
 
-    if (this.isLocalStorageAvailable) {
-      const storedRawItems = localStorage.getItem(this.storageKey);
+    // Check if there's any frequent items list set
+    const storedRawItems = localStorage.getItem(this.storageKey);
+    const storedFrequentItems = storedRawItems
+      ? JSON.parse(storedRawItems)
+      : [{ ...item, frequency: 1 }]; // No frequent items list set, set one up.
 
-      // Check if there's any frequent items list set
-      if (!storedRawItems) {
-        // No frequent items list set, set one up.
-        storedFrequentItems = [{ ...item, frequency: 1 }];
-      } else {
-        // Check if item is already present in items list
-        // When found, update metadata of it.
-        storedFrequentItems = JSON.parse(storedRawItems).map(frequentItem => {
-          if (frequentItem.id === item.id) {
-            matchFound = true;
-            const accessedOverHourAgo =
-              Math.abs(item.lastAccessedOn - frequentItem.lastAccessedOn) / HOUR_IN_MS > 1;
+    // Check if item already exists in list
+    const itemMatchIndex = _.findIndex(
+      storedFrequentItems,
+      frequentItem => frequentItem.id === item.id,
+    );
 
-            // Check if duration since last access of this item
-            // is over an hour
-            return {
-              ...item,
-              frequency: accessedOverHourAgo ? frequentItem.frequency + 1 : frequentItem.frequency,
-              lastAccessedOn: accessedOverHourAgo ? Date.now() : frequentItem.lastAccessedOn,
-            };
-          }
-
-          return frequentItem;
-        });
-
-        // Make room for the new item if the list of frequent items is past 20.
-        if (!matchFound) {
-          // We always keep size of items collection to 20 items
-          // out of which only 5 items with
-          // highest value of `frequency` and most recent `lastAccessedOn`
-          // are shown in items dropdown
-          if (storedFrequentItems.length === FREQUENT_ITEMS.MAX_COUNT) {
-            storedFrequentItems.shift();
-          }
-
-          storedFrequentItems.push({ ...item, frequency: 1 });
-        }
+    if (itemMatchIndex > -1) {
+      this.existingFrequentItem = storedFrequentItems[itemMatchIndex];
+      storedFrequentItems[itemMatchIndex] = this.updateExistingFrequentItem(item);
+    } else {
+      if (storedFrequentItems.length === FREQUENT_ITEMS.MAX_COUNT) {
+        storedFrequentItems.shift();
       }
 
-      localStorage.setItem(this.storageKey, JSON.stringify(storedFrequentItems));
+      storedFrequentItems.push({ ...item, frequency: 1 });
     }
+
+    return localStorage.setItem(this.storageKey, JSON.stringify(storedFrequentItems));
+  }
+
+  updateExistingFrequentItem(item) {
+    const frequentItem = this.existingFrequentItem;
+    const accessedOverHourAgo =
+      Math.abs(item.lastAccessedOn - frequentItem.lastAccessedOn) / HOUR_IN_MS > 1;
+
+    return {
+      ...item,
+      frequency: accessedOverHourAgo ? frequentItem.frequency + 1 : frequentItem.frequency,
+      lastAccessedOn: accessedOverHourAgo ? Date.now() : frequentItem.lastAccessedOn,
+    };
   }
 
   getTopFrequentItems(items) {
@@ -106,14 +100,10 @@ export default class FrequentItemsService {
     frequentItems.sort((itemA, itemB) => {
       // Sort all frequent items in decending order of frequency
       // and then by lastAccessedOn with recent most first
-      if (itemA.frequency < itemB.frequency) {
-        return 1;
-      } else if (itemA.frequency > itemB.frequency) {
-        return -1;
-      } else if (itemA.lastAccessedOn < itemB.lastAccessedOn) {
-        return 1;
-      } else if (itemA.lastAccessedOn > itemB.lastAccessedOn) {
-        return -1;
+      if (itemA.frequency !== itemB.frequency) {
+        return itemB.frequency - itemA.frequency;
+      } else if (itemA.lastAccessedOn !== itemB.lastAccessedOn) {
+        return itemB.lastAccessedOn - itemA.lastAccessedOn;
       }
 
       return 0;
