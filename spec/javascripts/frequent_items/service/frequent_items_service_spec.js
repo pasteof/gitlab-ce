@@ -3,7 +3,7 @@ import VueResource from 'vue-resource';
 
 import bp from '~/breakpoints';
 import FrequentItemsService from '~/frequent_items/services/frequent_items_service';
-import { FREQUENT_ITEMS } from '~/frequent_items/constants';
+import { FREQUENT_ITEMS, HOUR_IN_MS } from '~/frequent_items/constants';
 import { currentSession, unsortedFrequentItems, sortedFrequentItems } from '../mock_data';
 
 Vue.use(VueResource);
@@ -45,6 +45,7 @@ describe('FrequentItemsService', () => {
         };
 
         service.getSearchedItems(searchQuery);
+
         expect(service.itemsPath.get).toHaveBeenCalledWith(queryParams);
       });
     });
@@ -72,6 +73,7 @@ describe('FrequentItemsService', () => {
         service.logItemAccess(session.project);
 
         const projects = JSON.parse(storage[session.storageKey]);
+
         expect(projects.length).toBe(1);
         expect(projects[0].frequency).toBe(1);
         expect(projects[0].lastAccessedOn).toBeDefined();
@@ -82,19 +84,25 @@ describe('FrequentItemsService', () => {
         service.logItemAccess(session.project);
 
         const projects = JSON.parse(storage[session.storageKey]);
+
         expect(projects.length).toBe(1);
       });
 
       it('should increase frequency of report if it was logged multiple times over the course of an hour', () => {
         let projects;
-        spyOn(Math, 'abs').and.returnValue(3600001); // this will lead to `diff` > 1;
-        service.logItemAccess(session.project);
+        const newTimestamp = Date.now() + HOUR_IN_MS + 1;
 
+        service.logItemAccess(session.project);
         projects = JSON.parse(storage[session.storageKey]);
+
         expect(projects[0].frequency).toBe(1);
 
-        service.logItemAccess(session.project);
+        service.logItemAccess({
+          ...session.project,
+          lastAccessedOn: newTimestamp,
+        });
         projects = JSON.parse(storage[session.storageKey]);
+
         expect(projects[0].frequency).toBe(2);
         expect(projects[0].lastAccessedOn).not.toBe(session.project.lastAccessedOn);
       });
@@ -115,6 +123,7 @@ describe('FrequentItemsService', () => {
 
         service.logItemAccess(oldProject);
         projects = JSON.parse(storage[session.storageKey]);
+
         expect(projects[0].name).toBe(oldProject.name);
         expect(projects[0].avatarUrl).toBe(oldProject.avatarUrl);
         expect(projects[0].namespace).toBe(oldProject.namespace);
@@ -122,6 +131,7 @@ describe('FrequentItemsService', () => {
 
         service.logItemAccess(newProject);
         projects = JSON.parse(storage[session.storageKey]);
+
         expect(projects[0].name).toBe(newProject.name);
         expect(projects[0].avatarUrl).toBe(newProject.avatarUrl);
         expect(projects[0].namespace).toBe(newProject.namespace);
@@ -135,6 +145,7 @@ describe('FrequentItemsService', () => {
         }
 
         const projects = JSON.parse(storage[session.storageKey]);
+
         expect(projects.length).toBe(3);
       });
     });
@@ -176,6 +187,7 @@ describe('FrequentItemsService', () => {
 
       it('should return empty array if there are no projects available in store', () => {
         storage = {};
+
         expect(service.getFrequentItems().length).toBe(0);
       });
     });
@@ -214,6 +226,7 @@ describe('FrequentItemsService', () => {
         };
 
         service.getSearchedItems(searchQuery);
+
         expect(service.itemsPath.get).toHaveBeenCalledWith(queryParams);
       });
     });
@@ -241,6 +254,7 @@ describe('FrequentItemsService', () => {
         service.logItemAccess(session.group);
 
         const groups = JSON.parse(storage[session.storageKey]);
+
         expect(groups.length).toBe(1);
         expect(groups[0].frequency).toBe(1);
         expect(groups[0].lastAccessedOn).toBeDefined();
@@ -251,19 +265,25 @@ describe('FrequentItemsService', () => {
         service.logItemAccess(session.group);
 
         const groups = JSON.parse(storage[session.storageKey]);
+
         expect(groups.length).toBe(1);
       });
 
       it('should increase frequency of report if it was logged multiple times over the course of an hour', () => {
         let groups;
-        spyOn(Math, 'abs').and.returnValue(3600001); // this will lead to `diff` > 1;
-        service.logItemAccess(session.group);
+        const newTimestamp = Date.now() + HOUR_IN_MS + 1;
 
+        service.logItemAccess(session.group);
         groups = JSON.parse(storage[session.storageKey]);
+
         expect(groups[0].frequency).toBe(1);
 
-        service.logItemAccess(session.group);
+        service.logItemAccess({
+          ...session.group,
+          lastAccessedOn: newTimestamp,
+        });
         groups = JSON.parse(storage[session.storageKey]);
+
         expect(groups[0].frequency).toBe(2);
         expect(groups[0].lastAccessedOn).not.toBe(session.group.lastAccessedOn);
       });
@@ -284,6 +304,7 @@ describe('FrequentItemsService', () => {
 
         service.logItemAccess(oldGroup);
         groups = JSON.parse(storage[session.storageKey]);
+
         expect(groups[0].name).toBe(oldGroup.name);
         expect(groups[0].avatarUrl).toBe(oldGroup.avatarUrl);
         expect(groups[0].namespace).toBe(oldGroup.namespace);
@@ -291,6 +312,7 @@ describe('FrequentItemsService', () => {
 
         service.logItemAccess(newGroup);
         groups = JSON.parse(storage[session.storageKey]);
+
         expect(groups[0].name).toBe(newGroup.name);
         expect(groups[0].avatarUrl).toBe(newGroup.avatarUrl);
         expect(groups[0].namespace).toBe(newGroup.namespace);
@@ -304,6 +326,7 @@ describe('FrequentItemsService', () => {
         }
 
         const groups = JSON.parse(storage[session.storageKey]);
+
         expect(groups.length).toBe(3);
       });
     });
@@ -345,6 +368,7 @@ describe('FrequentItemsService', () => {
 
       it('should return empty array if there are no groups available in store', () => {
         storage = {};
+
         expect(service.getFrequentItems().length).toBe(0);
       });
     });
