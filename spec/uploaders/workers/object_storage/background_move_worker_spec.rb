@@ -125,8 +125,10 @@ describe ObjectStorage::BackgroundMoveWorker do
 
           it "migrates file to remote storage" do
             perform
+            project.reload
+            BatchLoader::Executor.clear_current
 
-            expect(project.reload.avatar.file_storage?).to be_falsey
+            expect(project.avatar.file_storage?).to be_falsey
           end
         end
 

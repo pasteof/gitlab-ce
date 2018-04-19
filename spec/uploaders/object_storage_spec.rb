@@ -659,4 +659,24 @@ describe ObjectStorage do
       end
     end
   end
+
+  describe '#retrieve_from_store!' do
+    [:group, :project, :user].each do |model|
+      context "for #{model}s" do
+        let(:models) { create_list(model, 10, :with_avatar).map(&:reload) }
+        let(:avatars) { models.map(&:avatar) }
+
+        it 'batches fetching uploads from the database' do
+          models
+
+          expect { avatars }.not_to exceed_query_limit(1)
+        end
+
+        it 'fetches the correct upload for each' do
+          expect(avatars.map(&:url).uniq).to eq(avatars.map(&:url))
+          expect(avatars.map(&:upload).uniq).to eq(avatars.map(&:upload))
+        end
+      end
+    end
+  end
 end
