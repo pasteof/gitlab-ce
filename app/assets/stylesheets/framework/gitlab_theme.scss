@@ -29,15 +29,21 @@
     .navbar-sub-nav,
     .navbar-nav {
       > li {
-        > a:hover,
-        > a:focus {
-          background-color: rgba($color-200, 0.2);
+        > a,
+        > button {
+          &:hover,
+          &:focus {
+            background-color: rgba($color-200, 0.2);
+          }
         }
 
-        &.active > a,
-        &.dropdown.open > a {
-          color: $color-900;
-          background-color: $color-alternate;
+        &.active,
+        &.dropdown.open {
+          > a,
+          > button {
+            color: $color-900;
+            background-color: $color-alternate;
+          }
         }
 
         &.line-separator {
