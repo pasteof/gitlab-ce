@@ -10,8 +10,10 @@ export default new Vuex.Store({
   actions,
   getters,
   mutations,
-  state: {
-    frequentItems: [],
-    searchedItems: [],
+  state() {
+    return {
+      frequentItems: [],
+      searchedItems: [],
+    };
   },
 });
