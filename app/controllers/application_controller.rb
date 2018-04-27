@@ -13,6 +13,7 @@ class ApplicationController < ActionController::Base
 
   before_action :authenticate_sessionless_user!
   before_action :authenticate_user!
+  before_action :authorize_access_web!
   before_action :validate_user_service_ticket!
   before_action :check_password_expiration
   before_action :ldap_security_check
@@ -265,6 +266,12 @@ class ApplicationController < ActionController::Base
   def require_email
     if current_user && current_user.temp_oauth_email? && session[:impersonator_id].nil?
       return redirect_to profile_path, notice: 'Please complete your profile with email address'
+    end
+  end
+
+  def authorize_access_web!
+    unless can?(current_user, :access_web)
+      render_403
     end
   end
 

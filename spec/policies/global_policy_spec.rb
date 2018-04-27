@@ -88,4 +88,18 @@ describe GlobalPolicy do
       it { is_expected.to be_allowed(:update_custom_attribute) }
     end
   end
+
+  describe 'accessing the web application' do
+    context 'anonymous users' do
+      let(:current_user) { nil }
+
+      it { is_expected.to be_allowed(:access_web) }
+    end
+
+    context 'blocked users' do
+      let(:current_user) { create(:user, :blocked) }
+
+      it { is_expected.not_to be_allowed(:access_web) }
+    end
+  end
 end

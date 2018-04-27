@@ -406,4 +406,32 @@ describe ApplicationController do
       end
     end
   end
+
+  context 'access to the web application' do
+    controller(described_class) do
+      def index
+        render nothing: true
+      end
+    end
+
+    before do
+      sign_in(user)
+    end
+
+    it 'renders 200 when the user has access' do
+      expect(Ability).to receive(:allowed?).with(user, :access_web, :global) { true }
+
+      get :index
+
+      expect(response).to have_gitlab_http_status(:success)
+    end
+
+    it 'renders 403 when the user does not have access' do
+      expect(Ability).to receive(:allowed?).with(user, :access_web, :global) { false }
+
+      get :index
+
+      expect(response).to have_gitlab_http_status(:forbidden)
+    end
+  end
 end

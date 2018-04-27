@@ -26,14 +26,16 @@ class GlobalPolicy < BasePolicy
     enable :log_in
     enable :access_api
     enable :access_git
+    enable :access_web
     enable :receive_notifications
     enable :use_quick_actions
   end
 
-  rule { blocked | internal }.policy do
+  rule { ~anonymous & (blocked | internal) }.policy do
     prevent :log_in
     prevent :access_api
     prevent :access_git
+    prevent :access_web
     prevent :receive_notifications
     prevent :use_quick_actions
   end
