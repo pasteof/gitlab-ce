@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180418053107) do
+ActiveRecord::Schema.define(version: 20180425131009) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -307,10 +307,10 @@ ActiveRecord::Schema.define(version: 20180418053107) do
     t.integer "auto_canceled_by_id"
     t.boolean "retried"
     t.integer "stage_id"
-    t.boolean "protected"
-    t.integer "failure_reason"
     t.integer "artifacts_file_store"
     t.integer "artifacts_metadata_store"
+    t.boolean "protected"
+    t.integer "failure_reason"
   end
 
   add_index "ci_builds", ["artifacts_expire_at"], name: "index_ci_builds_on_artifacts_expire_at", where: "(artifacts_file <> ''::text)", using: :btree
@@ -1436,6 +1436,13 @@ ActiveRecord::Schema.define(version: 20180418053107) do
 
   add_index "project_auto_devops", ["project_id"], name: "index_project_auto_devops_on_project_id", unique: true, using: :btree
 
+  create_table "project_ci_cd_settings", force: :cascade do |t|
+    t.integer "project_id", null: false
+    t.boolean "group_runners_enabled", default: true, null: false
+  end
+
+  add_index "project_ci_cd_settings", ["project_id"], name: "index_project_ci_cd_settings_on_project_id", unique: true, using: :btree
+
   create_table "project_custom_attributes", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -2162,6 +2169,7 @@ ActiveRecord::Schema.define(version: 20180418053107) do
   add_foreign_key "project_authorizations", "projects", on_delete: :cascade
   add_foreign_key "project_authorizations", "users", on_delete: :cascade
   add_foreign_key "project_auto_devops", "projects", on_delete: :cascade
+  add_foreign_key "project_ci_cd_settings", "projects", name: "fk_24c15d2f2e", on_delete: :cascade
   add_foreign_key "project_custom_attributes", "projects", on_delete: :cascade
   add_foreign_key "project_deploy_tokens", "deploy_tokens", on_delete: :cascade
   add_foreign_key "project_deploy_tokens", "projects", on_delete: :cascade
