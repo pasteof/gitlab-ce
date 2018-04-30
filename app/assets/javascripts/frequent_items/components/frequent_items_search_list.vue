@@ -1,9 +1,9 @@
 <script>
-import frequentItemsListItem from './frequent_items_list_item.vue';
+import FrequentItemsListItem from './frequent_items_list_item.vue';
 
 export default {
   components: {
-    frequentItemsListItem,
+    FrequentItemsListItem,
   },
   props: {
     matcher: {

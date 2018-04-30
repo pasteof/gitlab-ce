@@ -1,10 +1,10 @@
 <script>
 /* eslint-disable vue/require-default-prop, vue/require-prop-types */
-import identicon from '../../vue_shared/components/identicon.vue';
+import Identicon from '../../vue_shared/components/identicon.vue';
 
 export default {
   components: {
-    identicon,
+    Identicon,
   },
   props: {
     matcher: {
@@ -60,7 +60,9 @@ export default {
      * existing item namespaces which is not wise thing to do.
      */
     truncatedNamespace() {
-      if (!this.namespace) { return null; }
+      if (!this.namespace) {
+        return null;
+      }
       const namespaceArr = this.namespace.split(' / ');
 
       namespaceArr.splice(-1, 1);

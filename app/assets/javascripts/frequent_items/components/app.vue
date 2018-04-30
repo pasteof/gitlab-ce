@@ -1,21 +1,21 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import bs from '~/breakpoints';
-import loadingIcon from '~/vue_shared/components/loading_icon.vue';
+import LoadingIcon from '~/vue_shared/components/loading_icon.vue';
 
 import eventHub from '../event_hub';
 import store from '../stores/';
-import frequentItemsSearchInput from './frequent_items_search_input.vue';
-import frequentItemsList from './frequent_items_list.vue';
-import frequentItemsSearchList from './frequent_items_search_list.vue';
+import FrequentItemsSearchInput from './frequent_items_search_input.vue';
+import FrequentItemsList from './frequent_items_list.vue';
+import FrequentItemsSearchList from './frequent_items_search_list.vue';
 
 export default {
   store,
   components: {
-    frequentItemsSearchInput,
-    loadingIcon,
-    frequentItemsList,
-    frequentItemsSearchList,
+    LoadingIcon,
+    FrequentItemsSearchInput,
+    FrequentItemsList,
+    FrequentItemsSearchList,
   },
   props: {
     namespace: {
