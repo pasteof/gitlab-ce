@@ -11,3 +11,5 @@ export const setSearchedItems = ({ commit }, rawItems) => {
 export const clearSearchedItems = ({ commit }) => {
   commit(types.CLEAR_SEARCHED_ITEMS);
 };
+
+export default setFrequentItems;
