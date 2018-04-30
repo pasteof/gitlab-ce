@@ -43,7 +43,7 @@
     border-color: $gray-darkest;
   }
 
-  [data-toggle="dropdown"] {
+  [data-toggle='dropdown'] {
     outline: 0;
   }
 }
@@ -172,7 +172,11 @@
     color: $brand-danger;
   }
 
-  &:hover,
+  &.disable-hover {
+    text-decoration: none;
+  }
+
+  &:not(.disable-hover):hover,
   &:active,
   &:focus,
   &.is-focused {
@@ -508,16 +512,15 @@
       }
 
       &.is-indeterminate::before {
-        content: "\f068";
+        content: '\f068';
       }
 
       &.is-active::before {
-        content: "\f00c";
+        content: '\f00c';
       }
     }
   }
 }
-
 
 .dropdown-title {
   position: relative;
@@ -723,7 +726,6 @@
     max-height: 128px;
   }
 }
-
 
 .dropdown-menu-due-date {
   .dropdown-content {
