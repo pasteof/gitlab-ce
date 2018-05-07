@@ -50,6 +50,21 @@ namespace :gettext do
     end
   end
 
+  task updated_check: :find do
+    changed_files = `git diff --name-only`.lines.map(&:strip)
+
+    if changed_files.include?('locale/gitlab.pot')
+      raise <<~MSG
+        Newly translated strings found, please add them to `gitlab.pot` by running:
+
+          bundle exec rake gettext:find; git checkout locale/*/gitlab.po;
+
+        Then check in the resulting `locale/gitlab.pot`
+
+      MSG
+    end
+  end
+
   def report_errors_for_file(file, errors_for_file)
     puts "Errors in `#{file}`:"
 

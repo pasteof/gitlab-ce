@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gitlab 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-09 09:24+0200\n"
-"PO-Revision-Date: 2018-05-09 09:24+0200\n"
+"POT-Creation-Date: 2018-05-14 12:34+0200\n"
+"PO-Revision-Date: 2018-05-14 12:34+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -50,6 +50,16 @@ msgstr[1] ""
 
 msgid "%d metric"
 msgid_plural "%d metrics"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%d staged change"
+msgid_plural "%d staged changes"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%d unstaged change"
+msgid_plural "%d unstaged changes"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -98,6 +108,9 @@ msgstr ""
 msgid "%{title} changes"
 msgstr ""
 
+msgid "%{unstaged} unstaged and %{staged} staged changes"
+msgstr ""
+
 msgid "(checkout the %{link} for information on how to install it)."
 msgstr ""
 
@@ -114,12 +127,12 @@ msgid "- show less"
 msgstr ""
 
 msgid "1 %{type} addition"
-msgid_plural "%d %{type} additions"
+msgid_plural "%{count} %{type} additions"
 msgstr[0] ""
 msgstr[1] ""
 
 msgid "1 %{type} modification"
-msgid_plural "%d %{type} modifications"
+msgid_plural "%{count} %{type} modifications"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -202,6 +215,9 @@ msgid "Account and limit settings"
 msgstr ""
 
 msgid "Active"
+msgstr ""
+
+msgid "Active Sessions"
 msgstr ""
 
 msgid "Activity"
@@ -310,6 +326,9 @@ msgid "An error occurred previewing the blob"
 msgstr ""
 
 msgid "An error occurred when toggling the notification subscription"
+msgstr ""
+
+msgid "An error occurred while dismissing the alert. Refresh the page and try again."
 msgstr ""
 
 msgid "An error occurred while dismissing the feature highlight. Refresh the page and try dismissing again."
@@ -1019,6 +1038,9 @@ msgstr ""
 msgid "ClusterIntegration|Environment scope"
 msgstr ""
 
+msgid "ClusterIntegration|Every new Google Cloud Platform (GCP) account receives $300 in credit upon %{sign_up_link}. In partnership with Google, GitLab is able to offer an additional $200 for new GCP accounts to get started with GitLab's Google Kubernetes Engine Integration."
+msgstr ""
+
 msgid "ClusterIntegration|GitLab Integration"
 msgstr ""
 
@@ -1142,6 +1164,9 @@ msgstr ""
 msgid "ClusterIntegration|Read our %{link_to_help_page} on Kubernetes cluster integration."
 msgstr ""
 
+msgid "ClusterIntegration|Redeem up to $500 in free credit for Google Cloud Platform"
+msgstr ""
+
 msgid "ClusterIntegration|Remove Kubernetes cluster integration"
 msgstr ""
 
@@ -1230,6 +1255,9 @@ msgid "ClusterIntegration|meets the requirements"
 msgstr ""
 
 msgid "ClusterIntegration|properly configured"
+msgstr ""
+
+msgid "ClusterIntegration|sign up"
 msgstr ""
 
 msgid "Collapse"
@@ -1354,6 +1382,9 @@ msgid "Configure automatic git checks and housekeeping on repositories."
 msgstr ""
 
 msgid "Configure limits for web and API requests."
+msgstr ""
+
+msgid "Configure push mirrors."
 msgstr ""
 
 msgid "Configure storage path and circuit breaker settings."
@@ -1521,6 +1552,9 @@ msgstr ""
 msgid "CreateTokenToCloneLink|create a personal access token"
 msgstr ""
 
+msgid "Created"
+msgstr ""
+
 msgid "Cron Timezone"
 msgstr ""
 
@@ -1590,6 +1624,54 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "Deploy Keys"
+msgstr ""
+
+msgid "DeployKeys|+%{count} others"
+msgstr ""
+
+msgid "DeployKeys|Current project"
+msgstr ""
+
+msgid "DeployKeys|Deploy key"
+msgstr ""
+
+msgid "DeployKeys|Enabled deploy keys"
+msgstr ""
+
+msgid "DeployKeys|Error enabling deploy key"
+msgstr ""
+
+msgid "DeployKeys|Error getting deploy keys"
+msgstr ""
+
+msgid "DeployKeys|Error removing deploy key"
+msgstr ""
+
+msgid "DeployKeys|Expand %{count} other projects"
+msgstr ""
+
+msgid "DeployKeys|Loading deploy keys"
+msgstr ""
+
+msgid "DeployKeys|No deploy keys found. Create one with the form above."
+msgstr ""
+
+msgid "DeployKeys|Privately accessible deploy keys"
+msgstr ""
+
+msgid "DeployKeys|Project usage"
+msgstr ""
+
+msgid "DeployKeys|Publicly accessible deploy keys"
+msgstr ""
+
+msgid "DeployKeys|Read access only"
+msgstr ""
+
+msgid "DeployKeys|Write access allowed"
+msgstr ""
+
+msgid "DeployKeys|You are going to remove this deploy key. Are you sure?"
 msgstr ""
 
 msgid "DeployTokens|Active Deploy Tokens (%{active_tokens})"
@@ -1746,9 +1828,6 @@ msgid "Edit Pipeline Schedule %{id}"
 msgstr ""
 
 msgid "Edit files in the editor and commit changes here"
-msgstr ""
-
-msgid "Editing"
 msgstr ""
 
 msgid "Email"
@@ -2163,6 +2242,18 @@ msgstr ""
 msgid "Housekeeping successfully started"
 msgstr ""
 
+msgid "IDE|Commit"
+msgstr ""
+
+msgid "IDE|Edit"
+msgstr ""
+
+msgid "IDE|Go back"
+msgstr ""
+
+msgid "IDE|Review"
+msgstr ""
+
 msgid "If you already have files you can push them using the %{link_to_cli} below."
 msgstr ""
 
@@ -2331,6 +2422,9 @@ msgid "LastPushEvent|You pushed to"
 msgstr ""
 
 msgid "LastPushEvent|at"
+msgstr ""
+
+msgid "Latest changes"
 msgstr ""
 
 msgid "Learn more"
@@ -2875,7 +2969,13 @@ msgstr ""
 msgid "Pipelines|This project is not currently set up to run pipelines."
 msgstr ""
 
-msgid "Pipeline|Existing branch name, tag"
+msgid "Pipeline|Create for"
+msgstr ""
+
+msgid "Pipeline|Create pipeline"
+msgstr ""
+
+msgid "Pipeline|Existing branch name or tag"
 msgstr ""
 
 msgid "Pipeline|Retry pipeline"
@@ -2887,19 +2987,19 @@ msgstr ""
 msgid "Pipeline|Run Pipeline"
 msgstr ""
 
-msgid "Pipeline|Run on"
-msgstr ""
-
-msgid "Pipeline|Run pipeline"
-msgstr ""
-
 msgid "Pipeline|Search branches"
+msgstr ""
+
+msgid "Pipeline|Specify variable values to be used in this run. The values specified in %{settings_link} will be used by default."
 msgstr ""
 
 msgid "Pipeline|Stop pipeline"
 msgstr ""
 
 msgid "Pipeline|Stop pipeline #%{pipelineId}?"
+msgstr ""
+
+msgid "Pipeline|Variables"
 msgstr ""
 
 msgid "Pipeline|You’re about to retry pipeline %{pipelineId}."
@@ -3265,6 +3365,9 @@ msgstr ""
 msgid "Repository maintenance"
 msgstr ""
 
+msgid "Repository mirror settings"
+msgstr ""
+
 msgid "Repository storage"
 msgstr ""
 
@@ -3360,6 +3463,9 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
+msgid "Search branches"
+msgstr ""
+
 msgid "Search branches and tags"
 msgstr ""
 
@@ -3400,6 +3506,9 @@ msgid "Select assignee"
 msgstr ""
 
 msgid "Select branch/tag"
+msgstr ""
+
+msgid "Select source branch"
 msgstr ""
 
 msgid "Select target branch"
@@ -3934,6 +4043,9 @@ msgstr ""
 msgid "This merge request is locked."
 msgstr ""
 
+msgid "This option is disabled while you still have unstaged changes"
+msgstr ""
+
 msgid "This page is unavailable because you are not allowed to read information across multiple projects."
 msgstr ""
 
@@ -4248,9 +4360,6 @@ msgid "Various settings that affect GitLab performance."
 msgstr ""
 
 msgid "Verified"
-msgstr ""
-
-msgid "View and edit lines"
 msgstr ""
 
 msgid "View file @ "
