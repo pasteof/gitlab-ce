@@ -116,20 +116,4 @@ class Spinach::Features::ProjectForkedMergeRequests < Spinach::FeatureSteps
   step 'I should see validation errors' do
     expect(page).to have_content "You must select source and target branch"
   end
-
-  step 'I click "Assign to" dropdown"' do
-    click_button 'Assignee'
-  end
-
-  step 'I should see the target project ID in the input selector' do
-    expect(find('.js-assignee-search')["data-project-id"]).to eq "#{@project.id}"
-  end
-
-  step 'I should see the users from the target project ID' do
-    page.within '.dropdown-menu-user' do
-      expect(page).to have_content 'Unassigned'
-      expect(page).to have_content current_user.name
-      expect(page).to have_content @project.users.first.name
-    end
-  end
 end

@@ -39,7 +39,7 @@ describe "User creates a merge request", :js do
       visit(project_new_merge_request_path(forked_project))
 
       expect(page).to have_content("Source branch").and have_content("Target branch")
-      expect(find("#merge_request_target_project_id", visible: false).value).to eq(project.id.to_s) # project id is string in an HTML input field
+      expect(find("#merge_request_target_project_id", visible: false).value).to eq(project.id.to_s)
 
       first(".js-source-project").click
       first(".dropdown-source-project a", text: forked_project.full_path)
@@ -63,6 +63,16 @@ describe "User creates a merge request", :js do
         TITLE = "Merge Request On Forked Project".freeze
 
         fill_in("Title", with: TITLE)
+      end
+
+      click_button("Assignee")
+
+      expect(find(".js-assignee-search")["data-project-id"]).to eq(project.id.to_s)
+
+      page.within(".dropdown-menu-user") do
+        expect(page).to have_content("Unassigned")
+                   .and have_content(user.name)
+                   .and have_content(project.users.first.name)
       end
 
       click_button("Submit merge request")
