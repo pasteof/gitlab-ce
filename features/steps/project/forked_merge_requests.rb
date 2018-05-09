@@ -104,16 +104,4 @@ class Spinach::Features::ProjectForkedMergeRequests < Spinach::FeatureSteps
     expect(page).to have_content "Edit merge request #{@merge_request.to_reference}"
     expect(find("#merge_request_title").value).to eq "Merge Request On Forked Project"
   end
-
-  step 'I fill out an invalid "Merge Request On Forked Project" merge request' do
-    expect(find_by_id("merge_request_source_project_id", visible: false).value).to eq @forked_project.id.to_s
-    expect(find_by_id("merge_request_target_project_id", visible: false).value).to eq @project.id.to_s
-    expect(find_by_id("merge_request_source_branch", visible: false).value).to eq nil
-    expect(find_by_id("merge_request_target_branch", visible: false).value).to eq "master"
-    click_button "Compare branches"
-  end
-
-  step 'I should see validation errors' do
-    expect(page).to have_content "You must select source and target branch"
-  end
 end

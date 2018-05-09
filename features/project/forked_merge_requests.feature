@@ -18,9 +18,3 @@ Feature: Project Forked Merge Requests
     #And I update the merge request title
     #And I save the merge request
     #Then I should see the edited merge request
-
-  Scenario: I cannot submit an invalid merge request
-    Given I visit project "Forked Shop" merge requests page
-    And I click link "New Merge Request"
-    And I fill out an invalid "Merge Request On Forked Project" merge request
-    Then I should see validation errors

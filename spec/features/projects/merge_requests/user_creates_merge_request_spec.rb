@@ -41,6 +41,10 @@ describe "User creates a merge request", :js do
       expect(page).to have_content("Source branch").and have_content("Target branch")
       expect(find("#merge_request_target_project_id", visible: false).value).to eq(project.id.to_s)
 
+      click_button("Compare branches and continue")
+
+      expect(page).to have_content("You must select source and target branch")
+
       first(".js-source-project").click
       first(".dropdown-source-project a", text: forked_project.full_path)
 
