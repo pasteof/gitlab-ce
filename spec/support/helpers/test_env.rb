@@ -159,11 +159,10 @@ module TestEnv
     end
 
     spawn_script = Rails.root.join('scripts/gitaly-test-spawn').to_s
-
-    @gitaly_pid = Bundler.with_original_env do
-      ENV.delete("BUNDLE_GEMFILE") # Don't leak `BUNDLE_GEMFILE` to gitaly-ruby.
-      IO.popen([spawn_script], &:read).to_i
+    Bundler.with_original_env do
+      raise "gitaly spawn failed" unless system(spawn_script)
     end
+    @gitaly_pid = Integer(File.read('tmp/tests/gitaly.pid'))
 
     Kernel.at_exit { stop_gitaly }
 
