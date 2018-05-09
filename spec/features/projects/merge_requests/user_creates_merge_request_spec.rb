@@ -39,6 +39,7 @@ describe "User creates a merge request", :js do
       visit(project_new_merge_request_path(forked_project))
 
       expect(page).to have_content("Source branch").and have_content("Target branch")
+      expect(find("#merge_request_target_project_id", visible: false).value).to eq(project.id.to_s) # project id is string in an HTML input field
 
       first(".js-source-project").click
       first(".dropdown-source-project a", text: forked_project.full_path)

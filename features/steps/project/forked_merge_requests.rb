@@ -117,10 +117,6 @@ class Spinach::Features::ProjectForkedMergeRequests < Spinach::FeatureSteps
     expect(page).to have_content "You must select source and target branch"
   end
 
-  step 'the target repository should be the original repository' do
-    expect(find_by_id("merge_request_target_project_id").value).to eq "#{@project.id}"
-  end
-
   step 'I click "Assign to" dropdown"' do
     click_button 'Assignee'
   end
