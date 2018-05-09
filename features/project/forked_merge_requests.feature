@@ -4,14 +4,6 @@ Feature: Project Forked Merge Requests
     And I am a member of project "Shop"
     And I have a project forked off of "Shop" called "Forked Shop"
 
-  @javascript
-  Scenario: I submit new unassigned merge request to a forked project
-    Given I visit project "Forked Shop" merge requests page
-    And I click link "New Merge Request"
-    And I fill out a "Merge Request On Forked Project" merge request
-    And I submit the merge request
-    Then I should see merge request "Merge Request On Forked Project"
-
   # TODO: Improve it so it does not fail randomly
   #
   #@javascript
