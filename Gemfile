@@ -33,7 +33,7 @@ gem 'grape-route-helpers', '~> 2.1.0'
 gem 'faraday', '~> 0.12'
 
 # Authentication libraries
-gem 'devise', '~> 4.2'
+gem 'devise', '~> 4.4'
 gem 'doorkeeper', '~> 4.3'
 gem 'doorkeeper-openid_connect', '~> 1.3'
 gem 'omniauth', '~> 1.8'
@@ -41,7 +41,7 @@ gem 'omniauth-auth0', '~> 2.0.0'
 gem 'omniauth-azure-oauth2', '~> 0.0.9'
 gem 'omniauth-cas3', '~> 1.1.4'
 gem 'omniauth-facebook', '~> 4.0.0'
-gem 'omniauth-github', '~> 1.1.1'
+gem 'omniauth-github', '~> 1.3'
 gem 'omniauth-gitlab', '~> 1.0.2'
 gem 'omniauth-google-oauth2', '~> 0.5.3'
 gem 'omniauth-kerberos', '~> 0.3.0', group: :kerberos
@@ -51,7 +51,6 @@ gem 'omniauth-shibboleth', '~> 1.2.0'
 gem 'omniauth-twitter', '~> 1.4'
 gem 'omniauth_crowd', '~> 2.2.0'
 gem 'omniauth-authentiq', '~> 0.3.1'
-gem 'omniauth-jwt', '~> 0.0.2'
 gem 'rack-oauth2', '~> 1.2.1'
 gem 'jwt', '~> 1.5.6'
 
@@ -91,7 +90,7 @@ gem 'github-linguist', '~> 5.3.3', require: 'linguist'
 
 # API
 gem 'grape', '~> 1.0'
-gem 'grape-entity', '~> 0.6.0'
+gem 'grape-entity', '~> 0.7.1'
 gem 'rack-cors', '~> 1.0.0', require: 'rack/cors'
 
 # Disable strong_params so that Mash does not respond to :permitted?
@@ -185,6 +184,9 @@ gem 're2', '~> 1.1.1'
 
 gem 'version_sorter', '~> 2.1.0'
 
+# User agent parsing
+gem 'device_detector'
+
 # Cache
 gem 'redis-rails', '~> 5.0.2'
 
@@ -215,9 +217,6 @@ gem 'ruby-fogbugz', '~> 0.2.1'
 
 # Kubernetes integration
 gem 'kubeclient', '~> 3.0'
-
-# d3
-gem 'd3_rails', '~> 3.5.0'
 
 # Sanitize user input
 gem 'sanitize', '~> 2.0'
@@ -283,7 +282,6 @@ gem 'batch-loader', '~> 1.2.1'
 gem 'peek', '~> 1.0.1'
 gem 'peek-gc', '~> 0.0.2'
 gem 'peek-mysql2', '~> 1.1.0', group: :mysql
-gem 'peek-performance_bar', '~> 1.3.0'
 gem 'peek-pg', '~> 1.3.0', group: :postgres
 gem 'peek-rblineprof', '~> 0.2.0'
 gem 'peek-redis', '~> 1.2.0'
@@ -415,8 +413,8 @@ group :ed25519 do
 end
 
 # Gitaly GRPC client
-gem 'gitaly-proto', '~> 0.97.0', require: 'gitaly'
-gem 'grpc', '~> 1.10.0'
+gem 'gitaly-proto', '~> 0.99.0', require: 'gitaly'
+gem 'grpc', '~> 1.11.0'
 
 # Locked until https://github.com/google/protobuf/issues/4210 is closed
 gem 'google-protobuf', '= 3.5.1'
@@ -433,4 +431,4 @@ gem 'lograge', '~> 0.5'
 gem 'grape_logging', '~> 1.7'
 
 # Asset synchronization
-gem 'asset_sync', '~> 2.2.0'
+gem 'asset_sync', '~> 2.4'

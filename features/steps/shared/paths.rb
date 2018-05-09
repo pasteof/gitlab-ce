@@ -48,10 +48,6 @@ module SharedPaths
     visit group_group_members_path(Group.find_by(name: "Owned"))
   end
 
-  step 'I visit group "Owned" settings page' do
-    visit edit_group_path(Group.find_by(name: "Owned"))
-  end
-
   step 'I visit group "Owned" projects page' do
     visit projects_group_path(Group.find_by(name: "Owned"))
   end
@@ -337,11 +333,6 @@ module SharedPaths
 
   step 'I visit merge request page "Bug NS-04"' do
     visit merge_request_path("Bug NS-04")
-    wait_for_requests
-  end
-
-  step 'I visit merge request page "Bug NS-05"' do
-    visit merge_request_path("Bug NS-05")
     wait_for_requests
   end
 
