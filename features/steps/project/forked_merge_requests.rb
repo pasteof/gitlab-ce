@@ -19,89 +19,8 @@ class Spinach::Features::ProjectForkedMergeRequests < Spinach::FeatureSteps
                                    repository: true)
   end
 
-  step 'I click link "New Merge Request"' do
-    page.within '#content-body' do
-      page.has_link?('New Merge Request') ? click_link("New Merge Request") : click_link('New merge request')
-    end
-  end
-
-  step 'I should see merge request "Merge Request On Forked Project"' do
-    expect(@project.merge_requests.size).to be >= 1
-    @merge_request = @project.merge_requests.last
-    expect(current_path).to eq project_merge_request_path(@project, @merge_request)
-    expect(@merge_request.title).to eq "Merge Request On Forked Project"
-    expect(@merge_request.source_project).to eq @forked_project
-    expect(@merge_request.source_branch).to eq "fix"
-    expect(@merge_request.target_branch).to eq "master"
-    expect(page).to have_content @forked_project.full_path
-    expect(page).to have_content @project.full_path
-    expect(page).to have_content @merge_request.source_branch
-    expect(page).to have_content @merge_request.target_branch
-
-    wait_for_requests
-  end
-
-  step 'I fill out a "Merge Request On Forked Project" merge request' do
-    expect(page).to have_content('Source branch')
-    expect(page).to have_content('Target branch')
-
-    first('.js-source-project').click
-    first('.dropdown-source-project a', text: @forked_project.full_path)
-
-    first('.js-target-project').click
-    first('.dropdown-target-project a', text: @project.full_path)
-
-    first('.js-source-branch').click
-    wait_for_requests
-    first('.js-source-branch-dropdown .dropdown-content a', text: 'fix').click
-
-    click_button "Compare branches and continue"
-
-    expect(page).to have_css("h3.page-title", text: "New Merge Request")
-
-    page.within 'form#new_merge_request' do
-      fill_in "merge_request_title", with: "Merge Request On Forked Project"
-    end
-  end
-
-  step 'I submit the merge request' do
-    click_button "Submit merge request"
-  end
-
-  step 'I update the merge request title' do
-    fill_in "merge_request_title", with: "An Edited Forked Merge Request"
-  end
-
-  step 'I save the merge request' do
-    click_button "Save changes"
-  end
-
-  step 'I should see the edited merge request' do
-    expect(page).to have_content "An Edited Forked Merge Request"
-    expect(@project.merge_requests.size).to be >= 1
-    @merge_request = @project.merge_requests.last
-    expect(current_path).to eq project_merge_request_path(@project, @merge_request)
-    expect(@merge_request.source_project).to eq @forked_project
-    expect(@merge_request.source_branch).to eq "fix"
-    expect(@merge_request.target_branch).to eq "master"
-    expect(page).to have_content @forked_project.full_path
-    expect(page).to have_content @project.full_path
-    expect(page).to have_content @merge_request.source_branch
-    expect(page).to have_content @merge_request.target_branch
-  end
-
   step 'I should see last push widget' do
     expect(page).to have_content "You pushed to new_design"
     expect(page).to have_link "Create Merge Request"
-  end
-
-  step 'I click link edit "Merge Request On Forked Project"' do
-    find("#edit_merge_request").click
-  end
-
-  step 'I see the edit page prefilled for "Merge Request On Forked Project"' do
-    expect(current_path).to eq edit_project_merge_request_path(@project, @merge_request)
-    expect(page).to have_content "Edit merge request #{@merge_request.to_reference}"
-    expect(find("#merge_request_title").value).to eq "Merge Request On Forked Project"
   end
 end
