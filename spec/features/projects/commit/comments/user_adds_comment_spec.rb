@@ -58,6 +58,7 @@ describe "User adds a comment on a commit", :js do
         find(".line_holder[id='#{sample_commit.line_code}'] button").click
 
         expect(page).to have_css(".js-temp-notes-holder form.new-note")
+                   .and have_css(".js-close-discussion-note-form", text: "Cancel")
 
         page.within("form[data-line-code='#{sample_commit.line_code}']") do
           fill_in("note[note]", with: "#{comment_text} :smile:")

@@ -152,12 +152,6 @@ module SharedDiffNote
     end
   end
 
-  step 'I should see the cancel comment button' do
-    page.within("#{diff_file_selector} form") do
-      expect(page).to have_css(".js-close-discussion-note-form", text: "Cancel")
-    end
-  end
-
   step 'I should see the diff comment preview' do
     page.within("#{diff_file_selector} form") do
       expect(page).to have_css('.js-md-preview', visible: true)

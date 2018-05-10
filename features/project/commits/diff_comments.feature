@@ -6,11 +6,6 @@ Feature: Project Commits Diff Comments
     And I visit project commit page
 
   @javascript
-  Scenario: I have a cancel button on the diff form
-    Given I open a diff comment form
-    Then I should see the cancel comment button
-
-  @javascript
   Scenario: I can cancel a diff form
     Given I open a diff comment form
     And I cancel the diff comment
