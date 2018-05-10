@@ -104,12 +104,6 @@ module SharedDiffNote
     end
   end
 
-  step 'I should only see one diff form' do
-    page.within(diff_file_selector) do
-      expect(page).to have_css("form.new-note", count: 1)
-    end
-  end
-
   step 'I should see a diff comment form with ":-1: I don\'t like this"' do
     page.within(diff_file_selector) do
       expect(page).to have_field("note[note]", with: ":-1: I don\'t like this")

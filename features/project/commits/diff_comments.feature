@@ -6,12 +6,6 @@ Feature: Project Commits Diff Comments
     And I visit project commit page
 
   @javascript
-  Scenario: I can't open a second form for a diff line
-    Given I open a diff comment form
-    And I open a diff comment form
-    Then I should only see one diff form
-
-  @javascript
   Scenario: I can have multiple forms
     Given I open a diff comment form
     And I write a diff comment like ":-1: I don't like this"

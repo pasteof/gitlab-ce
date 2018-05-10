@@ -64,6 +64,9 @@ describe "User adds a comment on a commit", :js do
         expect(page).not_to have_css("form.new_note")
 
         click_diff_line(sample_commit.line_code)
+        click_diff_line(sample_commit.line_code) # Try to open the same form twice.
+
+        expect(page).to have_css("form.new-note", count: 1)
 
         page.within("form[data-line-code='#{sample_commit.line_code}']") do
           fill_in("note[note]", with: "#{comment_text} :smile:")
