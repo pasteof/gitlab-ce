@@ -12,11 +12,13 @@ describe "User adds a comment on a commit", :js do
   before do
     sign_in(user)
     project.add_developer(user)
-
-    visit(project_commit_path(project, sample_commit.id))
   end
 
   context "inline view" do
+    before do
+      visit(project_commit_path(project, sample_commit.id))
+    end
+
     it "adds a comment" do
       EMOJI = ":+1:".freeze
 
@@ -120,22 +122,37 @@ describe "User adds a comment on a commit", :js do
   end
 
   context "side-by-side view" do
-    it "adds a comment" do
-      page.within(".diff-file:nth-of-type(1)") do
-        click_diff_line(sample_commit.line_code)
-      end
+    before do
+      visit(project_commit_path(project, sample_commit.id, view: "parallel"))
+    end
 
-      find("#parallel-diff-btn").click
+    it "adds a comment" do
+      NEW_COMMENT = "New comment".freeze
+      OLD_COMMENT = "Old comment".freeze
+
+      # Left side.
       click_parallel_diff_line(sample_commit.del_line_code)
 
-      page.within("form[data-line-code='#{sample_commit.del_line_code}']") do
-        fill_in("note[note]", with: "Old comment")
-        find(".js-comment-button").click
+      page.within(".diff-file:nth-of-type(1) form[data-line-code='#{sample_commit.del_line_code}']") do
+        fill_in("note[note]", with: OLD_COMMENT)
+        click_button("Comment")
       end
 
-      page.within(".notes_content.parallel.old") do
-        expect(page).to have_content("Old comment")
+      page.within(".diff-file:nth-of-type(1) .notes_content.parallel.old") do
+        expect(page).to have_content(OLD_COMMENT)
       end
+
+      # Right side.
+      click_parallel_diff_line(sample_commit.line_code)
+
+      page.within(".diff-file:nth-of-type(1) form[data-line-code='#{sample_commit.line_code}']") do
+        fill_in("note[note]", with: NEW_COMMENT)
+        click_button("Comment")
+      end
+
+      wait_for_requests
+
+      expect(all(".diff-file:nth-of-type(1) .notes_content.parallel.new")[1].text).to have_content(NEW_COMMENT)
     end
   end
 
