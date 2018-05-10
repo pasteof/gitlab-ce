@@ -20,11 +20,6 @@ Feature: Project Commits Diff Comments
     Then I should see two separate previews
 
   @javascript
-  Scenario: I have a reply button in discussions
-    Given I leave a diff comment like "Typo, please fix"
-    Then I should see a discussion reply button
-
-  @javascript
   Scenario: I can preview with text
     Given I open a diff comment form
     And I write a diff comment like ":-1: I don't like this"
