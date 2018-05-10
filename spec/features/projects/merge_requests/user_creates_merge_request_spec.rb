@@ -85,5 +85,3 @@ describe "User creates a merge request", :js do
     end
   end
 end
-
-
