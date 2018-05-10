@@ -62,28 +62,10 @@ module SharedDiffNote
     end
   end
 
-  step 'I open another diff comment form' do
-    page.within(diff_file_selector) do
-      click_diff_line(sample_commit.del_line_code)
-    end
-  end
-
-  step 'I write a diff comment like ":-1: I don\'t like this"' do
-    page.within(diff_file_selector) do
-      fill_in "note[note]", with: ":-1: I don\'t like this"
-    end
-  end
-
   step 'The diff comment preview tab should say there is nothing to do' do
     page.within(diff_file_selector) do
       find('.js-md-preview-button').click
       expect(find('.js-md-preview')).to have_content('Nothing to preview.')
-    end
-  end
-
-  step 'I should see a diff comment form with ":-1: I don\'t like this"' do
-    page.within(diff_file_selector) do
-      expect(page).to have_field("note[note]", with: ":-1: I don\'t like this")
     end
   end
 
@@ -96,12 +78,6 @@ module SharedDiffNote
   step 'I should see a diff comment on the right side saying "New comment"' do
     page.within("#{diff_file_selector} .notes_content.parallel.new") do
       expect(page).to have_content("New comment")
-    end
-  end
-
-  step 'I should see an empty diff comment form' do
-    page.within(diff_file_selector) do
-      expect(page).to have_field("note[note]", with: "")
     end
   end
 

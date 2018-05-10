@@ -54,23 +54,36 @@ describe "User adds a comment on a commit", :js do
   context "when commenting on diff" do
     it "adds a comment" do
       page.within(".diff-file:nth-of-type(1)") do
+        # Open a form for a comment and check UI elements are visible and acting as expecting.
         click_diff_line(sample_commit.line_code)
 
         expect(page).to have_css(".js-temp-notes-holder form.new-note")
                    .and have_css(".js-close-discussion-note-form", text: "Cancel")
 
+        # The `Cancel` button closes the current form. The page should not have any open forms after that.
         find(".js-close-discussion-note-form").click
 
         expect(page).not_to have_css("form.new_note")
 
+        # Try to open the same form twice. There should be only one form opened.
         click_diff_line(sample_commit.line_code)
-        click_diff_line(sample_commit.line_code) # Try to open the same form twice.
+        click_diff_line(sample_commit.line_code)
 
         expect(page).to have_css("form.new-note", count: 1)
 
+        # Fill in a form.
         page.within("form[data-line-code='#{sample_commit.line_code}']") do
           fill_in("note[note]", with: "#{comment_text} :smile:")
+        end
 
+        # Open another form and check we have two forms now (because the first one is filled in).
+        click_diff_line(sample_commit.del_line_code)
+
+        expect(page).to have_field("note[note]", with: "#{comment_text} :smile:")
+                   .and have_field("note[note]", with: "")
+
+        # Test Preview feature and submition.
+        page.within("form[data-line-code='#{sample_commit.line_code}']") do
           click_link("Preview")
 
           expect(find(".js-md-preview")).to have_content(comment_text).and have_xpath("//gl-emoji[@data-name='smile']")
@@ -83,6 +96,7 @@ describe "User adds a comment on a commit", :js do
         expect(page).to have_button("Reply...").and have_no_css("form.new_note")
       end
 
+      # A comment should be added and visible.
       page.within(".diff-file:nth-of-type(1) .note") do
         expect(page).to have_content(comment_text).and have_xpath("//gl-emoji[@data-name='smile']")
       end

@@ -6,14 +6,6 @@ Feature: Project Commits Diff Comments
     And I visit project commit page
 
   @javascript
-  Scenario: I can have multiple forms
-    Given I open a diff comment form
-    And I write a diff comment like ":-1: I don't like this"
-    And I open another diff comment form
-    Then I should see a diff comment form with ":-1: I don't like this"
-    And I should see an empty diff comment form
-
-  @javascript
   Scenario: I can preview multiple forms separately
     Given I preview a diff comment text like "Should fix it :smile:"
     And I preview another diff comment text like "DRY this up"
