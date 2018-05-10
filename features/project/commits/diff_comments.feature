@@ -6,11 +6,6 @@ Feature: Project Commits Diff Comments
     And I visit project commit page
 
   @javascript
-  Scenario: I can comment on a commit diff
-    Given I leave a diff comment like "Typo, please fix"
-    Then I should see a diff comment saying "Typo, please fix"
-
-  @javascript
   Scenario: I can add a diff comment with a single emoji
     Given I open a diff comment form
     And I write a diff comment like ":smile:"

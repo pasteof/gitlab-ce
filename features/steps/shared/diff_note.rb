@@ -139,12 +139,6 @@ module SharedDiffNote
     end
   end
 
-  step 'I should see a diff comment saying "Typo, please fix"' do
-    page.within("#{diff_file_selector} .note") do
-      expect(page).to have_content("Typo, please fix")
-    end
-  end
-
   step 'I should see a diff comment on the left side saying "Old comment"' do
     page.within("#{diff_file_selector} .notes_content.parallel.old") do
       expect(page).to have_content("Old comment")
