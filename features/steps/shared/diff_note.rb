@@ -146,12 +146,6 @@ module SharedDiffNote
     end
   end
 
-  step 'I should see a temporary diff comment form' do
-    page.within(diff_file_selector) do
-      expect(page).to have_css(".js-temp-notes-holder form.new-note")
-    end
-  end
-
   step 'I should see an empty diff comment form' do
     page.within(diff_file_selector) do
       expect(page).to have_field("note[note]", with: "")

@@ -6,11 +6,6 @@ Feature: Project Commits Diff Comments
     And I visit project commit page
 
   @javascript
-  Scenario: I get a temporary form for the first comment on a diff line
-    Given I open a diff comment form
-    Then I should see a temporary diff comment form
-
-  @javascript
   Scenario: I have a cancel button on the diff form
     Given I open a diff comment form
     Then I should see the cancel comment button
