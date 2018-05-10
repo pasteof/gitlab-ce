@@ -7,12 +7,6 @@ module SharedDiffNote
     wait_for_requests if javascript_test?
   end
 
-  step 'I cancel the diff comment' do
-    page.within(diff_file_selector) do
-      find(".js-close-discussion-note-form").click
-    end
-  end
-
   step 'I delete a diff comment' do
     find('.note').hover
     find(".js-note-delete").click
@@ -94,12 +88,6 @@ module SharedDiffNote
   step 'I submit the diff comment' do
     page.within(diff_file_selector) do
       click_button("Comment")
-    end
-  end
-
-  step 'I should not see the diff comment form' do
-    page.within(diff_file_selector) do
-      expect(page).not_to have_css("form.new_note")
     end
   end
 

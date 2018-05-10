@@ -54,11 +54,16 @@ describe "User adds a comment on a commit", :js do
   context "when commenting on diff" do
     it "adds a comment" do
       page.within(".diff-file:nth-of-type(1)") do
-        find(".line_holder[id='#{sample_commit.line_code}'] td:nth-of-type(1)").hover
-        find(".line_holder[id='#{sample_commit.line_code}'] button").click
+        click_diff_line(sample_commit.line_code)
 
         expect(page).to have_css(".js-temp-notes-holder form.new-note")
                    .and have_css(".js-close-discussion-note-form", text: "Cancel")
+
+        find(".js-close-discussion-note-form").click
+
+        expect(page).not_to have_css("form.new_note")
+
+        click_diff_line(sample_commit.line_code)
 
         page.within("form[data-line-code='#{sample_commit.line_code}']") do
           fill_in("note[note]", with: "#{comment_text} :smile:")
@@ -70,5 +75,12 @@ describe "User adds a comment on a commit", :js do
         expect(page).to have_content(comment_text).and have_xpath("//gl-emoji[@data-name='smile']")
       end
     end
+  end
+
+  private
+
+  def click_diff_line(line)
+    find(".line_holder[id='#{line}'] td:nth-of-type(1)").hover
+    find(".line_holder[id='#{line}'] button").click
   end
 end

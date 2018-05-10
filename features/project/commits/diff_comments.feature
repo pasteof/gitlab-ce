@@ -6,12 +6,6 @@ Feature: Project Commits Diff Comments
     And I visit project commit page
 
   @javascript
-  Scenario: I can cancel a diff form
-    Given I open a diff comment form
-    And I cancel the diff comment
-    Then I should not see the diff comment form
-
-  @javascript
   Scenario: I can't open a second form for a diff line
     Given I open a diff comment form
     And I open a diff comment form
