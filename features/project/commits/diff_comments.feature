@@ -20,11 +20,6 @@ Feature: Project Commits Diff Comments
     Then I should see two separate previews
 
   @javascript
-  Scenario: I can edit after preview
-    Given I preview a diff comment text like "Should fix it :smile:"
-    Then I should see the diff comment write tab
-
-  @javascript
   Scenario: I can add a comment on a side-by-side commit diff (left side)
     Given I open a diff comment form
     And I click side-by-side diff button

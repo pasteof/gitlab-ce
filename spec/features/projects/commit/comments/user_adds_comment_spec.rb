@@ -75,6 +75,7 @@ describe "User adds a comment on a commit", :js do
 
           expect(find(".js-md-preview")).to have_content(comment_text).and have_xpath("//gl-emoji[@data-name='smile']")
           expect(find(".js-note-text", visible: false).text).to eq("")
+          expect(page).to have_css('.js-md-write-button')
 
           click_button("Comment")
         end

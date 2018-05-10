@@ -105,12 +105,6 @@ module SharedDiffNote
     end
   end
 
-  step 'I should see the diff comment write tab' do
-    page.within(diff_file_selector) do
-      expect(page).to have_css('.js-md-write-button', visible: true)
-    end
-  end
-
   step 'I should see two separate previews' do
     page.within(diff_file_selector) do
       expect(page).to have_css('.js-md-preview', visible: true, count: 2)
