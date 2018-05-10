@@ -5,6 +5,7 @@ describe "User adds a comment on a commit", :js do
   include RepoHelpers
 
   let(:comment_text) { "XML attached" }
+  let(:another_comment_text) { "SVG attached" }
   let(:project) { create(:project, :repository) }
   let(:user) { create(:user) }
 
@@ -82,11 +83,24 @@ describe "User adds a comment on a commit", :js do
         expect(page).to have_field("note[note]", with: "#{comment_text} :smile:")
                    .and have_field("note[note]", with: "")
 
-        # Test Preview feature and submition.
+        # Test Preview feature for both forms.
         page.within("form[data-line-code='#{sample_commit.line_code}']") do
           click_link("Preview")
+        end
 
-          expect(find(".js-md-preview")).to have_content(comment_text).and have_xpath("//gl-emoji[@data-name='smile']")
+        page.within("form[data-line-code='#{sample_commit.del_line_code}']") do
+          fill_in("note[note]", with: another_comment_text)
+
+          click_link("Preview")
+        end
+
+        expect(page).to have_css(".js-md-preview", visible: true, count: 2)
+                   .and have_content(comment_text)
+                   .and have_content(another_comment_text)
+                   .and have_xpath("//gl-emoji[@data-name='smile']")
+
+        # Test UI elements, then submit.
+        page.within("form[data-line-code='#{sample_commit.line_code}']") do
           expect(find(".js-note-text", visible: false).text).to eq("")
           expect(page).to have_css('.js-md-write-button')
 

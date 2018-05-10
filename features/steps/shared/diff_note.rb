@@ -34,28 +34,6 @@ module SharedDiffNote
     end
   end
 
-  step 'I preview a diff comment text like "Should fix it :smile:"' do
-    page.within(diff_file_selector) do
-      click_diff_line(sample_commit.line_code)
-
-      page.within("form[data-line-code='#{sample_commit.line_code}']") do
-        fill_in "note[note]", with: "Should fix it :smile:"
-        find('.js-md-preview-button').click
-      end
-    end
-  end
-
-  step 'I preview another diff comment text like "DRY this up"' do
-    page.within(diff_file_selector) do
-      click_diff_line(sample_commit.del_line_code)
-
-      page.within("form[data-line-code='#{sample_commit.del_line_code}']") do
-        fill_in "note[note]", with: "DRY this up"
-        find('.js-md-preview-button').click
-      end
-    end
-  end
-
   step 'I open a diff comment form' do
     page.within(diff_file_selector) do
       click_diff_line(sample_commit.line_code)
@@ -78,14 +56,6 @@ module SharedDiffNote
   step 'I should see a diff comment on the right side saying "New comment"' do
     page.within("#{diff_file_selector} .notes_content.parallel.new") do
       expect(page).to have_content("New comment")
-    end
-  end
-
-  step 'I should see two separate previews' do
-    page.within(diff_file_selector) do
-      expect(page).to have_css('.js-md-preview', visible: true, count: 2)
-      expect(page).to have_content('Should fix it')
-      expect(page).to have_content('DRY this up')
     end
   end
 

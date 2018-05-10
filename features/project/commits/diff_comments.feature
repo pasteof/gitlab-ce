@@ -6,12 +6,6 @@ Feature: Project Commits Diff Comments
     And I visit project commit page
 
   @javascript
-  Scenario: I can preview multiple forms separately
-    Given I preview a diff comment text like "Should fix it :smile:"
-    And I preview another diff comment text like "DRY this up"
-    Then I should see two separate previews
-
-  @javascript
   Scenario: I can add a comment on a side-by-side commit diff (left side)
     Given I open a diff comment form
     And I click side-by-side diff button
