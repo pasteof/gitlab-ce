@@ -85,12 +85,6 @@ module SharedDiffNote
     end
   end
 
-  step 'I submit the diff comment' do
-    page.within(diff_file_selector) do
-      click_button("Comment")
-    end
-  end
-
   step 'The diff comment preview tab should say there is nothing to do' do
     page.within(diff_file_selector) do
       find('.js-md-preview-button').click

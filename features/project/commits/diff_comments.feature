@@ -42,13 +42,6 @@ Feature: Project Commits Diff Comments
     Then I should see the diff comment write tab
 
   @javascript
-  Scenario: The form gets removed after posting
-    Given I preview a diff comment text like "Should fix it :smile:"
-    And I submit the diff comment
-    Then I should not see the diff comment form
-    And I should see a discussion reply button
-
-  @javascript
   Scenario: I can add a comment on a side-by-side commit diff (left side)
     Given I open a diff comment form
     And I click side-by-side diff button

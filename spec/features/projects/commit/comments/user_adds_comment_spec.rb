@@ -72,6 +72,9 @@ describe "User adds a comment on a commit", :js do
           fill_in("note[note]", with: "#{comment_text} :smile:")
           click_button("Comment")
         end
+
+        expect(page).not_to have_css("form.new_note")
+        expect(page).to have_button("Reply...")
       end
 
       page.within(".diff-file:nth-of-type(1) .note") do
