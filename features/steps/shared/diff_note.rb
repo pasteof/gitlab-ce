@@ -18,14 +18,6 @@ module SharedDiffNote
     end
   end
 
-  step 'I leave a diff comment in a parallel view on the left side like "Old comment"' do
-    click_parallel_diff_line(sample_commit.del_line_code, 'old')
-    page.within("#{diff_file_selector} form[data-line-code='#{sample_commit.del_line_code}']") do
-      fill_in "note[note]", with: "Old comment"
-      find(".js-comment-button").click
-    end
-  end
-
   step 'I leave a diff comment in a parallel view on the right side like "New comment"' do
     click_parallel_diff_line(sample_commit.line_code, 'new')
     page.within("#{diff_file_selector} form[data-line-code='#{sample_commit.line_code}']") do
@@ -44,12 +36,6 @@ module SharedDiffNote
     page.within(diff_file_selector) do
       find('.js-md-preview-button').click
       expect(find('.js-md-preview')).to have_content('Nothing to preview.')
-    end
-  end
-
-  step 'I should see a diff comment on the left side saying "Old comment"' do
-    page.within("#{diff_file_selector} .notes_content.parallel.old") do
-      expect(page).to have_content("Old comment")
     end
   end
 
