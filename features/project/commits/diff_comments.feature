@@ -20,12 +20,6 @@ Feature: Project Commits Diff Comments
     Then I should see two separate previews
 
   @javascript
-  Scenario: I preview a diff comment
-    Given I preview a diff comment text like "Should fix it :smile:"
-    Then I should see the diff comment preview
-    And I should not see the diff comment text field
-
-  @javascript
   Scenario: I can edit after preview
     Given I preview a diff comment text like "Should fix it :smile:"
     Then I should see the diff comment write tab

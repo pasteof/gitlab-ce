@@ -81,12 +81,6 @@ module SharedDiffNote
     end
   end
 
-  step 'I should not see the diff comment text field' do
-    page.within(diff_file_selector) do
-      expect(find('.js-note-text')).not_to be_visible
-    end
-  end
-
   step 'I should see a diff comment form with ":-1: I don\'t like this"' do
     page.within(diff_file_selector) do
       expect(page).to have_field("note[note]", with: ":-1: I don\'t like this")
@@ -108,12 +102,6 @@ module SharedDiffNote
   step 'I should see an empty diff comment form' do
     page.within(diff_file_selector) do
       expect(page).to have_field("note[note]", with: "")
-    end
-  end
-
-  step 'I should see the diff comment preview' do
-    page.within("#{diff_file_selector} form") do
-      expect(page).to have_css('.js-md-preview', visible: true)
     end
   end
 
