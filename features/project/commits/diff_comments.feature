@@ -6,12 +6,6 @@ Feature: Project Commits Diff Comments
     And I visit project commit page
 
   @javascript
-  Scenario: I can add a diff comment with a single emoji
-    Given I open a diff comment form
-    And I write a diff comment like ":smile:"
-    Then I should see a diff comment with an emoji image
-
-  @javascript
   Scenario: I get a temporary form for the first comment on a diff line
     Given I open a diff comment form
     Then I should see a temporary diff comment form
