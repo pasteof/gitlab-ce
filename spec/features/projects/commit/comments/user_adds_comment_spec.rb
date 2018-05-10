@@ -70,11 +70,15 @@ describe "User adds a comment on a commit", :js do
 
         page.within("form[data-line-code='#{sample_commit.line_code}']") do
           fill_in("note[note]", with: "#{comment_text} :smile:")
+
+          click_link("Preview")
+
+          expect(find('.js-md-preview')).to have_content(comment_text).and have_xpath("//gl-emoji[@data-name='smile']")
+
           click_button("Comment")
         end
 
-        expect(page).not_to have_css("form.new_note")
-        expect(page).to have_button("Reply...")
+        expect(page).to have_button("Reply...").and have_no_css("form.new_note")
       end
 
       page.within(".diff-file:nth-of-type(1) .note") do

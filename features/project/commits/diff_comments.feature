@@ -20,12 +20,6 @@ Feature: Project Commits Diff Comments
     Then I should see two separate previews
 
   @javascript
-  Scenario: I can preview with text
-    Given I open a diff comment form
-    And I write a diff comment like ":-1: I don't like this"
-    Then The diff comment preview tab should display rendered Markdown
-
-  @javascript
   Scenario: I preview a diff comment
     Given I preview a diff comment text like "Should fix it :smile:"
     Then I should see the diff comment preview

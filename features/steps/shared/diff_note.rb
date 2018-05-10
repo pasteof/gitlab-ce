@@ -123,13 +123,6 @@ module SharedDiffNote
     end
   end
 
-  step 'The diff comment preview tab should display rendered Markdown' do
-    page.within(diff_file_selector) do
-      find('.js-md-preview-button').click
-      expect(find('.js-md-preview')).to have_css('gl-emoji', visible: true)
-    end
-  end
-
   step 'I should see two separate previews' do
     page.within(diff_file_selector) do
       expect(page).to have_css('.js-md-preview', visible: true, count: 2)
