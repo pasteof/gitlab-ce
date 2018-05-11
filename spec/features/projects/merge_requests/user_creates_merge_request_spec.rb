@@ -3,6 +3,7 @@ require "spec_helper"
 describe "User creates a merge request", :js do
   include ProjectForksHelper
 
+  let(:title) { "Some feature" }
   let(:project) { create(:project, :repository) }
   let(:user) { create(:user) }
 
@@ -22,13 +23,11 @@ describe "User creates a merge request", :js do
 
     click_button("Compare branches")
 
-    TITLE = "Wiki Feature".freeze
-
-    fill_in("Title", with: TITLE)
+    fill_in("Title", with: title)
     click_button("Submit merge request")
 
     page.within(".merge-request") do
-      expect(page).to have_content(TITLE)
+      expect(page).to have_content(title)
     end
   end
 
@@ -55,18 +54,16 @@ describe "User creates a merge request", :js do
 
       wait_for_requests
 
-      SOURCE_BRANCH = "fix".freeze
+      source_branch = "fix"
 
-      first(".js-source-branch-dropdown .dropdown-content a", text: SOURCE_BRANCH).click
+      first(".js-source-branch-dropdown .dropdown-content a", text: source_branch).click
 
       click_button("Compare branches and continue")
 
       expect(page).to have_css("h3.page-title", text: "New Merge Request")
 
       page.within("form#new_merge_request") do
-        TITLE = "Merge Request On Forked Project".freeze
-
-        fill_in("Title", with: TITLE)
+        fill_in("Title", with: title)
       end
 
       click_button("Assignee")
@@ -81,7 +78,7 @@ describe "User creates a merge request", :js do
 
       click_button("Submit merge request")
 
-      expect(page).to have_content(TITLE).and have_content("Request to merge #{user.namespace.name}:#{SOURCE_BRANCH} into master")
+      expect(page).to have_content(title).and have_content("Request to merge #{user.namespace.name}:#{source_branch} into master")
     end
   end
 end
