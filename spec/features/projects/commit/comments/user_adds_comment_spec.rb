@@ -20,12 +20,12 @@ describe "User adds a comment on a commit", :js do
     end
 
     it "adds a comment" do
-      EMOJI = ":+1:".freeze
-
       page.within(".js-main-target-form") do
         expect(page).not_to have_link("Cancel")
 
-        fill_in("note[note]", with: "#{comment_text} #{EMOJI}")
+        emoji = ":+1:"
+
+        fill_in("note[note]", with: "#{comment_text} #{emoji}")
 
         # Check on `Preview` tab
         click_link("Preview")
@@ -36,7 +36,7 @@ describe "User adds a comment on a commit", :js do
         # Check on the `Write` tab
         click_link("Write")
 
-        expect(page).to have_field("note[note]", with: "#{comment_text} #{EMOJI}")
+        expect(page).to have_field("note[note]", with: "#{comment_text} #{emoji}")
 
         # Submit comment from the `Preview` tab to get rid of a separate `it` block
         # which would specially tests if everything gets cleared from the note form.
@@ -127,32 +127,32 @@ describe "User adds a comment on a commit", :js do
     end
 
     it "adds a comment" do
-      NEW_COMMENT = "New comment".freeze
-      OLD_COMMENT = "Old comment".freeze
+      new_comment = "New comment"
+      old_comment = "Old comment"
 
       # Left side.
       click_parallel_diff_line(sample_commit.del_line_code)
 
       page.within(".diff-file:nth-of-type(1) form[data-line-code='#{sample_commit.del_line_code}']") do
-        fill_in("note[note]", with: OLD_COMMENT)
+        fill_in("note[note]", with: old_comment)
         click_button("Comment")
       end
 
       page.within(".diff-file:nth-of-type(1) .notes_content.parallel.old") do
-        expect(page).to have_content(OLD_COMMENT)
+        expect(page).to have_content(old_comment)
       end
 
       # Right side.
       click_parallel_diff_line(sample_commit.line_code)
 
       page.within(".diff-file:nth-of-type(1) form[data-line-code='#{sample_commit.line_code}']") do
-        fill_in("note[note]", with: NEW_COMMENT)
+        fill_in("note[note]", with: new_comment)
         click_button("Comment")
       end
 
       wait_for_requests
 
-      expect(all(".diff-file:nth-of-type(1) .notes_content.parallel.new")[1].text).to have_content(NEW_COMMENT)
+      expect(all(".diff-file:nth-of-type(1) .notes_content.parallel.new")[1].text).to have_content(new_comment)
     end
   end
 
