@@ -3,7 +3,7 @@ import Vue from 'vue';
 import bp from '~/breakpoints';
 import appComponent from '~/frequent_items/components/app.vue';
 import eventHub from '~/frequent_items/event_hub';
-import store from '~/frequent_items/stores';
+import store from '~/frequent_items/store';
 import FrequentItemsService from '~/frequent_items/services/frequent_items_service';
 
 import { mountComponentWithStore } from 'spec/helpers/vue_mount_component_helper';

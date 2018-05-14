@@ -1,9 +1,9 @@
-import store from '~/frequent_items/stores';
+import store from '~/frequent_items/store';
 import { mockGroup, mockRawGroup, mockProject, mockRawProject } from '../mock_data';
 
 describe('ItemsStore', () => {
   describe('setFrequentItems', () => {
-    it('should set frequent items list to state with project', (done) => {
+    it('should set frequent items list to state with project', done => {
       store
         .dispatch('setFrequentItems', [mockProject])
         .then(() => {
@@ -14,7 +14,7 @@ describe('ItemsStore', () => {
         .catch(done.fail);
     });
 
-    it('should set frequent items list to state with group', (done) => {
+    it('should set frequent items list to state with group', done => {
       store
         .dispatch('setFrequentItems', [mockGroup])
         .then(() => {
@@ -27,7 +27,7 @@ describe('ItemsStore', () => {
   });
 
   describe('setSearchedItems', () => {
-    it('should set searched items list to state with project', (done) => {
+    it('should set searched items list to state with project', done => {
       store
         .dispatch('setSearchedItems', [mockRawProject])
         .then(() => {
@@ -43,7 +43,7 @@ describe('ItemsStore', () => {
         .catch(done.fail);
     });
 
-    it('should set searched items list to state with group', (done) => {
+    it('should set searched items list to state with group', done => {
       store
         .dispatch('setSearchedItems', [mockRawGroup])
         .then(() => {
@@ -61,13 +61,14 @@ describe('ItemsStore', () => {
   });
 
   describe('clearSearchedItems', () => {
-    it('should clear searched items list from state with project', (done) => {
+    it('should clear searched items list from state with project', done => {
       store
         .dispatch('setSearchedItems', [mockRawProject])
         .then(() => {
           expect(store.state.searchedItems.length).toBe(1);
 
-          store.dispatch('clearSearchedItems')
+          store
+            .dispatch('clearSearchedItems')
             .then(() => {
               expect(store.state.searchedItems.length).toBe(0);
             })
@@ -77,13 +78,14 @@ describe('ItemsStore', () => {
         .catch(done.fail);
     });
 
-    it('should clear searched items list from state with group', (done) => {
+    it('should clear searched items list from state with group', done => {
       store
         .dispatch('setSearchedItems', [mockRawGroup])
         .then(() => {
           expect(store.state.searchedItems.length).toBe(1);
 
-          store.dispatch('clearSearchedItems')
+          store
+            .dispatch('clearSearchedItems')
             .then(() => {
               expect(store.state.searchedItems.length).toBe(0);
             })

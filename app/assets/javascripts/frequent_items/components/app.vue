@@ -4,7 +4,7 @@ import bs from '~/breakpoints';
 import LoadingIcon from '~/vue_shared/components/loading_icon.vue';
 
 import eventHub from '../event_hub';
-import store from '../stores/';
+import store from '../store/';
 import FrequentItemsSearchInput from './frequent_items_search_input.vue';
 import FrequentItemsList from './frequent_items_list.vue';
 import FrequentItemsSearchList from './frequent_items_search_list.vue';
