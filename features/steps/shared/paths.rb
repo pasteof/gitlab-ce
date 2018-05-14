@@ -48,10 +48,6 @@ module SharedPaths
     visit group_group_members_path(Group.find_by(name: "Owned"))
   end
 
-  step 'I visit group "Owned" settings page' do
-    visit edit_group_path(Group.find_by(name: "Owned"))
-  end
-
   step 'I visit group "Owned" projects page' do
     visit projects_group_path(Group.find_by(name: "Owned"))
   end
@@ -244,10 +240,6 @@ module SharedPaths
     visit project_settings_integrations_path(@project)
   end
 
-  step 'I visit project deploy keys page' do
-    visit project_deploy_keys_path(@project)
-  end
-
   step 'I visit project find file page' do
     visit project_find_file_path(@project, root_ref)
   end
@@ -258,10 +250,6 @@ module SharedPaths
 
   step 'I visit project "Shop" page' do
     visit project_path(project)
-  end
-
-  step 'I visit project "Forked Shop" merge requests page' do
-    visit project_merge_requests_path(@forked_project)
   end
 
   step 'I visit edit project "Shop" page' do
@@ -311,10 +299,6 @@ module SharedPaths
     visit project_tags_path(@project)
   end
 
-  step 'I visit project commit page' do
-    visit project_commit_path(@project, sample_commit.id)
-  end
-
   step 'I visit issue page "Release 0.4"' do
     issue = Issue.find_by(title: "Release 0.4")
     visit project_issue_path(issue.project, issue)
@@ -337,11 +321,6 @@ module SharedPaths
 
   step 'I visit merge request page "Bug NS-04"' do
     visit merge_request_path("Bug NS-04")
-    wait_for_requests
-  end
-
-  step 'I visit merge request page "Bug NS-05"' do
-    visit merge_request_path("Bug NS-05")
     wait_for_requests
   end
 

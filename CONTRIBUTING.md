@@ -9,6 +9,10 @@ terms.
 
 [DCO + License](https://gitlab.com/gitlab-org/dco/blob/master/README.md)
 
+All Documentation content that resides under the [doc/ directory](/doc) of this
+repository is licensed under Creative Commons:
+[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+
 _This notice should stay as the first item in the CONTRIBUTING.md file._
 
 ---
@@ -724,6 +728,3 @@ available at [http://contributor-covenant.org/version/1/1/0/](http://contributor
 [polling-etag]: https://docs.gitlab.com/ce/development/polling.html
 [testing]: doc/development/testing_guide/index.md
 [us-english]: https://en.wikipedia.org/wiki/American_English
-
-[^1]: Please note that specs other than JavaScript specs are considered backend
-      code.
