@@ -12,6 +12,12 @@ export const STORAGE_KEY = {
   groups: 'frequent-groups',
 };
 
+export const VIEW_STATES = {
+  IS_LOADING_ITEMS: 'isLoadingItems',
+  IS_ITEMS_LIST_VISIBLE: 'isItemsListVisible',
+  IS_SEARCH_LIST_VISIBLE: 'isSearchListVisible',
+};
+
 export const TRANSLATION_KEYS = {
   projects: {
     loadingMessage: 'ProjectsDropdown|Loading projects',

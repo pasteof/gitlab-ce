@@ -1,6 +1,11 @@
 import * as types from './mutation_types';
 
 export default {
+  [types.SET_SEARCH_QUERY](state, searchQuery) {
+    Object.assign(state, {
+      searchQuery,
+    });
+  },
   [types.SET_FREQUENT_ITEMS](state, rawItems) {
     Object.assign(state, {
       frequentItems: rawItems,
@@ -15,11 +20,6 @@ export default {
         webUrl: rawItem.web_url,
         avatarUrl: rawItem.avatar_url,
       })),
-    });
-  },
-  [types.CLEAR_SEARCHED_ITEMS](state) {
-    Object.assign(state, {
-      searchedItems: [],
     });
   },
 };

@@ -1,10 +1,12 @@
 <script>
 import FrequentItemsListItem from './frequent_items_list_item.vue';
+import mixin from './mixin';
 
 export default {
   components: {
     FrequentItemsListItem,
   },
+  mixins: [mixin],
   props: {
     matcher: {
       type: String,
@@ -18,14 +20,10 @@ export default {
       type: Boolean,
       required: true,
     },
-    service: {
-      type: Object,
-      required: true,
-    },
   },
   computed: {
     translations() {
-      return this.service.getTranslations(['searchListErrorMessage', 'searchListEmptyMessage']);
+      return this.getTranslations(['searchListErrorMessage', 'searchListEmptyMessage']);
     },
     isListEmpty() {
       return this.items.length === 0;

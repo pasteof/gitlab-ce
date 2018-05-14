@@ -1,13 +1,16 @@
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import _ from 'underscore';
+import { mapState, mapActions } from 'vuex';
 import bs from '~/breakpoints';
 import LoadingIcon from '~/vue_shared/components/loading_icon.vue';
 
 import eventHub from '../event_hub';
-import store from '../store/';
+import store, { storeModule } from '../store/';
+import { VIEW_STATES, STORAGE_KEY } from '../constants';
 import FrequentItemsSearchInput from './frequent_items_search_input.vue';
 import FrequentItemsList from './frequent_items_list.vue';
 import FrequentItemsSearchList from './frequent_items_search_list.vue';
+import mixin from './mixin';
 
 export default {
   store,
@@ -17,8 +20,9 @@ export default {
     FrequentItemsList,
     FrequentItemsSearchList,
   },
+  mixins: [mixin],
   props: {
-    namespace: {
+    currentUserName: {
       type: String,
       required: true,
     },
@@ -26,104 +30,108 @@ export default {
       type: Object,
       required: true,
     },
-    service: {
-      type: Object,
-      required: true,
-    },
   },
   data() {
     return {
-      isLoadingItems: false,
-      isItemsListVisible: false,
-      isSearchListVisible: false,
+      [VIEW_STATES.IS_LOADING_ITEMS]: false,
+      [VIEW_STATES.IS_ITEMS_LIST_VISIBLE]: false,
+      [VIEW_STATES.IS_SEARCH_LIST_VISIBLE]: false,
       isLocalStorageFailed: false,
       isSearchFailed: false,
-      searchQuery: '',
     };
   },
   computed: {
-    ...mapGetters(['frequentItems', 'searchedItems']),
+    ...mapState({
+      searchQuery(state, getters) {
+        return getters[`${this.namespace}/searchQuery`];
+      },
+      frequentItems(state, getters) {
+        return getters[`${this.namespace}/frequentItems`];
+      },
+      searchedItems(state, getters) {
+        return getters[`${this.namespace}/searchedItems`];
+      },
+    }),
     translations() {
-      return this.service.getTranslations(['loadingMessage', 'header']);
+      return this.getTranslations(['loadingMessage', 'header']);
+    },
+  },
+  watch: {
+    searchQuery(val) {
+      if (val === '') {
+        this.toggleViewStates(VIEW_STATES.IS_ITEMS_LIST_VISIBLE);
+      } else {
+        this.toggleViewStates(VIEW_STATES.IS_LOADING_ITEMS);
+        this.fetchSearchedItems(this.searchQuery).catch(() => {
+          this.isSearchFailed = true;
+          this.toggleViewStates(VIEW_STATES.IS_SEARCH_LIST_VISIBLE);
+        });
+      }
+    },
+    frequentItems(items) {
+      if (!items) {
+        this.isLocalStorageFailed = true;
+      }
+
+      this.toggleViewStates(VIEW_STATES.IS_ITEMS_LIST_VISIBLE);
+    },
+    searchedItems(items) {
+      if (items) {
+        this.toggleViewStates(VIEW_STATES.IS_SEARCH_LIST_VISIBLE);
+      }
     },
   },
   created() {
+    const { namespace, currentUserName } = this;
+
+    store.registerModule(this.namespace, {
+      ...storeModule,
+      state: {
+        ...storeModule.state,
+        namespace,
+        currentUserName,
+        storageKey: `${currentUserName}/${STORAGE_KEY[namespace]}`,
+      },
+    });
+
     if (this.currentItem.id) {
-      this.logCurrentItemAccess();
+      this.logCurrentItemAccess(this.currentItem);
     }
 
-    eventHub.$on(`${this.namespace}-dropdownOpen`, this.fetchFrequentItems);
-    eventHub.$on(`${this.namespace}-searchItems`, this.fetchSearchedItems);
-    eventHub.$on(`${this.namespace}-searchCleared`, this.handleSearchClear);
-    eventHub.$on(`${this.namespace}-searchFailed`, this.handleSearchFailure);
+    eventHub.$on(`${this.namespace}-dropdownOpen`, this.dropdownOpenHandler);
   },
   beforeDestroy() {
-    eventHub.$off(`${this.namespace}-dropdownOpen`, this.fetchFrequentItems);
-    eventHub.$off(`${this.namespace}-searchItems`, this.fetchSearchedItems);
-    eventHub.$off(`${this.namespace}-searchCleared`, this.handleSearchClear);
-    eventHub.$off(`${this.namespace}-searchFailed`, this.handleSearchFailure);
+    eventHub.$off(`${this.namespace}-dropdownOpen`, this.dropdownOpenHandler);
   },
   methods: {
-    ...mapActions(['setFrequentItems', 'setSearchedItems', 'clearSearchedItems']),
-    toggleFrequentItemsList(state) {
-      this.isLoadingItems = !state;
-      this.isSearchListVisible = !state;
-      this.isItemsListVisible = state;
+    ...mapActions({
+      logCurrentItemAccess(dispatch, payload) {
+        return dispatch(`${this.namespace}/logItemAccess`, payload);
+      },
+      fetchFrequentItems(dispatch) {
+        return dispatch(`${this.namespace}/fetchFrequentItems`);
+      },
+      fetchSearchedItems(dispatch, payload) {
+        return dispatch(`${this.namespace}/fetchSearchedItems`, payload);
+      },
+    }),
+    toggleViewStates(viewToEnable) {
+      const views = _.values(VIEW_STATES);
+
+      views.forEach(view => {
+        this[view] = view === viewToEnable;
+      });
     },
-    toggleSearchItemsList(state) {
-      this.isLoadingItems = !state;
-      this.isItemsListVisible = !state;
-      this.isSearchListVisible = state;
-    },
-    toggleLoader(state) {
-      this.isItemsListVisible = !state;
-      this.isSearchListVisible = !state;
-      this.isLoadingItems = state;
-    },
-    fetchFrequentItems() {
+    dropdownOpenHandler() {
       const screenSize = bs.getBreakpointSize();
-      if (this.searchQuery && (screenSize !== 'sm' && screenSize !== 'xs')) {
-        this.toggleSearchItemsList(true);
+      if (this.searchQuery && screenSize !== ('sm' && 'xs')) {
+        this.toggleViewStates(VIEW_STATES.IS_SEARCH_LIST_VISIBLE);
       } else {
-        this.toggleLoader(true);
+        this.toggleViewStates(VIEW_STATES.IS_LOADING_ITEMS);
         this.isLocalStorageFailed = false;
-        const items = this.service.getFrequentItems();
-        if (items) {
-          this.toggleFrequentItemsList(true);
-          this.setFrequentItems(items);
-        } else {
-          this.isLocalStorageFailed = true;
-          this.toggleFrequentItemsList(true);
-          this.setFrequentItems([]);
-        }
+
+        this.fetchFrequentItems();
       }
-    },
-    fetchSearchedItems(searchQuery) {
-      this.searchQuery = searchQuery;
-      this.toggleLoader(true);
-      this.service
-        .getSearchedItems(this.searchQuery)
-        .then(res => res.json())
-        .then(results => {
-          this.toggleSearchItemsList(true);
-          this.setSearchedItems(results);
-        })
-        .catch(() => {
-          this.isSearchFailed = true;
-          this.toggleSearchItemsList(true);
-        });
-    },
-    logCurrentItemAccess() {
-      this.service.logItemAccess(this.currentItem);
-    },
-    handleSearchClear() {
-      this.searchQuery = '';
-      this.toggleFrequentItemsList(true);
-      this.clearSearchedItems();
-    },
-    handleSearchFailure() {
-      this.isSearchFailed = true;
-      this.toggleSearchItemsList(true);
     },
   },
 };
@@ -132,7 +140,7 @@ export default {
 <template>
   <div>
     <frequent-items-search-input
-      :service="service"
+      :namespace="namespace"
     />
     <loading-icon
       class="loading-animation prepend-top-20"
@@ -150,14 +158,14 @@ export default {
       v-if="isItemsListVisible"
       :local-storage-failed="isLocalStorageFailed"
       :items="frequentItems"
-      :service="service"
+      :namespace="namespace"
     />
     <frequent-items-search-list
       v-if="isSearchListVisible"
       :search-failed="isSearchFailed"
       :matcher="searchQuery"
       :items="searchedItems"
-      :service="service"
+      :namespace="namespace"
     />
   </div>
 </template>
