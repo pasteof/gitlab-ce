@@ -30,39 +30,39 @@ export default {
   },
   computed: {
     ...mapState({
-      searchQuery(state, getters) {
-        return getters[`${this.namespace}/searchQuery`];
+      searchQuery(state) {
+        return state[this.namespace].searchQuery;
       },
-      frequentItems(state, getters) {
-        return getters[`${this.namespace}/frequentItems`];
+      frequentItems(state) {
+        return state[this.namespace].frequentItems;
       },
-      searchedItems(state, getters) {
-        return getters[`${this.namespace}/searchedItems`];
+      searchedItems(state) {
+        return state[this.namespace].searchedItems;
       },
-      isLocalStorageFailed(state, getters) {
-        return getters[`${this.namespace}/isLocalStorageFailed`];
+      isLocalStorageFailed(state) {
+        return state[this.namespace].isLocalStorageFailed;
       },
-      isSearchFailed(state, getters) {
-        return getters[`${this.namespace}/isSearchFailed`];
+      isSearchFailed(state) {
+        return state[this.namespace].isSearchFailed;
       },
-      isLoadingItems(state, getters) {
-        return getters[`${this.namespace}/isLoadingItems`];
+      isLoadingItems(state) {
+        return state[this.namespace].isLoadingItems;
       },
-      isItemsListVisible(state, getters) {
-        return getters[`${this.namespace}/isItemsListVisible`];
+      isItemsListVisible(state) {
+        return state[this.namespace].isItemsListVisible;
       },
-      isSearchListVisible(state, getters) {
-        return getters[`${this.namespace}/isSearchListVisible`];
+      isSearchListVisible(state) {
+        return state[this.namespace].isSearchListVisible;
       },
     }),
     translations() {
       return this.getTranslations(['loadingMessage', 'header']);
     },
   },
-  created() {
-    const { namespace, currentUserName } = this;
+  beforeCreate() {
+    const { namespace, currentUserName } = this.$options.propsData;
 
-    store.registerModule(this.namespace, {
+    store.registerModule(namespace, {
       ...storeModule,
       state: {
         ...storeModule.state,
@@ -71,9 +71,12 @@ export default {
         storageKey: `${currentUserName}/${STORAGE_KEY[namespace]}`,
       },
     });
+  },
+  created() {
+    const { currentItem } = this;
 
-    if (this.currentItem.id) {
-      this.logItemAccess(this.currentItem);
+    if (currentItem.id) {
+      this.logItemAccess(currentItem);
     }
 
     this.fetchFrequentItems();
