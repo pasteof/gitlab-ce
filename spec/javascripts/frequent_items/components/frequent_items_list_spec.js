@@ -1,19 +1,17 @@
 import Vue from 'vue';
 
 import frequentItemsListComponent from '~/frequent_items/components/frequent_items_list.vue';
-import FrequentItemsService from '~/frequent_items/services/frequent_items_service';
 
 import mountComponent from 'spec/helpers/vue_mount_component_helper';
-import { currentSession, mockFrequentGroups, mockFrequentProjects } from '../mock_data';
+import { mockFrequentGroups, mockFrequentProjects } from '../mock_data';
 
-const createComponent = context => {
+const createComponent = namespace => {
   const Component = Vue.extend(frequentItemsListComponent);
-  const service = new FrequentItemsService(context, currentSession[context].username);
 
   return mountComponent(Component, {
+    namespace,
     items: mockFrequentProjects,
     localStorageFailed: false,
-    service,
   });
 };
 
@@ -70,7 +68,7 @@ describe('FrequentItemsListComponent', () => {
   });
 
   describe('template', () => {
-    it('should render component element with list of projects', (done) => {
+    it('should render component element with list of projects', done => {
       vm1.items = mockFrequentProjects;
 
       Vue.nextTick(() => {
@@ -81,7 +79,7 @@ describe('FrequentItemsListComponent', () => {
       });
     });
 
-    it('should render component element with list of groups', (done) => {
+    it('should render component element with list of groups', done => {
       vm2.items = mockFrequentGroups;
 
       Vue.nextTick(() => {
@@ -92,7 +90,7 @@ describe('FrequentItemsListComponent', () => {
       });
     });
 
-    it('should render component element with empty message', (done) => {
+    it('should render component element with empty message', done => {
       vm1.items = [];
 
       Vue.nextTick(() => {

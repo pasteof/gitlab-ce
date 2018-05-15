@@ -1,20 +1,18 @@
 import Vue from 'vue';
 
 import frequentItemsSearchListComponent from '~/frequent_items/components/frequent_items_search_list.vue';
-import FrequentItemsService from '~/frequent_items/services/frequent_items_service';
 
 import mountComponent from 'spec/helpers/vue_mount_component_helper';
-import { currentSession, mockGroup, mockProject } from '../mock_data';
+import { mockGroup, mockProject } from '../mock_data';
 
-const createComponent = context => {
+const createComponent = namespace => {
   const Component = Vue.extend(frequentItemsSearchListComponent);
-  const service = new FrequentItemsService(context, currentSession[context].username);
 
   return mountComponent(Component, {
+    namespace,
     items: [mockProject],
     matcher: 'lab',
     searchFailed: false,
-    service,
   });
 };
 
@@ -71,7 +69,7 @@ describe('FrequentItemsSearchListComponent', () => {
   });
 
   describe('template', () => {
-    it('should render component element with list of projects', (done) => {
+    it('should render component element with list of projects', done => {
       vm1.items = [mockProject];
 
       Vue.nextTick(() => {
@@ -82,7 +80,7 @@ describe('FrequentItemsSearchListComponent', () => {
       });
     });
 
-    it('should render component element with list of groups', (done) => {
+    it('should render component element with list of groups', done => {
       vm2.items = [mockGroup];
 
       Vue.nextTick(() => {
@@ -93,7 +91,7 @@ describe('FrequentItemsSearchListComponent', () => {
       });
     });
 
-    it('should render component element with empty message', (done) => {
+    it('should render component element with empty message', done => {
       vm1.items = [];
 
       Vue.nextTick(() => {
@@ -103,7 +101,7 @@ describe('FrequentItemsSearchListComponent', () => {
       });
     });
 
-    it('should render component element with failure message', (done) => {
+    it('should render component element with failure message', done => {
       vm1.searchFailed = true;
       vm1.items = [];
 

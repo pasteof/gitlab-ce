@@ -2,10 +2,10 @@ import store from '~/frequent_items/store';
 import { mockGroup, mockRawGroup, mockProject, mockRawProject } from '../mock_data';
 
 describe('ItemsStore', () => {
-  describe('setFrequentItems', () => {
+  describe('receiveFrequentItemsSuccess', () => {
     it('should set frequent items list to state with project', done => {
       store
-        .dispatch('setFrequentItems', [mockProject])
+        .dispatch('receiveFrequentItemsSuccess', [mockProject])
         .then(() => {
           expect(store.state.frequentItems.length).toBe(1);
           expect(store.state.frequentItems[0].id).toBe(mockProject.id);

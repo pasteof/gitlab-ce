@@ -128,7 +128,7 @@ export const unsortedFrequentItems = [
 
 /**
  * This const has a specific order which tests authenticity
- * of `FrequentItemsService.getTopFrequentItems` method so
+ * of `getTopFrequentItems` method so
  * DO NOT change order of items in this const.
  */
 export const sortedFrequentItems = [
