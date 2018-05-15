@@ -14,6 +14,13 @@ export default {
       searchQuery,
     });
   },
+  [types.REQUEST_FREQUENT_ITEMS](state) {
+    const newViewStates = toggleViewStates(state, VIEW_STATES.IS_LOADING_ITEMS);
+
+    Object.assign(state, {
+      ...newViewStates,
+    });
+  },
   [types.RECEIVE_FREQUENT_ITEMS_SUCCESS](state, rawItems) {
     const newViewStates = toggleViewStates(state, VIEW_STATES.IS_ITEMS_LIST_VISIBLE);
 

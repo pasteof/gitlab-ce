@@ -5,6 +5,9 @@ import { FREQUENT_ITEMS } from '../constants';
 import * as types from './mutation_types';
 import { isLocalStorageAvailable, getTopFrequentItems, updateExistingFrequentItem } from './utils';
 
+export const requestFrequentItems = ({ commit }) => {
+  commit(types.REQUEST_FREQUENT_ITEMS);
+};
 export const receiveFrequentItemsSuccess = ({ commit }, data) => {
   commit(types.RECEIVE_FREQUENT_ITEMS_SUCCESS, data);
 };
@@ -13,6 +16,8 @@ export const receiveFrequentItemsError = ({ commit }) => {
 };
 
 export const fetchFrequentItems = ({ state, dispatch }) => {
+  dispatch('requestFrequentItems');
+
   if (isLocalStorageAvailable) {
     const storedFrequentItems = JSON.parse(localStorage.getItem(state.storageKey));
 
@@ -51,8 +56,8 @@ export const fetchSearchedItems = ({ state, dispatch }, searchQuery) => {
     .then(results => {
       dispatch('receiveSearchedItemsSuccess', results);
     })
-    .catch(error => {
-      dispatch('receiveSearchedItemsError', error);
+    .catch(() => {
+      dispatch('receiveSearchedItemsError');
     });
 };
 
