@@ -20,11 +20,18 @@ export const toggleViewStates = (state, viewToEnable) => {
 };
 
 export const getTopFrequentItems = items => {
+  if (!items) {
+    return [];
+  }
   const frequentItemsCount = isMobile()
     ? FREQUENT_ITEMS.LIST_COUNT_MOBILE
     : FREQUENT_ITEMS.LIST_COUNT_DESKTOP;
 
   const frequentItems = items.filter(item => item.frequency >= FREQUENT_ITEMS.ELIGIBLE_FREQUENCY);
+
+  if (!frequentItems || frequentItems.length === 0) {
+    return [];
+  }
 
   frequentItems.sort((itemA, itemB) => {
     // Sort all frequent items in decending order of frequency
