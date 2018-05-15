@@ -3598,6 +3598,11 @@ describe Project do
           .to be_truthy
       end
 
+      it 'allows access when there are merge requests open but no branch name is given' do
+        expect(project.branch_allows_maintainer_push?(user, nil))
+          .to be_truthy
+      end
+
       it 'does not allow guest users access' do
         guest = create(:user)
         target_project.add_guest(guest)
