@@ -5,10 +5,9 @@ import { FREQUENT_ITEMS } from '../constants';
 import * as types from './mutation_types';
 import { isLocalStorageAvailable, getTopFrequentItems, updateExistingFrequentItem } from './utils';
 
-export const setSearchQuery = ({ commit }, query) => {
-  commit(types.SET_SEARCH_QUERY, query);
+export const requestFrequentItems = ({ commit }) => {
+  commit(types.REQUEST_FREQUENT_ITEMS);
 };
-
 export const receiveFrequentItemsSuccess = ({ commit }, data) => {
   commit(types.RECEIVE_FREQUENT_ITEMS_SUCCESS, data);
 };
@@ -17,6 +16,7 @@ export const receiveFrequentItemsError = ({ commit }) => {
 };
 
 export const fetchFrequentItems = ({ state, dispatch }) => {
+  dispatch('requestFrequentItems');
   if (isLocalStorageAvailable) {
     const storedFrequentItems = JSON.parse(localStorage.getItem(state.storageKey));
 
@@ -29,6 +29,9 @@ export const fetchFrequentItems = ({ state, dispatch }) => {
   }
 };
 
+export const requestSearchedItems = ({ commit }) => {
+  commit(types.REQUEST_SEARCHED_ITEMS);
+};
 export const receiveSearchedItemsSuccess = ({ commit }, data) => {
   commit(types.RECEIVE_SEARCHED_ITEMS_SUCCESS, data);
 };
@@ -36,6 +39,7 @@ export const receiveSearchedItemsError = ({ commit }) => {
   commit(types.RECEIVE_SEARCHED_ITEMS_ERROR);
 };
 export const fetchSearchedItems = ({ state, dispatch }, searchQuery) => {
+  dispatch('requestSearchedItems');
   const params = {
     simple: true,
     per_page: 20,
@@ -53,6 +57,12 @@ export const fetchSearchedItems = ({ state, dispatch }, searchQuery) => {
     .catch(error => {
       dispatch('receiveSearchedItemsError', error);
     });
+};
+
+export const setSearchQuery = ({ commit, dispatch }, query) => {
+  commit(types.SET_SEARCH_QUERY, query);
+
+  dispatch('fetchSearchedItems', query);
 };
 
 export const logItemAccess = ({ state }, item) => {

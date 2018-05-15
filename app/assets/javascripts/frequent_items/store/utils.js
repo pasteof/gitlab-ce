@@ -2,11 +2,22 @@ import _ from 'underscore';
 import bp from '~/breakpoints';
 import AccessorUtilities from '~/lib/utils/accessor';
 
-import { FREQUENT_ITEMS, HOUR_IN_MS } from '../constants';
+import { VIEW_STATES, FREQUENT_ITEMS, HOUR_IN_MS } from '../constants';
 
 const isMobile = () => bp.getBreakpointSize() === ('sm' && 'xs');
 
 export const isLocalStorageAvailable = AccessorUtilities.isLocalStorageAccessSafe();
+
+export const toggleViewStates = (state, viewToEnable) => {
+  const newState = { ...state };
+  const views = _.values(VIEW_STATES);
+
+  views.forEach(view => {
+    newState[view] = view === viewToEnable;
+  });
+
+  return newState;
+};
 
 export const getTopFrequentItems = items => {
   const frequentItemsCount = isMobile()

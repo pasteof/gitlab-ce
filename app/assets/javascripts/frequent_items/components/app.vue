@@ -1,12 +1,9 @@
 <script>
-import _ from 'underscore';
 import { mapState, mapActions } from 'vuex';
-import bs from '~/breakpoints';
 import LoadingIcon from '~/vue_shared/components/loading_icon.vue';
 
-import eventHub from '../event_hub';
 import store, { storeModule } from '../store/';
-import { VIEW_STATES, STORAGE_KEY } from '../constants';
+import { STORAGE_KEY } from '../constants';
 import FrequentItemsSearchInput from './frequent_items_search_input.vue';
 import FrequentItemsList from './frequent_items_list.vue';
 import FrequentItemsSearchList from './frequent_items_search_list.vue';
@@ -31,13 +28,6 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      [VIEW_STATES.IS_LOADING_ITEMS]: false,
-      [VIEW_STATES.IS_ITEMS_LIST_VISIBLE]: false,
-      [VIEW_STATES.IS_SEARCH_LIST_VISIBLE]: false,
-    };
-  },
   computed: {
     ...mapState({
       searchQuery(state, getters) {
@@ -55,29 +45,18 @@ export default {
       isSearchFailed(state, getters) {
         return getters[`${this.namespace}/isSearchFailed`];
       },
+      isLoadingItems(state, getters) {
+        return getters[`${this.namespace}/isLoadingItems`];
+      },
+      isItemsListVisible(state, getters) {
+        return getters[`${this.namespace}/isItemsListVisible`];
+      },
+      isSearchListVisible(state, getters) {
+        return getters[`${this.namespace}/isSearchListVisible`];
+      },
     }),
     translations() {
       return this.getTranslations(['loadingMessage', 'header']);
-    },
-  },
-  watch: {
-    searchQuery(val) {
-      if (val === '') {
-        this.toggleViewStates(VIEW_STATES.IS_ITEMS_LIST_VISIBLE);
-      } else {
-        this.toggleViewStates(VIEW_STATES.IS_LOADING_ITEMS);
-        this.fetchSearchedItems(this.searchQuery).catch(() => {
-          this.toggleViewStates(VIEW_STATES.IS_SEARCH_LIST_VISIBLE);
-        });
-      }
-    },
-    frequentItems() {
-      this.toggleViewStates(VIEW_STATES.IS_ITEMS_LIST_VISIBLE);
-    },
-    searchedItems(items) {
-      if (items) {
-        this.toggleViewStates(VIEW_STATES.IS_SEARCH_LIST_VISIBLE);
-      }
     },
   },
   created() {
@@ -97,10 +76,7 @@ export default {
       this.logItemAccess(this.currentItem);
     }
 
-    eventHub.$on(`${this.namespace}-dropdownOpen`, this.dropdownOpenHandler);
-  },
-  beforeDestroy() {
-    eventHub.$off(`${this.namespace}-dropdownOpen`, this.dropdownOpenHandler);
+    this.fetchFrequentItems();
   },
   methods: {
     ...mapActions({
@@ -110,27 +86,7 @@ export default {
       fetchFrequentItems(dispatch) {
         return dispatch(`${this.namespace}/fetchFrequentItems`);
       },
-      fetchSearchedItems(dispatch, payload) {
-        return dispatch(`${this.namespace}/fetchSearchedItems`, payload);
-      },
     }),
-    toggleViewStates(viewToEnable) {
-      const views = _.values(VIEW_STATES);
-
-      views.forEach(view => {
-        this[view] = view === viewToEnable;
-      });
-    },
-    dropdownOpenHandler() {
-      const screenSize = bs.getBreakpointSize();
-      if (this.searchQuery && screenSize !== ('sm' && 'xs')) {
-        this.toggleViewStates(VIEW_STATES.IS_SEARCH_LIST_VISIBLE);
-      } else {
-        this.toggleViewStates(VIEW_STATES.IS_LOADING_ITEMS);
-
-        this.fetchFrequentItems();
-      }
-    },
   },
 };
 </script>
