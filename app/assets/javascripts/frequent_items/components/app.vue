@@ -79,11 +79,9 @@ export default {
     }),
     dropdownOpenHandler() {
       const screenSize = bs.getBreakpointSize();
-      if (this.searchQuery && screenSize !== ('sm' && 'xs')) {
+      if (this.state.searchQuery && (screenSize !== 'sm' && screenSize !== 'xs')) {
         this.toggleVisibility(VIEW_STATES.IS_SEARCH_LIST_VISIBLE);
       } else {
-        this.toggleVisibility(VIEW_STATES.IS_LOADING_ITEMS);
-
         this.fetchFrequentItems();
       }
     },
