@@ -14,13 +14,6 @@ export default {
       searchQuery,
     });
   },
-  [types.REQUEST_FREQUENT_ITEMS](state) {
-    const newViewStates = toggleViewStates(state, VIEW_STATES.IS_LOADING_ITEMS);
-
-    Object.assign(state, {
-      ...newViewStates,
-    });
-  },
   [types.RECEIVE_FREQUENT_ITEMS_SUCCESS](state, rawItems) {
     const newViewStates = toggleViewStates(state, VIEW_STATES.IS_ITEMS_LIST_VISIBLE);
 
@@ -45,10 +38,7 @@ export default {
     });
   },
   [types.RECEIVE_SEARCHED_ITEMS_SUCCESS](state, rawItems) {
-    const newViewStates = toggleViewStates(
-      state,
-      state.searchQuery ? VIEW_STATES.IS_SEARCH_LIST_VISIBLE : VIEW_STATES.IS_ITEMS_LIST_VISIBLE,
-    );
+    const newViewStates = toggleViewStates(state, VIEW_STATES.IS_SEARCH_LIST_VISIBLE);
 
     Object.assign(state, {
       ...newViewStates,
