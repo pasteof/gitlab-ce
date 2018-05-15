@@ -30,29 +30,8 @@ export default {
   },
   computed: {
     ...mapState({
-      searchQuery(state) {
-        return state[this.namespace].searchQuery;
-      },
-      frequentItems(state) {
-        return state[this.namespace].frequentItems;
-      },
-      searchedItems(state) {
-        return state[this.namespace].searchedItems;
-      },
-      isLocalStorageFailed(state) {
-        return state[this.namespace].isLocalStorageFailed;
-      },
-      isSearchFailed(state) {
-        return state[this.namespace].isSearchFailed;
-      },
-      isLoadingItems(state) {
-        return state[this.namespace].isLoadingItems;
-      },
-      isItemsListVisible(state) {
-        return state[this.namespace].isItemsListVisible;
-      },
-      isSearchListVisible(state) {
-        return state[this.namespace].isSearchListVisible;
+      state(state) {
+        return state[this.namespace];
       },
     }),
     translations() {
@@ -102,26 +81,26 @@ export default {
     <loading-icon
       class="loading-animation prepend-top-20"
       size="2"
-      v-if="isLoadingItems"
+      v-if="state.isLoadingItems"
       :label="translations.loadingMessage"
     />
     <div
       class="section-header"
-      v-if="isItemsListVisible"
+      v-if="state.isItemsListVisible"
     >
       {{ translations.header }}
     </div>
     <frequent-items-list
-      v-if="isItemsListVisible"
-      :local-storage-failed="isLocalStorageFailed"
-      :items="frequentItems"
+      v-if="state.isItemsListVisible"
+      :local-storage-failed="state.isLocalStorageFailed"
+      :items="state.frequentItems"
       :namespace="namespace"
     />
     <frequent-items-search-list
-      v-if="isSearchListVisible"
-      :search-failed="isSearchFailed"
-      :matcher="searchQuery"
-      :items="searchedItems"
+      v-if="state.isSearchListVisible"
+      :search-failed="state.isSearchFailed"
+      :matcher="state.searchQuery"
+      :items="state.searchedItems"
       :namespace="namespace"
     />
   </div>
