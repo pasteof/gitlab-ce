@@ -6,12 +6,17 @@ export default {
       searchQuery,
     });
   },
-  [types.SET_FREQUENT_ITEMS](state, rawItems) {
+  [types.RECEIVE_FREQUENT_ITEMS_SUCCESS](state, rawItems) {
     Object.assign(state, {
       frequentItems: rawItems,
     });
   },
-  [types.SET_SEARCHED_ITEMS](state, rawItems) {
+  [types.RECEIVE_FREQUENT_ITEMS_ERROR](state) {
+    Object.assign(state, {
+      isLocalStorageFailed: true,
+    });
+  },
+  [types.RECEIVE_SEARCHED_ITEMS_SUCCESS](state, rawItems) {
     Object.assign(state, {
       searchedItems: rawItems.map(rawItem => ({
         id: rawItem.id,
@@ -20,6 +25,11 @@ export default {
         webUrl: rawItem.web_url,
         avatarUrl: rawItem.avatar_url,
       })),
+    });
+  },
+  [types.RECEIVE_SEARCHED_ITEMS_ERROR](state) {
+    Object.assign(state, {
+      isSearchFailed: true,
     });
   },
 };

@@ -9,18 +9,33 @@ export const setSearchQuery = ({ commit }, query) => {
   commit(types.SET_SEARCH_QUERY, query);
 };
 
-export const fetchFrequentItems = ({ commit, state }) => {
+export const receiveFrequentItemsSuccess = ({ commit }, data) => {
+  commit(types.RECEIVE_FREQUENT_ITEMS_SUCCESS, data);
+};
+export const receiveFrequentItemsError = ({ commit }) => {
+  commit(types.RECEIVE_FREQUENT_ITEMS_ERROR);
+};
+
+export const fetchFrequentItems = ({ state, dispatch }) => {
   if (isLocalStorageAvailable) {
     const storedFrequentItems = JSON.parse(localStorage.getItem(state.storageKey));
 
-    commit(
-      types.SET_FREQUENT_ITEMS,
+    dispatch(
+      'receiveFrequentItemsSuccess',
       !storedFrequentItems ? [] : getTopFrequentItems(storedFrequentItems),
     );
+  } else {
+    dispatch('receiveFrequentItemsError');
   }
 };
 
-export const fetchSearchedItems = ({ commit, state }, searchQuery) => {
+export const receiveSearchedItemsSuccess = ({ commit }, data) => {
+  commit(types.RECEIVE_SEARCHED_ITEMS_SUCCESS, data);
+};
+export const receiveSearchedItemsError = ({ commit }) => {
+  commit(types.RECEIVE_SEARCHED_ITEMS_ERROR);
+};
+export const fetchSearchedItems = ({ state, dispatch }, searchQuery) => {
   const params = {
     simple: true,
     per_page: 20,
@@ -31,9 +46,13 @@ export const fetchSearchedItems = ({ commit, state }, searchQuery) => {
     params.order_by = 'last_activity_at';
   }
 
-  return Api[state.namespace](searchQuery, params).then(results => {
-    commit(types.SET_SEARCHED_ITEMS, results);
-  });
+  return Api[state.namespace](searchQuery, params)
+    .then(results => {
+      dispatch('receiveSearchedItemsSuccess', results);
+    })
+    .catch(error => {
+      dispatch('receiveSearchedItemsError', error);
+    });
 };
 
 export const logItemAccess = ({ state }, item) => {

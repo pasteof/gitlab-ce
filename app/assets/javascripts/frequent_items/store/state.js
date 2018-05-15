@@ -3,6 +3,8 @@ export default {
   currentUserName: '',
   storageKey: '',
   searchQuery: '',
+  isLocalStorageFailed: false,
+  isSearchFailed: false,
   frequentItems: [],
   searchedItems: [],
 };

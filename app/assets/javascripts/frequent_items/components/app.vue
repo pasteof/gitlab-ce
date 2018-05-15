@@ -36,8 +36,6 @@ export default {
       [VIEW_STATES.IS_LOADING_ITEMS]: false,
       [VIEW_STATES.IS_ITEMS_LIST_VISIBLE]: false,
       [VIEW_STATES.IS_SEARCH_LIST_VISIBLE]: false,
-      isLocalStorageFailed: false,
-      isSearchFailed: false,
     };
   },
   computed: {
@@ -51,6 +49,12 @@ export default {
       searchedItems(state, getters) {
         return getters[`${this.namespace}/searchedItems`];
       },
+      isLocalStorageFailed(state, getters) {
+        return getters[`${this.namespace}/isLocalStorageFailed`];
+      },
+      isSearchFailed(state, getters) {
+        return getters[`${this.namespace}/isSearchFailed`];
+      },
     }),
     translations() {
       return this.getTranslations(['loadingMessage', 'header']);
@@ -63,16 +67,11 @@ export default {
       } else {
         this.toggleViewStates(VIEW_STATES.IS_LOADING_ITEMS);
         this.fetchSearchedItems(this.searchQuery).catch(() => {
-          this.isSearchFailed = true;
           this.toggleViewStates(VIEW_STATES.IS_SEARCH_LIST_VISIBLE);
         });
       }
     },
-    frequentItems(items) {
-      if (!items) {
-        this.isLocalStorageFailed = true;
-      }
-
+    frequentItems() {
       this.toggleViewStates(VIEW_STATES.IS_ITEMS_LIST_VISIBLE);
     },
     searchedItems(items) {
@@ -95,7 +94,7 @@ export default {
     });
 
     if (this.currentItem.id) {
-      this.logCurrentItemAccess(this.currentItem);
+      this.logItemAccess(this.currentItem);
     }
 
     eventHub.$on(`${this.namespace}-dropdownOpen`, this.dropdownOpenHandler);
@@ -105,7 +104,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      logCurrentItemAccess(dispatch, payload) {
+      logItemAccess(dispatch, payload) {
         return dispatch(`${this.namespace}/logItemAccess`, payload);
       },
       fetchFrequentItems(dispatch) {
@@ -128,7 +127,6 @@ export default {
         this.toggleViewStates(VIEW_STATES.IS_SEARCH_LIST_VISIBLE);
       } else {
         this.toggleViewStates(VIEW_STATES.IS_LOADING_ITEMS);
-        this.isLocalStorageFailed = false;
 
         this.fetchFrequentItems();
       }
