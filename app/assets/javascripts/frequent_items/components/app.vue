@@ -1,9 +1,11 @@
 <script>
 import { mapState, mapActions } from 'vuex';
+import bs from '~/breakpoints';
 import LoadingIcon from '~/vue_shared/components/loading_icon.vue';
 
+import eventHub from '../event_hub';
 import store, { storeModule } from '../store/';
-import { STORAGE_KEY } from '../constants';
+import { VIEW_STATES, STORAGE_KEY } from '../constants';
 import FrequentItemsSearchInput from './frequent_items_search_input.vue';
 import FrequentItemsList from './frequent_items_list.vue';
 import FrequentItemsSearchList from './frequent_items_search_list.vue';
@@ -58,7 +60,10 @@ export default {
       this.logItemAccess(currentItem);
     }
 
-    this.fetchFrequentItems();
+    eventHub.$on(`${this.namespace}-dropdownOpen`, this.dropdownOpenHandler);
+  },
+  beforeDestroy() {
+    eventHub.$off(`${this.namespace}-dropdownOpen`, this.dropdownOpenHandler);
   },
   methods: {
     ...mapActions({
@@ -68,7 +73,20 @@ export default {
       fetchFrequentItems(dispatch) {
         return dispatch(`${this.namespace}/fetchFrequentItems`);
       },
+      toggleVisibility(dispatch, payload) {
+        return dispatch(`${this.namespace}/toggleVisibility`, payload);
+      },
     }),
+    dropdownOpenHandler() {
+      const screenSize = bs.getBreakpointSize();
+      if (this.searchQuery && screenSize !== ('sm' && 'xs')) {
+        this.toggleVisibility(VIEW_STATES.IS_SEARCH_LIST_VISIBLE);
+      } else {
+        this.toggleVisibility(VIEW_STATES.IS_LOADING_ITEMS);
+
+        this.fetchFrequentItems();
+      }
+    },
   },
 };
 </script>

@@ -3,6 +3,13 @@ import * as types from './mutation_types';
 import { toggleViewStates } from './utils';
 
 export default {
+  [types.TOGGLE_VISIBILITY](state, view) {
+    const newViewStates = toggleViewStates(state, view);
+
+    Object.assign(state, {
+      ...newViewStates,
+    });
+  },
   [types.SET_SEARCH_QUERY](state, searchQuery) {
     const newViewStates = toggleViewStates(
       state,
