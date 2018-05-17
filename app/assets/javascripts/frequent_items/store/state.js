@@ -1,6 +1,7 @@
 import { VIEW_STATES } from '../constants';
 
 export default {
+  namespace: '',
   storageKey: '',
   searchQuery: '',
   isLocalStorageFailed: false,

@@ -6,30 +6,10 @@ import state from './state';
 
 Vue.use(Vuex);
 
-const namespaced = true;
-
-export const storeModule = {
-  namespaced,
+export default new Vuex.Store({
   actions,
   mutations,
-  state,
-};
-
-export default new Vuex.Store({
-  modules: {
-    projects: {
-      ...storeModule,
-      state: {
-        ...storeModule.state,
-        namespace: 'projects',
-      },
-    },
-    groups: {
-      ...storeModule,
-      state: {
-        ...storeModule.state,
-        namespace: 'groups',
-      },
-    },
+  state() {
+    return state;
   },
 });
