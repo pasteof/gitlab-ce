@@ -1,7 +1,6 @@
 import _ from 'underscore';
 import bp from '~/breakpoints';
 import AccessorUtilities from '~/lib/utils/accessor';
-
 import { VIEW_STATES, FREQUENT_ITEMS, HOUR_IN_MS } from '../constants';
 
 const isMobile = () => bp.getBreakpointSize() === ('sm' && 'xs');

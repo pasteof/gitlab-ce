@@ -9,10 +9,8 @@ import FrequentProjectsSearchInput from './frequent_projects_search_input.vue';
 import FrequentItemsList from './frequent_items_list.vue';
 import FrequentItemsSearchList from './frequent_items_search_list.vue';
 
-const vuexModuleName = 'projects';
-
 export default {
-  store,
+  store: store(),
   components: {
     LoadingIcon,
     FrequentProjectsSearchInput,
@@ -30,7 +28,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(vuexModuleName, [
+    ...mapState([
       'searchQuery',
       'isLoadingItems',
       'isItemsListVisible',
@@ -48,7 +46,8 @@ export default {
       this.logItemAccess(currentItem);
     }
 
-    this.setStorageKey(`${currentUserName}/${STORAGE_KEY[vuexModuleName]}`);
+    this.setNamespace('projects');
+    this.setStorageKey(`${currentUserName}/${STORAGE_KEY.projects}`);
 
     eventHub.$on('projects-dropdownOpen', this.dropdownOpenHandler);
   },
@@ -56,8 +55,9 @@ export default {
     eventHub.$off('projects-dropdownOpen', this.dropdownOpenHandler);
   },
   methods: {
-    ...mapActions(vuexModuleName, [
+    ...mapActions([
       'logItemAccess',
+      'setNamespace',
       'setStorageKey',
       'fetchFrequentItems',
       'toggleVisibility',

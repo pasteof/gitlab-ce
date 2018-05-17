@@ -1,9 +1,12 @@
 import _ from 'underscore';
 import Api from '~/api';
-
 import { FREQUENT_ITEMS } from '../constants';
 import * as types from './mutation_types';
 import { isLocalStorageAvailable, getTopFrequentItems, updateExistingFrequentItem } from './utils';
+
+export const setNamespace = ({ commit }, namespace) => {
+  commit(types.SET_NAMESPACE, namespace);
+};
 
 export const setStorageKey = ({ commit }, key) => {
   commit(types.SET_STORAGE_KEY, key);

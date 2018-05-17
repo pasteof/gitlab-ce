@@ -3,6 +3,11 @@ import * as types from './mutation_types';
 import { toggleViewStates } from './utils';
 
 export default {
+  [types.SET_NAMESPACE](state, namespace) {
+    Object.assign(state, {
+      namespace,
+    });
+  },
   [types.SET_STORAGE_KEY](state, storageKey) {
     Object.assign(state, {
       storageKey,

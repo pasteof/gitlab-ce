@@ -1,9 +1,7 @@
 import $ from 'jquery';
 import Vue from 'vue';
-
 import Translate from '~/vue_shared/translate';
 import eventHub from '~/frequent_items/event_hub';
-
 import FrequentProjects from './components/frequent_projects.vue';
 import FrequentGroups from './components/frequent_groups.vue';
 

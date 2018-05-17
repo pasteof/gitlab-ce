@@ -9,10 +9,8 @@ import FrequentGroupsSearchInput from './frequent_groups_search_input.vue';
 import FrequentItemsList from './frequent_items_list.vue';
 import FrequentItemsSearchList from './frequent_items_search_list.vue';
 
-const vuexModuleName = 'groups';
-
 export default {
-  store,
+  store: store(),
   components: {
     LoadingIcon,
     FrequentGroupsSearchInput,
@@ -30,7 +28,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(vuexModuleName, [
+    ...mapState([
       'searchQuery',
       'isLoadingItems',
       'isItemsListVisible',
@@ -48,7 +46,8 @@ export default {
       this.logItemAccess(currentItem);
     }
 
-    this.setStorageKey(`${currentUserName}/${STORAGE_KEY[vuexModuleName]}`);
+    this.setNamespace('groups');
+    this.setStorageKey(`${currentUserName}/${STORAGE_KEY.groups}`);
 
     eventHub.$on('groups-dropdownOpen', this.dropdownOpenHandler);
   },
@@ -56,8 +55,9 @@ export default {
     eventHub.$off('groups-dropdownOpen', this.dropdownOpenHandler);
   },
   methods: {
-    ...mapActions(vuexModuleName, [
+    ...mapActions([
       'logItemAccess',
+      'setNamespace',
       'setStorageKey',
       'fetchFrequentItems',
       'toggleVisibility',

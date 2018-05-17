@@ -1,6 +1,5 @@
 <script>
 import _ from 'underscore';
-
 import eventHub from '../event_hub';
 
 export default {
@@ -18,7 +17,7 @@ export default {
      */
     // eslint-disable-next-line func-names
     searchQuery: _.debounce(function() {
-      this.$store.dispatch('projects/setSearchQuery', this.searchQuery);
+      this.$store.dispatch('setSearchQuery', this.searchQuery);
     }, 500),
   },
   mounted() {
