@@ -15,4 +15,21 @@ export const storeModule = {
   state,
 };
 
-export default new Vuex.Store();
+export default new Vuex.Store({
+  modules: {
+    projects: {
+      ...storeModule,
+      state: {
+        ...storeModule.state,
+        namespace: 'projects',
+      },
+    },
+    groups: {
+      ...storeModule,
+      state: {
+        ...storeModule.state,
+        namespace: 'groups',
+      },
+    },
+  },
+});

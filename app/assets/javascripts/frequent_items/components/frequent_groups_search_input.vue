@@ -2,19 +2,12 @@
 import _ from 'underscore';
 
 import eventHub from '../event_hub';
-import mixin from './mixin';
 
 export default {
-  mixins: [mixin],
   data() {
     return {
       searchQuery: '',
     };
-  },
-  computed: {
-    translations() {
-      return this.getTranslations(['searchInputPlaceholder']);
-    },
   },
   watch: {
     /**
@@ -25,14 +18,14 @@ export default {
      */
     // eslint-disable-next-line func-names
     searchQuery: _.debounce(function() {
-      this.$store.dispatch(`${this.namespace}/setSearchQuery`, this.searchQuery);
+      this.$store.dispatch('groups/setSearchQuery', this.searchQuery);
     }, 500),
   },
   mounted() {
-    eventHub.$on(`${this.namespace}-dropdownOpen`, this.setFocus);
+    eventHub.$on('groups-dropdownOpen', this.setFocus);
   },
   beforeDestroy() {
-    eventHub.$off(`${this.namespace}-dropdownOpen`, this.setFocus);
+    eventHub.$off('groups-dropdownOpen', this.setFocus);
   },
   methods: {
     setFocus() {
@@ -51,7 +44,7 @@ export default {
       class="form-control"
       ref="search"
       v-model="searchQuery"
-      :placeholder="translations.searchInputPlaceholder"
+      :placeholder="s__('GroupsDropdown|Search your groups')"
     />
     <i
       v-if="!searchQuery"

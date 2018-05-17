@@ -5,6 +5,10 @@ import { FREQUENT_ITEMS } from '../constants';
 import * as types from './mutation_types';
 import { isLocalStorageAvailable, getTopFrequentItems, updateExistingFrequentItem } from './utils';
 
+export const setStorageKey = ({ commit }, key) => {
+  commit(types.SET_STORAGE_KEY, key);
+};
+
 export const toggleVisibility = ({ commit }, view) => {
   commit(types.TOGGLE_VISIBILITY, view);
 };

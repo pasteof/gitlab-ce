@@ -17,24 +17,3 @@ export const VIEW_STATES = {
   IS_ITEMS_LIST_VISIBLE: 'isItemsListVisible',
   IS_SEARCH_LIST_VISIBLE: 'isSearchListVisible',
 };
-
-export const TRANSLATION_KEYS = {
-  projects: {
-    loadingMessage: 'ProjectsDropdown|Loading projects',
-    header: 'ProjectsDropdown|Frequently visited',
-    itemListErrorMessage: 'ProjectsDropdown|This feature requires browser localStorage support',
-    itemListEmptyMessage: 'ProjectsDropdown|Projects you visit often will appear here',
-    searchListErrorMessage: 'ProjectsDropdown|Something went wrong on our end.',
-    searchListEmptyMessage: 'ProjectsDropdown|Sorry, no projects matched your search',
-    searchInputPlaceholder: 'ProjectsDropdown|Search your projects',
-  },
-  groups: {
-    loadingMessage: 'GroupsDropdown|Loading groups',
-    header: 'GroupsDropdown|Frequently visited',
-    itemListErrorMessage: 'GroupsDropdown|This feature requires browser localStorage support',
-    itemListEmptyMessage: 'GroupsDropdown|Groups you visit often will appear here',
-    searchListErrorMessage: 'GroupsDropdown|Something went wrong on our end.',
-    searchListEmptyMessage: 'GroupsDropdown|Sorry, no groups matched your search',
-    searchInputPlaceholder: 'GroupsDropdown|Search your groups',
-  },
-};

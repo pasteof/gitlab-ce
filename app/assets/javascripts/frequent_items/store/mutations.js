@@ -3,6 +3,11 @@ import * as types from './mutation_types';
 import { toggleViewStates } from './utils';
 
 export default {
+  [types.SET_STORAGE_KEY](state, storageKey) {
+    Object.assign(state, {
+      storageKey,
+    });
+  },
   [types.TOGGLE_VISIBILITY](state, view) {
     const newViewStates = toggleViewStates(state, view);
 

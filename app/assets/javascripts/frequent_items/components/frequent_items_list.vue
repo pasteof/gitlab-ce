@@ -1,12 +1,10 @@
 <script>
 import FrequentItemsListItem from './frequent_items_list_item.vue';
-import mixin from './mixin';
 
 export default {
   components: {
     FrequentItemsListItem,
   },
-  mixins: [mixin],
   props: {
     items: {
       type: Array,
@@ -16,18 +14,21 @@ export default {
       type: Boolean,
       required: true,
     },
+    emptyMessage: {
+      type: String,
+      required: true,
+    },
+    errorMessage: {
+      type: String,
+      required: true,
+    },
   },
   computed: {
-    translations() {
-      return this.getTranslations(['itemListErrorMessage', 'itemListEmptyMessage']);
-    },
     isListEmpty() {
       return this.items.length === 0;
     },
     listEmptyMessage() {
-      return this.localStorageFailed
-        ? this.translations.itemListErrorMessage
-        : this.translations.itemListEmptyMessage;
+      return this.localStorageFailed ? this.errorMessage : this.emptyMessage;
     },
   },
 };
