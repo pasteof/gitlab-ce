@@ -10,7 +10,7 @@ import FrequentItemsList from './frequent_items_list.vue';
 import FrequentItemsSearchList from './frequent_items_search_list.vue';
 
 export default {
-  store,
+  store: store(),
   components: {
     LoadingIcon,
     FrequentProjectsSearchInput,
