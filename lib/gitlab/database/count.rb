@@ -24,7 +24,7 @@ module Gitlab
       end
 
       def self.execute_estimate_if_updated_recently(model)
-        ActiveRecord::Base.connection.select_value(postgresql_estimate_query(model)).to_i if reltuples_updated_recently?(model)
+        ApplicationRecord.connection.select_value(postgresql_estimate_query(model)).to_i if reltuples_updated_recently?(model)
       rescue *CONNECTION_ERRORS
       end
 
@@ -35,7 +35,7 @@ module Gitlab
           (last_vacuum > #{time} OR last_autovacuum > #{time} OR last_analyze > #{time} OR last_autoanalyze > #{time})
         SQL
 
-        ActiveRecord::Base.connection.select_all(query).count > 0
+        ApplicationRecord.connection.select_all(query).count > 0
       rescue *CONNECTION_ERRORS
         false
       end

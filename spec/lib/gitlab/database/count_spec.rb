@@ -18,7 +18,7 @@ describe Gitlab::Database::Count do
 
     context 'when reltuples have been updated' do
       before do
-        ActiveRecord::Base.connection.execute('ANALYZE projects')
+        ApplicationRecord.connection.execute('ANALYZE projects')
       end
 
       it 'calls postgresql_estimate_query' do
@@ -49,7 +49,7 @@ describe Gitlab::Database::Count do
 
     describe 'when reltuples have been updated', :postgresql do
       before do
-        ActiveRecord::Base.connection.execute('ANALYZE projects')
+        ApplicationRecord.connection.execute('ANALYZE projects')
       end
 
       it 'counts all projects in the fast way' do
