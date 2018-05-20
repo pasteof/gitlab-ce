@@ -511,6 +511,7 @@ module Ci
     def predefined_variables
       Gitlab::Ci::Variables::Collection.new
         .append(key: 'CI_PIPELINE_ID', value: id.to_s)
+        .append(key: 'CI_PIPELINE_URL', value: project_pipeline_url(project, self))
         .append(key: 'CI_CONFIG_PATH', value: ci_yaml_file_path)
         .append(key: 'CI_PIPELINE_SOURCE', value: source.to_s)
         .append(key: 'CI_COMMIT_MESSAGE', value: git_commit_message)
