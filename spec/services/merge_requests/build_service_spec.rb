@@ -357,5 +357,21 @@ describe MergeRequests::BuildService do
         expect(merge_request.source_project).to eq(project)
       end
     end
+
+    context 'source_branch is a tag' do
+      let(:source_project) { create(:project, :private, :repository)}
+      let(:commits) { Commit.decorate([commit_1], project) }
+      create(:protected_tag, name: 'ref', project: source_project)
+      let(:source_branch) { 'ref' }
+
+      it 'creates compare object with target branch as default branch' do
+        expect(merge_request.compare).to be_present
+        expect(merge_request.target_branch).to eq(project.default_branch)
+      end
+
+      it 'allows the merge request to be created' do
+        expect(merge_request.can_be_created).to eq(true)
+      end
+    end
   end
 end
