@@ -4,9 +4,9 @@
 
 ### Proposal
 
-### Impact of this change and how can it be measured?
+### What does success look like, and how can we measure that?
 
-(If no way to measure impact, link to an issue that will implement a way to measure this)
+(If no way to measure success, link to an issue that will implement a way to measure this)
 
 ### Links / references
 
