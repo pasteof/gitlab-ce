@@ -1,8 +1,12 @@
-### Description
+### Problem to solve
 
-(Include problem, use cases, benefits, and/or goals)
+### Further details
 
-### Proposal
+(Include use cases, benefits, and/or goals)
+
+### Initial proposal
+
+Alternative proposals are welcome.
 
 ### What does success look like, and how can we measure that?
 
