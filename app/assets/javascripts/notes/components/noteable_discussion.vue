@@ -118,9 +118,7 @@ export default {
       return shouldRenderDiffs ? diffWithNote : 'div';
     },
     wrapperClass() {
-      return this.isDiffDiscussion
-        ? ''
-        : 'panel panel-default discussion-wrapper';
+      return this.isDiffDiscussion ? '' : 'card discussion-wrapper';
     },
   },
   mounted() {
@@ -286,7 +284,7 @@ Please check your network connection and try again.`;
                   class="discussion-reply-holder">
                   <template v-if="!isReplying && canReply">
                     <div
-                      class="btn-group-justified discussion-with-resolve-btn"
+                      class="btn-group d-flex discussion-with-resolve-btn"
                       role="group">
                       <div
                         class="btn-group"
