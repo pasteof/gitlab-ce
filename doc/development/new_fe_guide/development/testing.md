@@ -125,3 +125,11 @@ beforeEach(() => {
   });
 },
 ```
+
+Don't forget to clean up:
+
+```
+afterEach(() => {
+  vm.$destroy();
+});
+```
