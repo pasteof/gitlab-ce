@@ -64,7 +64,7 @@ Karma tests are run against a virtual DOM.
 
 To populate the DOM, we can use fixtures to fake the generation of HTML instead of having Rails do that.
 
-Be sure to check the [best practices for karma tests](/development/testing_guide/frontend_testing.html#best-practices).
+Be sure to check the [best practices for karma tests](../../testing_guide/frontend_testing.html#best-practices).
 
 ### Vue and Vuex
 
@@ -72,7 +72,7 @@ Test as much as possible without double-testing Vue's internal features, as ment
 
 Make sure to test computedProperties, mutations, actions. Run the action and test that the proper mutations are committed.
 
-Also check these [notes on testing Vue components](https://docs.gitlab.com/ce/development/fe_guide/vue.html#testing-vue-components).
+Also check these [notes on testing Vue components](../../fe_guide/vue.html#testing-vue-components).
 
 #### Vuex Helper: `testAction`
 
