@@ -4,9 +4,7 @@
 
 (Include use cases, benefits, and/or goals)
 
-### Initial proposal
-
-Alternative proposals are welcome.
+### Proposal
 
 ### What does success look like, and how can we measure that?
 
