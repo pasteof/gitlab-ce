@@ -1,9 +1,15 @@
 class PersonalSnippetPolicy < BasePolicy
   condition(:public_snippet, scope: :subject) { @subject.public? }
+  condition(:secret_snippet, scope: :subject) { @subject.secret? }
   condition(:is_author) { @user && @subject.author == @user }
   condition(:internal_snippet, scope: :subject) { @subject.internal? }
 
   rule { public_snippet }.policy do
+    enable :read_personal_snippet
+    enable :comment_personal_snippet
+  end
+
+  rule { secret_snippet }.policy do
     enable :read_personal_snippet
     enable :comment_personal_snippet
   end

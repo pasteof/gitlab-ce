@@ -20,6 +20,7 @@ module Gitlab
     PRIVATE  = 0 unless const_defined?(:PRIVATE)
     INTERNAL = 10 unless const_defined?(:INTERNAL)
     PUBLIC   = 20 unless const_defined?(:PUBLIC)
+    SECRET   = 30 unless const_defined?(:SECRET)
 
     class << self
       delegate :values, to: :options
@@ -44,7 +45,8 @@ module Gitlab
         {
           N_('VisibilityLevel|Private')  => PRIVATE,
           N_('VisibilityLevel|Internal') => INTERNAL,
-          N_('VisibilityLevel|Public')   => PUBLIC
+          N_('VisibilityLevel|Public')   => PUBLIC,
+          N_('VisibilityLevel|Secret')   => SECRET
         }
       end
 
@@ -52,7 +54,8 @@ module Gitlab
         {
           'private'  => PRIVATE,
           'internal' => INTERNAL,
-          'public'   => PUBLIC
+          'public'   => PUBLIC,
+          'secret'   => SECRET
         }
       end
 
@@ -123,6 +126,10 @@ module Gitlab
 
     def public?
       visibility_level_value == PUBLIC
+    end
+
+    def secret?
+      visibility_level_value == SECRET
     end
 
     def visibility_level_value
