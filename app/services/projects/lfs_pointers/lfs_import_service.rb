@@ -4,67 +4,72 @@
 module Projects
   module LfsPointers
     class LfsImportService < BaseService
+      include Gitlab::Utils::StrongMemoize
+
       HEAD_REV = 'head'.freeze
       LFS_ENDPOINT_PATTERN = /^\t?url\s=\s(.+)$/.freeze
 
       LfsImportError = Class.new(StandardError)
 
       def execute
-        return {} unless check_lfs_enabled
+        return {} unless project&.lfs_enabled?
 
-        existent_lfs = LfsListService.new(project).execute
+        if external_lfs_endpoint?
+          # If the endpoint host is different from the import_url it means
+          # that the repo is using a third party service for storing the LFS files.
+          # In this case, we have to disable lfs in the project
+          disable_lfs!
 
-        download_links = LfsDownloadLinkListService.new(project,
-                                                        import_url: @lfs_endpoint || project.import_url)
-                                                   .execute(not_linked_lfs(existent_lfs))
+          return {}
+        end
 
-        download_links
+        get_download_links(lfsconfig_endpoint_uri&.to_s || project.import_url)
       rescue LfsDownloadLinkListService::DownloadLinksError => e
         raise LfsImportError, "The LFS objects download list couldn't be imported. Error: #{e.message}"
       end
 
       private
 
-      def check_lfs_enabled
-        return false unless project&.lfs_enabled?
-
-        data = project.repository.lfsconfig_for(HEAD_REV)
-
-        if result = data&.match(LFS_ENDPOINT_PATTERN)
-          endpoint = URI.parse(result[1])
-          import_uri = URI.parse(project.import_url)
-
-          # If the endpoint host is different from the import_url it means
-          # that the repo is using a third party service for storing the LFS files.
-          # In this case, we have to disable lfs in the project
-          if endpoint.host != import_uri.host
-            disable_lfs!
-
-            return false
-          else
-            set_lfs_endpoint(endpoint, import_uri.user, import_uri.password)
-          end
-        end
-
-        true
-      rescue URI::InvalidURIError
-        raise LfsImportError, 'Invalid url in .lfsconfig file'
+      def external_lfs_endpoint?
+        lfsconfig_endpoint_uri && lfsconfig_endpoint_uri.host != import_uri.host
       end
 
-      def not_linked_lfs(oids)
-        linked_oids = LfsLinkService.new(project).execute(oids.keys)
+      def lfsconfig_endpoint_uri
+        strong_memoize(:lfsconfig_endpoint_uri) do
+          # Retrieveing the blob data from the .lfsconfig file
+          data = project.repository.lfsconfig_for(HEAD_REV)
+          # Parsing the data to retrieve the url
+          parsed_data = data&.match(LFS_ENDPOINT_PATTERN)
 
-        oids.except(*linked_oids)
+          if parsed_data
+            URI.parse(parsed_data[1]).tap do |endpoint|
+              endpoint.user ||= import_uri.user
+              endpoint.password ||= import_uri.password
+            end
+          end
+        end
+      rescue URI::InvalidURIError
+        raise LfsImportError, 'Invalid URL in .lfsconfig file'
+      end
+
+      def import_uri
+        @import_uri ||= URI.parse(project.import_url)
+      rescue URI::InvalidURIError
+        raise LfsImportError, 'Invalid project import URL'
       end
 
       def disable_lfs!
         project.update(lfs_enabled: false)
       end
 
-      def set_lfs_endpoint(uri, user, password)
-        uri.user = user
-        uri.password = password
-        @lfs_endpoint = uri.to_s
+      def get_download_links(url)
+        existent_lfs = LfsListService.new(project).execute
+        linked_oids = LfsLinkService.new(project).execute(existent_lfs.keys)
+
+        # Retrieving those oids not linked and which we need to download
+        not_linked_lfs = existent_lfs.except(*linked_oids)
+
+        LfsDownloadLinkListService.new(project, import_url: url).execute(not_linked_lfs)
       end
     end
   end
