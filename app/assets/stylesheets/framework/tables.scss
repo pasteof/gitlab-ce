@@ -38,6 +38,11 @@ table {
         &.wide {
           width: 55%;
         }
+
+        &.table-th-transparent {
+          background: none;
+          color: $gl-text-color-secondary;
+        }
       }
 
       td {

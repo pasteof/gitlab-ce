@@ -43,12 +43,31 @@
         = render partial: "projects/stage/stage", collection: pipeline.legacy_stages, as: :stage
 
   - if @pipeline.failed_builds.present?
-    #js-tab-failures.build-failures.tab-pane
-      - @pipeline.failed_builds.each_with_index do |build, index|
-        .build-state
-          %span.ci-status-icon-failed= custom_icon('icon_status_failed')
-          %span.stage
-            = build.stage.titleize
-          %span.build-name
-            = link_to build.name, pipeline_job_url(pipeline, build)
-        %pre.build-log= build_summary(build, skip: index >= 10)
+    #js-tab-failures.build-failures.tab-pane.build-page
+      %table.table.ci-table
+        %thead
+          %th.table-th-transparent
+          %th.table-th-transparent= _("Name")
+          %th.table-th-transparent= _("Stage")
+          %th.table-th-transparent= _("Failure")
+
+        %tbody
+          - @pipeline.failed_builds.each_with_index do |build, index|
+            %tr.build-state
+              %td.ci-status-icon-failed= custom_icon("icon_status_#{build.status}")
+              %td.build-name
+                = link_to build.name, pipeline_job_url(pipeline, build)
+              %td.build-stage
+                = build.stage.titleize
+              %td.build-failure
+                = build.present.callout_failure_message
+              %td.build-actions
+                = link_to retry_project_job_path(build.project, build, return_to: request.original_url), method: :post, title: 'Retry', class: 'btn btn-build' do
+                  = icon('repeat')
+            %tr.build-trace-row
+              %td
+              %td.build-trace-container.prepend-top-default{ colspan: 4 }
+                %pre.build-trace.build-trace-rounded
+                  %code.bash.js-build-output
+                    = build_summary(build)
+

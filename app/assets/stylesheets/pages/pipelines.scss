@@ -321,11 +321,14 @@
 }
 
 .build-failures {
+  th {
+    border-top: 0;
+  }
+
   .build-state {
     padding: 20px 2px;
 
     .build-name {
-      float: right;
       font-weight: $gl-font-weight-normal;
     }
 
@@ -343,6 +346,46 @@
   .build-log {
     border: 0;
     line-height: initial;
+  }
+
+  .build-trace-row td {
+    border-top: 0;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    padding-top: 0;
+  }
+
+  .build-name {
+    width: 14em;
+
+    a {
+      font-weight: $gl-font-weight-bold;
+      color: $gl-text-color;
+      text-decoration: none;
+
+      &:focus,
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .build-actions {
+    width: 5em;
+  }
+
+  .build-stage {
+    width: 10em;
+  }
+
+  .ci-status-icon-failed {
+    padding: 10px 4px 10px 12px;
+    width: 4rem;
+
+    svg {
+      width: 28px;
+      height: 28px;
+    }
   }
 }
 
@@ -929,7 +972,7 @@ button.mini-pipeline-graph-dropdown-toggle {
   &.dropdown-menu {
     transform: translate(-80%, 0);
 
-    @media(min-width: map-get($grid-breakpoints, md)) {
+    @media (min-width: map-get($grid-breakpoints, md)) {
       transform: translate(-50%, 0);
       right: auto;
       left: 50%;

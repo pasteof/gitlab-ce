@@ -71,6 +71,10 @@
     .bash {
       display: block;
     }
+
+    &.build-trace-rounded {
+      border-radius: $border-radius-base;
+    }
   }
 
   .top-bar {
