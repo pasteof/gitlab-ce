@@ -195,6 +195,10 @@ class Group < Namespace
     owners.include?(user) && owners.size == 1
   end
 
+  def ldap_synced?
+    false
+  end
+
   def post_create_hook
     Gitlab::AppLogger.info("Group \"#{name}\" was created")
 
