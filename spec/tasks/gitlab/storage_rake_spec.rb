@@ -55,7 +55,7 @@ describe 'rake gitlab:storage:*' do
     end
 
     context '3 legacy projects' do
-      let(:projects) { create_list(:project, 3, storage_version: 0) }
+      let(:projects) { create_list(:project, 3, :legacy_storage) }
 
       context 'in batches of 1' do
         before do
@@ -93,13 +93,13 @@ describe 'rake gitlab:storage:*' do
       end
 
       it 'displays a message when project exists but its already migrated' do
-        project = create(:project, storage_version: 2)
+        project = create(:project)
 
         expect { run_rake_task(task, project.id) }.to output(/There are no projects requiring storage migration with ID=#{project.id}/).to_stdout
       end
 
       it 'enqueues migration when project can be found' do
-        project = create(:project, storage_version: 0)
+        project = create(:project, :legacy_storage)
 
         expect { run_rake_task(task, project.id) }.to output(/Enqueueing storage migration .* \(ID=#{project.id}\)/).to_stdout
       end
@@ -109,14 +109,14 @@ describe 'rake gitlab:storage:*' do
   describe 'gitlab:storage:legacy_projects' do
     it_behaves_like 'rake entities summary', 'projects', 'Legacy' do
       let(:task) { 'gitlab:storage:legacy_projects' }
-      let(:create_collection) { create_list(:project, 3, storage_version: 0) }
+      let(:create_collection) { create_list(:project, 3, :legacy_storage) }
     end
   end
 
   describe 'gitlab:storage:list_legacy_projects' do
     it_behaves_like 'rake listing entities', 'projects', 'Legacy' do
       let(:task) { 'gitlab:storage:list_legacy_projects' }
-      let(:create_collection) { create_list(:project, 3, storage_version: 0) }
+      let(:create_collection) { create_list(:project, 3, :legacy_storage) }
     end
   end
 
@@ -153,7 +153,7 @@ describe 'rake gitlab:storage:*' do
   describe 'gitlab:storage:hashed_attachments' do
     it_behaves_like 'rake entities summary', 'attachments', 'Hashed' do
       let(:task) { 'gitlab:storage:hashed_attachments' }
-      let(:project) { create(:project, storage_version: 2) }
+      let(:project) { create(:project) }
       let(:create_collection) { create_list(:upload, 3, model: project) }
     end
   end
@@ -161,7 +161,7 @@ describe 'rake gitlab:storage:*' do
   describe 'gitlab:storage:list_hashed_attachments' do
     it_behaves_like 'rake listing entities', 'attachments', 'Hashed' do
       let(:task) { 'gitlab:storage:list_hashed_attachments' }
-      let(:project) { create(:project, storage_version: 2) }
+      let(:project) { create(:project) }
       let(:create_collection) { create_list(:upload, 3, model: project) }
     end
   end
