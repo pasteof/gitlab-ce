@@ -2,6 +2,8 @@ namespace :gitlab do
   namespace :storage do
     desc 'GitLab | Storage | Migrate existing projects to Hashed Storage (project_id is optional)'
     task :migrate_to_hashed, [:project_id] => :environment do |_, args|
+      migrator_service = Projects::HashedStorage::MigratorService.new
+
       if args.project_id
         project = Project.with_unmigrated_storage.find_by(id: args.project_id)
 
@@ -11,8 +13,8 @@ namespace :gitlab do
           next
         end
 
-        puts "Starting storage migration of #{project.full_path} (ID=#{project.id})..."
-        project.migrate_to_hashed_storage!
+        puts "Enqueueing storage migration of #{project.full_path} (ID=#{project.id})..."
+        migrator_service.migrate(project)
 
         next
       end
@@ -29,7 +31,7 @@ namespace :gitlab do
       print "Enqueuing migration of #{legacy_projects_count} projects in batches of #{helper.batch_size}"
 
       helper.project_id_batches do |start, finish|
-        StorageMigratorWorker.perform_async(start, finish)
+        migrator_service.bulk_schedule(start, finish)
 
         print '.'
       end
