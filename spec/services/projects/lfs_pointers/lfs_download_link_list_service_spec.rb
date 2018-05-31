@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Projects::LfsPointers::LfsDownloadLinkListService do
   let(:import_url) { 'http://www.gitlab.com/demo/repo.git' }
+  let(:lfs_endpoint) { "#{import_url}/info/lfs/objects/batch" }
   let!(:project) { create(:project, import_url: import_url) }
   let(:new_oids) { { 'oid1' => 123, 'oid2' => 125 } }
 
@@ -26,7 +27,7 @@ describe Projects::LfsPointers::LfsDownloadLinkListService do
     ]
   end
 
-  subject { described_class.new(project, import_url: import_url) }
+  subject { described_class.new(project, lfs_endpoint: lfs_endpoint) }
 
   before do
     allow(project).to receive(:lfs_enabled?).and_return(true)
@@ -41,12 +42,12 @@ describe Projects::LfsPointers::LfsDownloadLinkListService do
     end
 
     context 'credentials' do
-      context 'when the download link and the import_url have the same host' do
-        let(:import_url_with_credentials) { 'http://user:password@www.gitlab.com/demo/repo.git' }
+      context 'when the download link and the lfs_endpoint have the same host' do
+        context 'when lfs_endpoint has credentials' do
+          let(:import_url) { 'http://user:password@www.gitlab.com/demo/repo.git' }
 
-        context 'when import_url has credentials' do
           it 'adds credentials to the download_link' do
-            result = described_class.new(project, import_url: import_url_with_credentials).execute(new_oids)
+            result = subject.execute(new_oids)
 
             result.each do |oid, link|
               expect(link.starts_with?('http://user:password@')).to be_truthy
@@ -54,7 +55,7 @@ describe Projects::LfsPointers::LfsDownloadLinkListService do
           end
         end
 
-        context 'when import_url does not have any credentials' do
+        context 'when lfs_endpoint does not have any credentials' do
           it 'does not add any credentials' do
             result = subject.execute(new_oids)
 
@@ -65,11 +66,12 @@ describe Projects::LfsPointers::LfsDownloadLinkListService do
         end
       end
 
-      context 'when the download link and the import_url have different hosts' do
+      context 'when the download link and the lfs_endpoint have different hosts' do
         let(:import_url_with_credentials) { 'http://user:password@www.otherdomain.com/demo/repo.git' }
+        let(:lfs_endpoint) { "#{import_url_with_credentials}/info/lfs/objects/batch" }
 
         it 'downloads without any credentials' do
-          result = described_class.new(project, import_url: import_url_with_credentials).execute(new_oids)
+          result = subject.execute(new_oids)
 
           result.each do |oid, link|
             expect(link.starts_with?('http://user:password@')).to be_falsey
@@ -94,14 +96,6 @@ describe Projects::LfsPointers::LfsDownloadLinkListService do
       result = subject.send(:parse_response_links, invalid_object_response)
 
       expect(result).to be_empty
-    end
-  end
-
-  describe '#uri_with_git_suffix' do
-    it 'adds suffix .git if the url does not have it' do
-      url = 'http://www.gitlab.com/namespace/repo'
-
-      expect(subject.send(:uri_with_git_suffix, url).to_s).to eq url + '.git'
     end
   end
 end

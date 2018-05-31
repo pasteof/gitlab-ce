@@ -8,6 +8,7 @@ module Projects
 
       HEAD_REV = 'head'.freeze
       LFS_ENDPOINT_PATTERN = /^\t?url\s=\s(.+)$/.freeze
+      LFS_BATCH_API_ENDPOINT = '/info/lfs/objects/batch'.freeze
 
       LfsImportError = Class.new(StandardError)
 
@@ -23,7 +24,7 @@ module Projects
           return {}
         end
 
-        get_download_links(lfsconfig_endpoint_uri&.to_s || project.import_url)
+        get_download_links
       rescue LfsDownloadLinkListService::DownloadLinksError => e
         raise LfsImportError, "The LFS objects download list couldn't be imported. Error: #{e.message}"
       end
@@ -32,6 +33,20 @@ module Projects
 
       def external_lfs_endpoint?
         lfsconfig_endpoint_uri && lfsconfig_endpoint_uri.host != import_uri.host
+      end
+
+      def disable_lfs!
+        project.update(lfs_enabled: false)
+      end
+
+      def get_download_links
+        existent_lfs = LfsListService.new(project).execute
+        linked_oids = LfsLinkService.new(project).execute(existent_lfs.keys)
+
+        # Retrieving those oids not linked and which we need to download
+        not_linked_lfs = existent_lfs.except(*linked_oids)
+
+        LfsDownloadLinkListService.new(project, lfs_endpoint: current_endpoint_url).execute(not_linked_lfs)
       end
 
       def lfsconfig_endpoint_uri
@@ -58,18 +73,19 @@ module Projects
         raise LfsImportError, 'Invalid project import URL'
       end
 
-      def disable_lfs!
-        project.update(lfs_enabled: false)
+      def current_endpoint_url
+        (lfsconfig_endpoint_uri || default_endpoint_uri).to_s
       end
 
-      def get_download_links(url)
-        existent_lfs = LfsListService.new(project).execute
-        linked_oids = LfsLinkService.new(project).execute(existent_lfs.keys)
-
-        # Retrieving those oids not linked and which we need to download
-        not_linked_lfs = existent_lfs.except(*linked_oids)
-
-        LfsDownloadLinkListService.new(project, import_url: url).execute(not_linked_lfs)
+      # The import url must end with '.git' here we ensure it is
+      def default_endpoint_uri
+        @default_endpoint_uri ||= begin
+          import_uri.dup.tap do |uri|
+            path = uri.path.gsub(%r(/$), '')
+            path += '.git' unless path.ends_with?('.git')
+            uri.path = path + LFS_BATCH_API_ENDPOINT
+          end
+        end
       end
     end
   end

@@ -3,7 +3,6 @@
 module Projects
   module LfsPointers
     class LfsDownloadLinkListService < BaseService
-      LFS_BATCH_API_ENDPOINT = '/info/lfs/objects/batch'.freeze
       DOWNLOAD_ACTION = 'download'.freeze
 
       DownloadLinksError = Class.new(StandardError)
@@ -11,10 +10,10 @@ module Projects
 
       attr_reader :remote_uri
 
-      def initialize(project, import_url: nil)
+      def initialize(project, lfs_endpoint: nil)
         super(project)
 
-        @remote_uri = uri_with_git_suffix(import_url)
+        @remote_uri = URI.parse(lfs_endpoint)
       end
 
       # This method accepts two parameters:
@@ -30,7 +29,7 @@ module Projects
       private
 
       def get_download_links(oids)
-        response = Gitlab::HTTP.post(lfs_batch_endpoint(remote_uri),
+        response = Gitlab::HTTP.post(remote_uri,
                                      body: request_body(oids),
                                      headers: headers)
 
@@ -52,22 +51,6 @@ module Projects
             Rails.logger.error("Link for Lfs Object with oid #{oid} not found or invalid.")
           end
         end
-      end
-
-      def lfs_batch_endpoint(url)
-        URI.join(url, LFS_BATCH_API_ENDPOINT)
-      end
-
-      # The import url must end with '.git' here we ensure it is
-      def uri_with_git_suffix(remote_url)
-        return unless remote_url
-
-        URI.parse(remote_url).tap do |uri|
-          path = uri.path.gsub(%r(/$), '')
-          path += '.git' unless path.ends_with?('.git')
-          uri.path = path
-        end
-      rescue URI::InvalidURIError
       end
 
       def request_body(oids)
