@@ -13,7 +13,7 @@ module Projects
       def initialize(project, lfs_endpoint: nil)
         super(project)
 
-        @remote_uri = URI.parse(lfs_endpoint)
+        @remote_uri = URI.parse(lfs_endpoint) if lfs_endpoint
       end
 
       # This method accepts two parameters:
