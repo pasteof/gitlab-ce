@@ -28,7 +28,7 @@ module ChangelogHelpers
 
   def fail_with(message)
     warn "\e[31merror\e[0m #{message}"
-    exit
+    exit 1
   end
 end
 
@@ -124,7 +124,7 @@ class ChangelogOptionParser
     def assert_valid_type!(type)
       unless type
         warn "Invalid category index, please select an index between 1 and #{TYPES.length}"
-        exit
+        exit 1
       end
     end
 
