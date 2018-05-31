@@ -1,7 +1,22 @@
 namespace :gitlab do
   namespace :storage do
-    desc 'GitLab | Storage | Migrate existing projects to Hashed Storage'
-    task migrate_to_hashed: :environment do
+    desc 'GitLab | Storage | Migrate existing projects to Hashed Storage (project_id is optional)'
+    task :migrate_to_hashed, [:project_id] => :environment do |_, args|
+      if args.project_id
+        project = Project.with_unmigrated_storage.find_by(id: args.project_id)
+
+        unless project
+          puts "There are no projects requiring storage migration with ID=#{args.project_id}"
+
+          next
+        end
+
+        puts "Starting storage migration of #{project.full_path} (ID=#{project.id})..."
+        project.migrate_to_hashed_storage!
+
+        next
+      end
+
       legacy_projects_count = Project.with_unmigrated_storage.count
       helper = Gitlab::HashedStorage::RakeHelper
 

@@ -1,6 +1,6 @@
 require 'rake_helper'
 
-describe 'gitlab:storage:*' do
+describe 'rake gitlab:storage:*' do
   before do
     Rake.application.rake_require 'tasks/gitlab/storage'
 
@@ -44,11 +44,13 @@ describe 'gitlab:storage:*' do
   end
 
   describe 'gitlab:storage:migrate_to_hashed' do
+    let(:task) { 'gitlab:storage:migrate_to_hashed' }
+
     context '0 legacy projects' do
       it 'does nothing' do
         expect(StorageMigratorWorker).not_to receive(:perform_async)
 
-        run_rake_task('gitlab:storage:migrate_to_hashed')
+        run_rake_task(task)
       end
     end
 
@@ -65,7 +67,7 @@ describe 'gitlab:storage:*' do
             expect(StorageMigratorWorker).to receive(:perform_async).with(project.id, project.id)
           end
 
-          run_rake_task('gitlab:storage:migrate_to_hashed')
+          run_rake_task(task)
         end
       end
 
@@ -80,8 +82,26 @@ describe 'gitlab:storage:*' do
             expect(StorageMigratorWorker).to receive(:perform_async).with(first, last)
           end
 
-          run_rake_task('gitlab:storage:migrate_to_hashed')
+          run_rake_task(task)
         end
+      end
+    end
+
+    context 'with project id' do
+      it 'displays message when project cant be found' do
+        expect { run_rake_task(task, 99999) }.to output(/There are no projects requiring storage migration with ID=99999/).to_stdout
+      end
+
+      it 'displays a message when project exists but its already migrated' do
+        project = create(:project, storage_version: 2)
+
+        expect { run_rake_task(task, project.id) }.to output(/There are no projects requiring storage migration with ID=#{project.id}/).to_stdout
+      end
+
+      it 'enqueues migration when project can be found' do
+        project = create(:project, storage_version: 0)
+
+        expect { run_rake_task(task, project.id) }.to output(/Enqueueing storage migration .* \(ID=#{project.id}\)/).to_stdout
       end
     end
   end
