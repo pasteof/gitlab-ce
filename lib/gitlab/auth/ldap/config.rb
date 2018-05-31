@@ -27,6 +27,10 @@ module Gitlab
           _available_servers
         end
 
+        def self.group_sync_enabled?
+          false
+        end
+
         def self._available_servers
           Array.wrap(servers.first)
         end
