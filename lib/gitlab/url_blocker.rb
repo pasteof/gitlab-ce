@@ -6,7 +6,6 @@ module Gitlab
 
     class << self
       def validate!(url, allow_localhost: false, allow_local_network: true, valid_ports: [])
-        return false
         return true if url.nil?
 
         begin
