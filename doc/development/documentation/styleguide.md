@@ -6,7 +6,7 @@ description: 'Writing styles, markup, formatting, and reusing regular expression
 
 The documentation style guide defines the markup structure used in
 GitLab documentation. Check the
-[documentation guidelines](documentation/index.md) for general development instructions.
+[documentation guidelines](index.md) for general development instructions.
 
 Check the GitLab handbook for the [writing styles guidelines](https://about.gitlab.com/handbook/communication/#writing-style-guidelines).
 
