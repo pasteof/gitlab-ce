@@ -1,5 +1,9 @@
 module Projects
   module HashedStorage
+    # Hashed Storage Migrator Service
+    #
+    # This is responsible for scheduling and flagging projects
+    # to be migrated from Legacy to Hashed storage, either one by one or in bulk.
     class MigratorService < BaseService
       BATCH_SIZE = 100
 
@@ -7,10 +11,21 @@ module Projects
         # overriding initializer from BaseService
       end
 
+      # Schedule a range of projects to be bulk migrated with #bulk_migrate asynchronously
+      #
+      # @param [Object] start first project id for the range
+      # @param [Object] finish last project id for the range
       def bulk_schedule(start, finish)
         StorageMigratorWorker.perform_async(start, finish)
       end
 
+      # Start migration of projects from specified range
+      #
+      # Flagging a project to be migrated is a synchronous action,
+      # but the migration runs through async jobs
+      #
+      # @param [Object] start first project id for the range
+      # @param [Object] finish last project id for the range
       def bulk_migrate(start, finish)
         projects = build_relation(start, finish)
 
@@ -19,6 +34,9 @@ module Projects
         end
       end
 
+      # Flag a project to me migrated
+      #
+      # @param [Object] project that will be migrated
       def migrate(project)
         Rails.logger.info "Starting storage migration of #{project.full_path} (ID=#{project.id})..."
 
