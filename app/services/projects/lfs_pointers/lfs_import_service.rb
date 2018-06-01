@@ -46,7 +46,7 @@ module Projects
         # Retrieving those oids not linked and which we need to download
         not_linked_lfs = existent_lfs.except(*linked_oids)
 
-        LfsDownloadLinkListService.new(project, remote_uri: current_endpoint_url).execute(not_linked_lfs)
+        LfsDownloadLinkListService.new(project, remote_uri: current_endpoint_uri).execute(not_linked_lfs)
       end
 
       def lfsconfig_endpoint_uri
@@ -73,7 +73,7 @@ module Projects
         raise LfsImportError, 'Invalid project import URL'
       end
 
-      def current_endpoint_url
+      def current_endpoint_uri
         (lfsconfig_endpoint_uri || default_endpoint_uri)
       end
 
