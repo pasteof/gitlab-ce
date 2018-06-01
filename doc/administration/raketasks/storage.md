@@ -17,13 +17,13 @@ This task will schedule all your existing projects and attachments associated wi
 **Omnibus Installation**
 
 ```bash
-gitlab-rake gitlab:storage:migrate_to_hashed
+sudo gitlab-rake gitlab:storage:migrate_to_hashed
 ```
 
 **Source Installation**
 
 ```bash
-rake gitlab:storage:migrate_to_hashed
+sudo -u git -H bundle exec rake gitlab:storage:migrate_to_hashed RAILS_ENV=production
 ```
 
 You can monitor the progress in the _Admin > Monitoring > Background jobs_ screen.
@@ -37,6 +37,21 @@ Any error or warning will be logged in the sidekiq's log file.
 You only need the `gitlab:storage:migrate_to_hashed` rake task to migrate your repositories, but we have additional
 commands below that helps you inspect projects and attachments in both legacy and hashed storage.
 
+### Migrate specific project only
+
+If you need to migrate a single project only, you can use the same command above passing the
+desired project's ID (i.e. ID=25):
+
+```bash
+sudo gitlab-rake gitlab:storage:migrate_to_hashed[25]
+```
+
+**Source Installation**
+
+```bash
+sudo -u git -H bundle exec rake gitlab:storage:migrate_to_hashed[25] RAILS_ENV=production
+```
+
 ## List projects on Legacy storage
 
 To have a simple summary of projects using **Legacy** storage:
@@ -44,13 +59,13 @@ To have a simple summary of projects using **Legacy** storage:
 **Omnibus Installation**
 
 ```bash
-gitlab-rake gitlab:storage:legacy_projects
+sudo gitlab-rake gitlab:storage:legacy_projects
 ```
 
 **Source Installation**
 
 ```bash
-rake gitlab:storage:legacy_projects
+sudo -u git -H bundle exec rake gitlab:storage:legacy_projects RAILS_ENV=production
 ```
 
 ------
@@ -60,13 +75,13 @@ To list projects using **Legacy** storage:
 **Omnibus Installation**
 
 ```bash
-gitlab-rake gitlab:storage:list_legacy_projects
+sudo gitlab-rake gitlab:storage:list_legacy_projects
 ```
 
 **Source Installation**
 
 ```bash
-rake gitlab:storage:list_legacy_projects
+sudo -u git -H bundle exec rake gitlab:storage:list_legacy_projects RAILS_ENV=production
 
 ```
 
@@ -77,13 +92,13 @@ To have a simple summary of projects using **Hashed** storage:
 **Omnibus Installation**
 
 ```bash
-gitlab-rake gitlab:storage:hashed_projects
+sudo gitlab-rake gitlab:storage:hashed_projects
 ```
 
 **Source Installation**
 
 ```bash
-rake gitlab:storage:hashed_projects
+sudo -u git -H bundle exec rake gitlab:storage:hashed_projects RAILS_ENV=production
 ```
 
 ------
@@ -93,14 +108,13 @@ To list projects using **Hashed** storage:
 **Omnibus Installation**
 
 ```bash
-gitlab-rake gitlab:storage:list_hashed_projects
+sudo gitlab-rake gitlab:storage:list_hashed_projects
 ```
 
 **Source Installation**
 
 ```bash
-rake gitlab:storage:list_hashed_projects
-
+sudo -u git -H bundle exec rake gitlab:storage:list_hashed_projects RAILS_ENV=production
 ```
 
 ## List attachments on Legacy storage
@@ -110,13 +124,13 @@ To have a simple summary of project attachments using **Legacy** storage:
 **Omnibus Installation**
 
 ```bash
-gitlab-rake gitlab:storage:legacy_attachments
+sudo gitlab-rake gitlab:storage:legacy_attachments
 ```
 
 **Source Installation**
 
 ```bash
-rake gitlab:storage:legacy_attachments
+sudo -u git -H bundle exec rake gitlab:storage:legacy_attachments RAILS_ENV=production
 ```
 
 ------
@@ -126,13 +140,13 @@ To list project attachments using **Legacy** storage:
 **Omnibus Installation**
 
 ```bash
-gitlab-rake gitlab:storage:list_legacy_attachments
+sudo gitlab-rake gitlab:storage:list_legacy_attachments
 ```
 
 **Source Installation**
 
 ```bash
-rake gitlab:storage:list_legacy_attachments
+sudo -u git -H bundle exec rake gitlab:storage:list_legacy_attachments RAILS_ENV=production
 ```
 
 ## List attachments on Hashed storage
@@ -142,13 +156,13 @@ To have a simple summary of project attachments using **Hashed** storage:
 **Omnibus Installation**
 
 ```bash
-gitlab-rake gitlab:storage:hashed_attachments
+sudo gitlab-rake gitlab:storage:hashed_attachments
 ```
 
 **Source Installation**
 
 ```bash
-rake gitlab:storage:hashed_attachments
+sudo -u git -H bundle exec rake gitlab:storage:hashed_attachments RAILS_ENV=production
 ```
 
 ------
@@ -158,13 +172,13 @@ To list project attachments using **Hashed** storage:
 **Omnibus Installation**
 
 ```bash
-gitlab-rake gitlab:storage:list_hashed_attachments
+sudo gitlab-rake gitlab:storage:list_hashed_attachments
 ```
 
 **Source Installation**
 
 ```bash
-rake gitlab:storage:list_hashed_attachments
+sudo -u git -H bundle exec rake gitlab:storage:list_hashed_attachments RAILS_ENV=production
 ```
 
 [storage-types]: ../repository_storage_types.md
