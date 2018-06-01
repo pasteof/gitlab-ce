@@ -1,0 +1,5 @@
+---
+title: Uses `<kbd>` elements on the shortcuts modal
+merge_request: 17475
+author: samdbeckham
+type: fixed
