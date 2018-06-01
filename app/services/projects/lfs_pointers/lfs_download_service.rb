@@ -29,7 +29,7 @@ module Projects
         {}.tap do |headers|
           credentials = sanitized_uri.credentials
 
-          if credentials[:user].present? && credentials[:password].present?
+          if credentials[:user].present? || credentials[:password].present?
             # Using authentication headers in the request
             headers[:http_basic_authentication] = [credentials[:user], credentials[:password]]
           end

@@ -5,6 +5,7 @@ describe Projects::LfsPointers::LfsDownloadLinkListService do
   let(:lfs_endpoint) { "#{import_url}/info/lfs/objects/batch" }
   let!(:project) { create(:project, import_url: import_url) }
   let(:new_oids) { { 'oid1' => 123, 'oid2' => 125 } }
+  let(:remote_uri) { URI.parse(lfs_endpoint) }
 
   let(:objects_response) do
     body = new_oids.map do |oid, size|
@@ -27,7 +28,7 @@ describe Projects::LfsPointers::LfsDownloadLinkListService do
     ]
   end
 
-  subject { described_class.new(project, lfs_endpoint: lfs_endpoint) }
+  subject { described_class.new(project, remote_uri: remote_uri) }
 
   before do
     allow(project).to receive(:lfs_enabled?).and_return(true)

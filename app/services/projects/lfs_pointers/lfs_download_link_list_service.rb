@@ -10,10 +10,10 @@ module Projects
 
       attr_reader :remote_uri
 
-      def initialize(project, lfs_endpoint: nil)
+      def initialize(project, remote_uri: nil)
         super(project)
 
-        @remote_uri = URI.parse(lfs_endpoint) if lfs_endpoint
+        @remote_uri = remote_uri
       end
 
       # This method accepts two parameters:
@@ -86,7 +86,7 @@ module Projects
       end
 
       def url_credentials?
-        remote_uri.user.present? && remote_uri.password.present?
+        remote_uri.user.present? || remote_uri.password.present?
       end
     end
   end

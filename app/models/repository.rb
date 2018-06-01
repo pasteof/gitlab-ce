@@ -946,8 +946,8 @@ class Repository
     blob_data_at(sha, path)
   end
 
-  def lfsconfig_for(sha, path = '.lfsconfig')
-    blob_data_at(sha, path)
+  def lfsconfig_for(sha)
+    blob_data_at(sha, '.lfsconfig')
   end
 
   def fetch_ref(source_repository, source_ref:, target_ref:)
