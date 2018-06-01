@@ -119,7 +119,7 @@ const gfmRules = {
       return el.outerHTML;
     },
     'dl'(el, text) {
-      let lines = text.trim().split('\n');
+      let lines = text.replace(/\n\n/g, '\n').trim().split('\n');
       // Add two spaces to the front of subsequent list items lines,
       // or leave the line entirely blank.
       lines = lines.map((l) => {
@@ -129,11 +129,11 @@ const gfmRules = {
         return `  ${line}`;
       });
 
-      return `<dl>\n${lines.join('\n')}\n</dl>`;
+      return `<dl>\n${lines.join('\n')}\n</dl>\n`;
     },
     'sub, dt, dd, kbd, q, samp, var, ruby, rt, rp, abbr, summary, details'(el, text) {
       const tag = el.nodeName.toLowerCase();
-      return `<${tag}>${text}</${tag}>`;
+      return `<${tag}>${text}</${tag}>\n`;
     },
   },
   SyntaxHighlightFilter: {
@@ -215,22 +215,22 @@ const gfmRules = {
       return text.replace(/^- /mg, '1. ');
     },
     'h1'(el, text) {
-      return `# ${text.trim()}`;
+      return `# ${text.trim()}\n`;
     },
     'h2'(el, text) {
-      return `## ${text.trim()}`;
+      return `## ${text.trim()}\n`;
     },
     'h3'(el, text) {
-      return `### ${text.trim()}`;
+      return `### ${text.trim()}\n`;
     },
     'h4'(el, text) {
-      return `#### ${text.trim()}`;
+      return `#### ${text.trim()}\n`;
     },
     'h5'(el, text) {
-      return `##### ${text.trim()}`;
+      return `##### ${text.trim()}\n`;
     },
     'h6'(el, text) {
-      return `###### ${text.trim()}`;
+      return `###### ${text.trim()}\n`;
     },
     'strong'(el, text) {
       return `**${text}**`;
@@ -245,7 +245,10 @@ const gfmRules = {
       return `^${text}`;
     },
     'hr'(el) {
-      return '-----';
+      return '-----\n';
+    },
+    'p'(el, text) {
+      return `${text.trim()}\n`;
     },
     'table'(el) {
       const theadEl = el.querySelector('thead');
@@ -263,7 +266,7 @@ const gfmRules = {
 
         let before = '';
         let after = '';
-        switch (cell.style.textAlign) {
+        switch (cell.align) {
           case 'center':
             before = ':';
             after = ':';
