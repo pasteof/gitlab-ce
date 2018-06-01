@@ -16,7 +16,7 @@ Check the GitLab handbook for the [writing styles guidelines](https://about.gitl
   double line breaks are shown as a full line break in [GitLab markdown][gfm].
   80-100 characters is a good line length
 - Make sure that the documentation is added in the correct
-  [directory](documentation/index.md#documentation-directory-structure) and that
+  [directory](index.md#documentation-directory-structure) and that
   there's a link to it somewhere useful
 - Do not duplicate information
 - Be brief and clear
@@ -88,7 +88,7 @@ For punctuation rules, please refer to the [GitLab UX guide](https://design.gitl
   Example: instead of `[text](../../merge_requests/)`, use
   `[text](../../merge_requests/index.md)` or, `[text](../../ci/README.md)`, or,
   for anchor links, `[text](../../ci/README.md#examples)`.
-  Using the markdown extension is necessary for the [`/help`](documentation/index.md#gitlab-help)
+  Using the markdown extension is necessary for the [`/help`](index.md#gitlab-help)
   section of GitLab.
 - To link from CE to EE-only documentation, use the EE-only doc full URL.
 - Use [meaningful anchor texts](https://www.futurehosting.com/blog/links-should-have-meaningful-anchor-text-heres-why/).
@@ -102,7 +102,7 @@ For punctuation rules, please refer to the [GitLab UX guide](https://design.gitl
   names with the name of the document that they will be included in. For
   example, if there is a document called `twitter.md`, then a valid image name
   could be `twitter_login_screen.png`. [**Exception**: images for
-  [articles](documentation/index.md#technical-articles) should be
+  [articles](index.md#technical-articles) should be
   put in a directory called `img` underneath `/articles/article_title/img/`, therefore,
   there's no need to prepend the document name to their filenames.]
 - Images should have a specific, non-generic name that will differentiate them.
