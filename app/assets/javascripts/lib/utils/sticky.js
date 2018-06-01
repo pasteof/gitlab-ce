@@ -1,3 +1,5 @@
+import StickyFill from 'stickyfilljs';
+
 export const createPlaceholder = () => {
   const placeholder = document.createElement('div');
   placeholder.classList.add('sticky-placeholder');
@@ -28,12 +30,14 @@ export const isSticky = (el, scrollY, stickyTop, insertPlaceholder) => {
   }
 };
 
-export default (el, stickyTop, insertPlaceholder = true) => {
+export default (el, stickyTop, { insertPlaceholder = true, hasOnStickListener = true }) => {
   if (!el) return;
 
-  if (typeof CSS === 'undefined' || !(CSS.supports('(position: -webkit-sticky) or (position: sticky)'))) return;
+  StickyFill.add(el);
 
-  document.addEventListener('scroll', () => isSticky(el, window.scrollY, stickyTop, insertPlaceholder), {
-    passive: true,
-  });
+  if (hasOnStickListener) {
+    document.addEventListener('scroll', () => isSticky(el, window.scrollY, stickyTop, insertPlaceholder), {
+      passive: true,
+    });
+  }
 };
