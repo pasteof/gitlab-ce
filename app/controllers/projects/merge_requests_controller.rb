@@ -245,7 +245,13 @@ class Projects::MergeRequestsController < Projects::MergeRequests::ApplicationCo
 
   def invalid_mr
     # Render special view for MR with removed target branch
-    render 'invalid'
+    respond_to do |format|
+      format.html { render 'invalid' }
+      format.json do
+        render json: serializer.represent(
+          @merge_request, serializer: params[:serializer])
+      end
+    end
   end
 
   def merge_params
