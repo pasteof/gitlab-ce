@@ -14,7 +14,8 @@ describe Gitlab::GithubImport::Importer::RepositoryImporter do
       disk_path: 'foo',
       repository: repository,
       create_wiki: true,
-      import_state: import_state
+      import_state: import_state,
+      size: 50
     )
   end
 
@@ -82,6 +83,10 @@ describe Gitlab::GithubImport::Importer::RepositoryImporter do
         .and_return(true)
 
       expect(importer)
+        .to receive(:repository_too_large?)
+        .and_return(false)
+
+      expect(importer)
         .to receive(:import_wiki?)
         .and_return(true)
 
@@ -102,6 +107,10 @@ describe Gitlab::GithubImport::Importer::RepositoryImporter do
     it 'does not import the repository if it already exists' do
       expect(project)
         .to receive(:empty_repo?)
+        .and_return(false)
+
+      expect(importer)
+        .to receive(:repository_too_large?)
         .and_return(false)
 
       expect(importer)
@@ -127,6 +136,10 @@ describe Gitlab::GithubImport::Importer::RepositoryImporter do
         .and_return(true)
 
       expect(importer)
+        .to receive(:repository_too_large?)
+        .and_return(false)
+
+      expect(importer)
         .to receive(:import_wiki?)
         .and_return(false)
 
@@ -149,6 +162,10 @@ describe Gitlab::GithubImport::Importer::RepositoryImporter do
         .and_return(true)
 
       expect(importer)
+        .to receive(:repository_too_large?)
+        .and_return(false)
+
+      expect(importer)
         .to receive(:import_wiki?)
         .and_return(true)
 
@@ -163,6 +180,55 @@ describe Gitlab::GithubImport::Importer::RepositoryImporter do
         .not_to receive(:import_wiki_repository)
 
       expect(importer.execute).to eq(false)
+    end
+
+    context 'when the repository is too large' do
+      it 'does not import the repository' do
+        expect(importer)
+          .to receive(:repository_too_large?)
+          .and_return(true)
+
+        expect(importer)
+          .not_to receive(:import_repository)
+
+        expect(importer)
+          .to receive(:fail_import)
+          .and_return(false)
+
+        expect(importer.execute).to eq(false)
+      end
+    end
+  end
+
+  describe '#repository_size' do
+    it 'returns the size of the repository as a Float' do
+      expect(importer)
+        .to receive(:github_repository)
+        .and_return(repository)
+
+      expect(repository)
+        .to receive(:size)
+        .and_return(10)
+
+      expect(importer.repository_size).to eq(10.0)
+    end
+  end
+
+  describe '#repository_too_large?' do
+    it 'returns true when the repository is too large' do
+      expect(importer)
+        .to receive(:repository_size)
+        .and_return(10_485_7600.0)
+
+      expect(importer.repository_too_large?).to eq(true)
+    end
+
+    it 'returns false when the repository is not too large' do
+      expect(importer)
+        .to receive(:repository_size)
+        .and_return(10.0)
+
+      expect(importer.repository_too_large?).to eq(false)
     end
   end
 

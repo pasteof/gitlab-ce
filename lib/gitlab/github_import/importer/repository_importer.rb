@@ -13,11 +13,23 @@ module Gitlab
           @client = client
         end
 
+        def github_repository
+          @github_repository ||= client.repository(project.import_source)
+        end
+
         # Returns true if we should import the wiki for the project.
         def import_wiki?
-          client.repository(project.import_source)&.has_wiki &&
+          github_repository&.has_wiki &&
             !project.wiki_repository_exists? &&
             Gitlab::GitalyClient::RemoteService.exists?(wiki_url)
+        end
+
+        def repository_size
+          github_repository.size.to_f
+        end
+
+        def repository_too_large?
+          repository_size > 10_485_760.0 # size is in KB
         end
 
         # Imports the repository data.
@@ -25,6 +37,10 @@ module Gitlab
         # This method will return true if the data was imported successfully or
         # the repository had already been imported before.
         def execute
+          if repository_too_large?
+            return fail_import('The repository is too large to import')
+          end
+
           imported =
             # It's possible a repository has already been imported when running
             # this code, e.g. because we had to retry this job after
