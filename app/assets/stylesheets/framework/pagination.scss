@@ -1,19 +1,4 @@
 .gl-pagination {
-  @include media-breakpoint-down(xs) {
-    .page-item {
-      @include not-list(
-        '.active',
-        '.js-first-button',
-        '.js-last-button',
-        '.js-next-button',
-        '.js-previous-button',
-        '.separator'
-      ) {
-        display: none;
-      }
-    }
-  }
-
   a {
     color: inherit;
     text-decoration: none;

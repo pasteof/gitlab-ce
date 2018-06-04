@@ -142,6 +142,7 @@
           'js-next-button': item.next,
           'js-last-button': item.last,
           'js-first-button': item.first,
+          'd-none d-md-block': !item.first && !item.last && !item.next && !item.prev && !item.active,
           separator: item.separator,
           active: item.active,
           disabled: item.disabled || item.separator
