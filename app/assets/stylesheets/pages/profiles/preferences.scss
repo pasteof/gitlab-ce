@@ -26,43 +26,43 @@
     border-radius: 4px;
     min-width: 110px;
 
-    &.indigo {
+    &.ui_indigo {
       background-color: $indigo-900;
     }
 
-    &.light-indigo {
+    &.ui_light_indigo {
       background-color: $indigo-700;
     }
 
-    &.blue {
+    &.ui_blue {
       background-color: $theme-blue-900;
     }
 
-    &.light-blue {
+    &.ui_light_blue {
       background-color: $theme-blue-700;
     }
 
-    &.green {
+    &.ui_green {
       background-color: $theme-green-900;
     }
 
-    &.light-green {
+    &.ui_light_green {
       background-color: $theme-green-700;
     }
 
-    &.red {
+    &.ui_red {
       background-color: $theme-red-900;
     }
 
-    &.light-red {
+    &.ui_light_red {
       background-color: $theme-red-700;
     }
 
-    &.dark {
+    &.ui_dark {
       background-color: $theme-gray-900;
     }
 
-    &.light {
+    &.ui_light {
       background-color: $theme-gray-600;
     }
   }
