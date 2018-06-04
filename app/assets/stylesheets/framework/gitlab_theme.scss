@@ -213,14 +213,14 @@ body {
     );
   }
 
-  &.ui_dark {
+  &.ui_light_indigo {
     @include gitlab-theme(
-      $theme-gray-100,
-      $theme-gray-200,
-      $theme-gray-500,
-      $theme-gray-700,
-      $theme-gray-800,
-      $theme-gray-900,
+      $indigo-700,
+      $indigo-200,
+      $indigo-500,
+      $indigo-500,
+      $indigo-800,
+      $indigo-700,
       $white-light
     );
   }
@@ -237,6 +237,18 @@ body {
     );
   }
 
+  &.ui_light_blue {
+    @include gitlab-theme(
+      $theme-blue-700,
+      $theme-blue-200,
+      $theme-blue-500,
+      $theme-blue-500,
+      $theme-blue-800,
+      $theme-blue-700,
+      $white-light
+    );
+  }
+
   &.ui_green {
     @include gitlab-theme(
       $theme-green-100,
@@ -245,6 +257,54 @@ body {
       $theme-green-700,
       $theme-green-800,
       $theme-green-900,
+      $white-light
+    );
+  }
+
+  &.ui_light_green {
+    @include gitlab-theme(
+      $theme-green-700,
+      $theme-green-200,
+      $theme-green-500,
+      $theme-green-500,
+      $theme-green-800,
+      $theme-green-700,
+      $white-light
+    );
+  }
+
+  &.ui_red {
+    @include gitlab-theme(
+      $theme-red-100,
+      $theme-red-200,
+      $theme-red-500,
+      $theme-red-700,
+      $theme-red-800,
+      $theme-red-900,
+      $white-light
+    );
+  }
+
+  &.ui_light_red {
+    @include gitlab-theme(
+      $theme-red-700,
+      $theme-red-200,
+      $theme-red-500,
+      $theme-red-500,
+      $theme-red-800,
+      $theme-red-700,
+      $white-light
+    );
+  }
+
+  &.ui_dark {
+    @include gitlab-theme(
+      $theme-gray-100,
+      $theme-gray-200,
+      $theme-gray-500,
+      $theme-gray-700,
+      $theme-gray-800,
+      $theme-gray-900,
       $white-light
     );
   }

@@ -13,10 +13,15 @@ module Gitlab
     # All available Themes
     THEMES = [
       Theme.new(1, 'Indigo', 'ui_indigo'),
-      Theme.new(2, 'Dark', 'ui_dark'),
-      Theme.new(3, 'Light', 'ui_light'),
-      Theme.new(4, 'Blue', 'ui_blue'),
-      Theme.new(5, 'Green', 'ui_green')
+      Theme.new(2, 'Light-Indigo', 'ui_light_indigo'),
+      Theme.new(3, 'Blue', 'ui_blue'),
+      Theme.new(4, 'Light-Blue', 'ui_light_blue'),
+      Theme.new(5, 'Green', 'ui_green'),
+      Theme.new(6, 'Light-Green', 'ui_light_green'),
+      Theme.new(7, 'Red', 'ui_red'),
+      Theme.new(8, 'Light-Red', 'ui_light_red'),
+      Theme.new(9, 'Dark', 'ui_dark'),
+      Theme.new(10, 'Light', 'ui_light')
     ].freeze
 
     # Convenience method to get a space-separated String of all the theme

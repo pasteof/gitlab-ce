@@ -10,12 +10,6 @@
     - Gitlab::Themes.each do |theme|
       = label_tag do
         .preview{ class: theme.name.downcase }
-          .preview-row
-            .quadrant.one
-            .quadrant.two
-          .preview-row
-            .quadrant.three
-            .quadrant.four
         = f.radio_button :theme_id, theme.id, checked: Gitlab::Themes.for_user(@user).id == theme.id
         = theme.name
 
