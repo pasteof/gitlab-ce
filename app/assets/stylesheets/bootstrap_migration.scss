@@ -61,7 +61,12 @@ code {
 
   .code & {
     background-color: inherit;
+    padding: unset;
   }
+}
+
+.code {
+  padding: 9.5px;
 }
 
 table {
