@@ -52,9 +52,7 @@ module MergeRequests
     end
 
     def find_target_branch
-      return target_branch if target_project.repository.branch_exists? target_branch
-
-      target_project.default_branch
+      target_branch || target_project.default_branch
     end
 
     def source_branch_specified?

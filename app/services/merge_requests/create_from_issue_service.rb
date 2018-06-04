@@ -41,7 +41,8 @@ module MergeRequests
     end
 
     def ref
-      @ref || project.default_branch || 'master'
+      @ref = project.default_branch if !project.repository.branch_exists(@ref)
+      @ref || 'master'
     end
 
     def merge_request
